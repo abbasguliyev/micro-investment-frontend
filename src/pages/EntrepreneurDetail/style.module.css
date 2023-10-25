@@ -1,0 +1,22 @@
+.entrepreneur_detail {
+    border: 1px solid #f3f3f3;
+}
+
+.entrepreneur_invest_form input {
+    border-bottom: 1px solid #1F2937;
+    outline: none;
+    margin-bottom: 10px;
+}
+
+.entrepreneur_invest_form button {
+    background-color: #1F2937;
+    color: #fff;
+    padding: 10px;
+}
+
+.entrepreneur_invest_form button:hover {
+    background-color: #fff;
+    border: 1px solid #1F2937;
+    color: #1F2937;
+    transition: all ease 0.4s;
+}

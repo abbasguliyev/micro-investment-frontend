@@ -1,0 +1,103 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Scropllbar */
+/* Firefox */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: gray;
+  }
+  
+/* Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+    width: 15px;
+}
+
+*::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 5px;
+}
+
+*::-webkit-scrollbar-thumb {
+    background-color: gray;
+    border-radius: 14px;
+    border: 3px solid #f1f1f1;
+}
+
+/* Error */
+.error-div {
+    display: flex;
+    justify-content: center;
+}
+
+.error-div span {
+    background-color: #B00020;
+    color: #fff;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.error {
+    color: #B00020;
+}
+
+:root {
+    --main: #132043;
+    --second: #fff;
+}
+
+/* navbar */
+
+.normal-nav {
+    color: var(--second);
+}
+
+.normal-nav:hover {
+    background-color: var(--second);
+    color: var(--main);
+    transition: all ease 0.4s;
+}
+
+.active-nav {
+    background-color: var(--second);
+    color: var(--main);
+}
+
+/* Button */
+
+.btn-main-bg {
+    background-color: var(--main);
+    color: var(--second);
+}
+
+.btn-main-bg:hover {
+    background-color: var(--second);
+    color: var(--main);
+    border: 1px solid var(--main);
+    transition: all ease 0.4s;
+}
+
+/* Header */
+
+.header {
+    background-color: var(--main);
+    color: var(--second);
+}
+
+/* Footer */
+
+.footer {
+    background-color: var(--main);
+    color: var(--second);
+}
+
+.footer a {
+    color: #F8DC20;
+}
