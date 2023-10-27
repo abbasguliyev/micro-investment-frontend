@@ -1,11 +1,25 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import style from "./style.module.css"
+import { useParams } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { getEntrepreneurDetailAsync } from '../../redux/EntrepreneurSlice/EntrepreneurSlice'
 
 function EntrepreneurDetail() {
+
+  const {id} = useParams()
+
+  let entrepreneur = useSelector((state)=>state.entrepreneur.entrepreneur)
+  console.log(entrepreneur);
+  const dispatch = useDispatch();
+
+  useEffect(()=>{
+    dispatch(getEntrepreneurDetailAsync(id))
+  },[dispatch])
+
   return (
     <>
         <div className="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8 w-full">
-            <h1 className='text-6xl text-center mt-10'>Entrepreneur 1</h1>
+            <h1 className='text-6xl text-center mt-10'>{entrepreneur}</h1>
             <hr className='m-10' />
             <div className='mx-auto flex flex-col md:flex-row lg:flex-row'>
                 <div className='h-96 flex flex-row md:flex-col mr-2 order-2 md:order-1 scroll-smooth overflow-y-auto overflow-x-hidden overflow-hidden'>

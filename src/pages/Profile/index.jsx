@@ -1,8 +1,13 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { NavLink, useLocation, Routes, Route } from 'react-router-dom'
-import EntrepreneurDetail from '../EntrepreneurDetail'
+import EntreprenuerTable from '../../components/Profile/EntreprenuerTable'
+import Orders from '../../components/Profile/Orders'
+import Education from '../../components/Profile/Education'
+import Experience from '../../components/Profile/Experience'
 
 function Profile() {
+  const [showTab, setShowTab] =useState(<EntreprenuerTable/>);
+  
   return (
     <div className="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8 w-full">
       <div className='flex flex-row'>
@@ -58,14 +63,15 @@ function Profile() {
       </div>
       <div className='w-full h-96 border pt-4 mt-5 mr-2 rounded drop-shadow-md'>
         <div>
-        <NavLink to="entrepreneur-table" className={`p-2 ml-2 rounded btn-main-bg`}>Yatırımlarım</NavLink>
-        <NavLink to="" className={`p-2 ml-2 rounded btn-main-bg`}>Sifarişlərim</NavLink>
-        <NavLink to="" className={`p-2 ml-2 rounded btn-main-bg`}>Təhsilim</NavLink>
-        <NavLink to="" className={`p-2 ml-2 rounded btn-main-bg`}>Təcrübələrim</NavLink>
+            <button onClick={()=>{setShowTab(<EntreprenuerTable/>)}} className={`p-2 ml-2 rounded btn-main-bg`}>Yatırımlarım</button>
+            <button onClick={()=>{setShowTab(<Orders/>)}} className={`p-2 ml-2 rounded btn-main-bg`}>Sifarişlərim</button>
+            <button onClick={()=>{setShowTab(<Education/>)}} className={`p-2 ml-2 rounded btn-main-bg`}>Təhsilim</button>
+            <button onClick={()=>{setShowTab(<Experience/>)}} className={`p-2 ml-2 rounded btn-main-bg`}>Təcrübələrim</button>
         </div>
         <div>
-            <Routes>
-            </Routes>
+          {
+            showTab
+          }
         </div>
       </div>
     </div>
