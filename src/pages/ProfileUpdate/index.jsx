@@ -1,67 +1,74 @@
 import { useEffect, useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useFormik } from "formik";
 import AuthInput from "../../components/InputComponents/AuthInput";
 import RadioInput from "../../components/InputComponents/RadioInput";
-import validations from "./validation";
 import style from "./style.module.css"
 import FileInput from "../../components/InputComponents/FileInput";
-import MultiSelectDropdown from "../../components/InputComponents/MultiSelectDropdown";
 import TextAreaInput from "../../components/InputComponents/TextAreaInput";
-import { getAllUsersAsync, postRegisterAsync } from "../../redux/AuthSlice/AuthSlice";
+import { getMeAsync } from "../../redux/AuthSlice/AuthSlice";
 
 
-function Register() {
+function ProfileUpdate() {
     const dispatch = useDispatch();
-    const navigate = useNavigate()
 
-    let users = useSelector((state) => state.auth.users)
-
+    let me = useSelector((state) => state.auth.me)
+    
     const formik = useFormik({
         initialValues: {
-            first_name: "",
-            last_name: "",
-            email: "",
-            birthdate: "",
-            address: "",
-            marital_status: "",
-            employment_status: "",
-            housing_status: "",
-            phone_number: "",
-            credit_cart_number: "",
-            debt_amount: 0,
-            monthly_income: 0,
-            about: "",
-            business_activities: "",
+            first_name: me ? me.user.first_name || "" : "",
+            last_name: me ? me.user.last_name || "" : "",
+            email: me ? me.user.email || "" : "",
+            birthdate: me ? me.birthdate || "" : "",
+            address: me ? me.address || "" : "",
+            marital_status: me ? me.marital_status || "" : "",
+            employment_status: me ? me.employment_status || "" : "",
+            housing_status: me ? me.housing_status || "" : "",
+            phone_number: me ? me.phone_number || "" : "",
+            credit_cart_number: me ? me.credit_cart_number || "" : "",
+            debt_amount: me ? me.debt_amount || 0 : 0,
+            monthly_income: me ? me.monthly_income || 0 : 0,
+            about: me ? me.about || "" : "",
             profile_picture: "",
-            references: [],
-            password: "",
+            business_activities: me ? me.business_activities || "" : ""
         },
         onSubmit: (values) => {
             console.log(values);
-            console.log(values.birthdate);
-            dispatch(postRegisterAsync(values));
         },
-        validationSchema: validations,
     });
 
     let successMsg = useSelector((state) => state.auth.successMsg)
     let errorMsg = useSelector((state) => state.auth.error)
 
-    // useEffect(() => {
-    //     dispatch(getAllUsersAsync())
-    // })
+    useEffect(() => {
+        dispatch(getMeAsync())
+    }, [])
 
-
-    const access = localStorage.getItem("access");
+    console.log(formik.values);
+    console.log(formik.values.employment_status === "working");
 
     useEffect(() => {
-        if (access != null) {
-            navigate("/");
+        if (me) {
+            formik.setValues({
+                first_name: me ? me.user.first_name || "" : "",
+                last_name: me ? me.user.last_name || "" : "",
+                email: me ? me.user.email || "" : "",
+                birthdate: me ? me.birthdate || "" : "",
+                address: me ? me.address || "" : "",
+                marital_status: me ? me.marital_status || "" : "",
+                employment_status: me ? me.employment_status || "" : "",
+                housing_status: me ? me.housing_status || "" : "",
+                phone_number: me ? me.phone_number || "" : "",
+                credit_cart_number: me ? me.credit_cart_number || "" : "",
+                debt_amount: me ? me.debt_amount || 0 : 0,
+                monthly_income: me ? me.monthly_income || 0 : 0,
+                about: me ? me.about || "" : "",
+                profile_picture: "",
+                business_activities: me ? me.business_activities || "" : ""
+            });
         }
-    }, [navigate, access]);
-
+    }, [me]);
+    
     return (
         <>
             <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
@@ -83,7 +90,7 @@ function Register() {
                 }
                 <div className="sm:mx-auto sm:w-full sm:max-w-sm">
                     <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-                        Qeydiyyatdan keçin:
+                        Məlumatları yenilə:
                     </h2>
                 </div>
 
@@ -160,20 +167,22 @@ function Register() {
                                     id="married"
                                     name="marital_status"
                                     type="radio"
-                                    value={formik.values.marital_status}
+                                    value="married"
                                     onChange={formik.handleChange}
                                     onBlur={formik.handleBlur}
                                     style={style}
+                                    checked={me ? me.marital_status : "" === "married"}
                                 />
                                 <RadioInput
                                     label="Subay"
                                     id="single"
                                     name="marital_status"
                                     type="radio"
-                                    value={formik.values.marital_status}
+                                    value="single"
                                     onChange={formik.handleChange}
                                     onBlur={formik.handleBlur}
                                     style={style}
+                                    checked={me ? me.marital_status : "" === "single"}
                                 />
                             </div>
                         </div>
@@ -188,20 +197,22 @@ function Register() {
                                     id="working"
                                     name="employment_status"
                                     type="radio"
-                                    value={formik.values.employment_status}
+                                    value="working"
                                     onChange={formik.handleChange}
                                     onBlur={formik.handleBlur}
                                     style={style}
+                                    checked={me ? me.employment_status : "" === "working"}
                                 />
                                 <RadioInput
                                     label="İşsizəm"
                                     id="unemployed"
                                     name="employment_status"
                                     type="radio"
-                                    value={formik.values.employment_status}
+                                    value="unemployed"
                                     onChange={formik.handleChange}
                                     onBlur={formik.handleBlur}
                                     style={style}
+                                    checked={me ? me.employment_status : "" === "unemployed"}
                                 />
                             </div>
                         </div>
@@ -216,20 +227,22 @@ function Register() {
                                     id="own_home"
                                     name="housing_status"
                                     type="radio"
-                                    value={formik.values.housing_status}
+                                    value="own home"
                                     onChange={formik.handleChange}
                                     onBlur={formik.handleBlur}
                                     style={style}
+                                    checked={me ? me.housing_status : "" == "own home"}
                                 />
                                 <RadioInput
                                     label="Kirayədə qalıram"
                                     id="renting"
                                     name="housing_status"
                                     type="radio"
-                                    value={formik.values.housing_status}
+                                    value="renting"
                                     onChange={formik.handleChange}
                                     onBlur={formik.handleBlur}
                                     style={style}
+                                    checked={me ? me.housing_status : "" === "renting"}
                                 />
                             </div>
                         </div>
@@ -293,18 +306,6 @@ function Register() {
                             error={formik.errors.profile_picture}
                             style={style}
                         />
-                        <MultiSelectDropdown
-                            label="Referanslar"
-                            id="references"
-                            name="references"
-                            options={users}
-                            value={formik.values.references}
-                            onChange={formik.handleChange}
-                            onBlur={formik.handleBlur}
-                            touched={formik.touched.references}
-                            error={formik.errors.references}
-                            style={style}
-                        />
                         <TextAreaInput
                             label="Biznez Fəaliyyətləri"
                             id="business_activities"
@@ -327,42 +328,19 @@ function Register() {
                             error={formik.errors.about}
                             style={style}
                         />
-                        
-                        <AuthInput
-                            label="Parol"
-                            id="password"
-                            name="password"
-                            type="password"
-                            value={formik.values.password}
-                            onChange={formik.handleChange}
-                            onBlur={formik.handleBlur}
-                            touched={formik.touched.password}
-                            error={formik.errors.password}
-                            style={style}
-                        />
                         <div>
                             <button
                                 type="submit"
                                 className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                             >
-                                Qeydiyyatdan keç
+                                Təsdiqlə
                             </button>
                         </div>
                     </form>
-
-                    <p className="mt-10 text-center text-sm text-gray-500">
-                        Hesabınız var?{" "}
-                        <NavLink
-                            to="/login"
-                            className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
-                        >
-                            Daxil olun
-                        </NavLink>
-                    </p>
                 </div>
             </div>
         </>
     );
 }
 
-export default Register;
+export default ProfileUpdate;

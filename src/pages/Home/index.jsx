@@ -51,7 +51,7 @@ function Home() {
   
   return (
     <>
-      <header className="bg-white shadow">
+      <header className="bg-white shadow place-items-start">
         <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
           <h1 className="text-3xl font-bold tracking-tight text-gray-900">İnvestisiyalar</h1>
         </div>
@@ -103,8 +103,8 @@ function Home() {
                             <span>{entrepreneur.end_date}</span>
                           </div>
                           <div className='w-full flex flex-col md:flex-col lg:flex-col xl:flex-row justify-between'>
-                            <p className='text-slate-400'>Hədəflənən məbləğ:</p>
-                            <span>{entrepreneur.target_amount} AZN</span>
+                            <p className='text-slate-400'>Ümumi investisiya:</p>
+                            <span>{entrepreneur.total_investment} AZN</span>
                           </div>
                           <div className='w-full flex flex-col md:flex-col lg:flex-col xl:flex-row justify-between'>
                             <p className='text-slate-400'>Toplanan məbləğ:</p>

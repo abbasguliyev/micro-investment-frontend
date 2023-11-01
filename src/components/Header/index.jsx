@@ -17,8 +17,13 @@ function Header() {
 
   useEffect(() => {
     dispatch(getMeAsync());
-
   }, [dispatch])
+
+  useEffect(() => {
+    if (me != null) {
+        navigate("/login");
+    }
+}, []);
 
 
   function logout() {

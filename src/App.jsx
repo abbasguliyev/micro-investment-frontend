@@ -14,6 +14,7 @@ import EntreprenuerTable from './components/Profile/EntreprenuerTable'
 import Experience from './components/Profile/Experience'
 import Orders from './components/Profile/Orders'
 import Education from './components/Profile/Education'
+import ProfileUpdate from './pages/ProfileUpdate'
 
 
 function App() {
@@ -39,15 +40,10 @@ function App() {
                     <Route path='/' element={<Home/>} />
                     <Route path='/about' element={<About/>} />
                     <Route path='/entrepreneur-detail/:id' element={<EntrepreneurDetail/>} />
-                    {/* <Route path='/profile' element={<Outlet/>}>
+                    <Route path='/profile' element={<Outlet/>}>
                       <Route path='' element={<Profile/>} />
-                      <Route path='entrepreneur-table' element={<EntreprenuerTable/>}/>
-                      <Route path='experience' element={<Experience/>}/>
-                      <Route path='orders' element={<Orders/>}/>
-                      <Route path='education' element={<Education/>}/>
-                    </Route> */}
-                      <Route path='/profile' element={<Profile/>} />
-
+                      <Route path='profile-update' element={<ProfileUpdate/>} />
+                    </Route>
                     <Route path='/login' element={<Login/>} />
                     <Route path='/register' element={<Register/>} />
                     <Route path='*' element={<NotFoundPage/>} />

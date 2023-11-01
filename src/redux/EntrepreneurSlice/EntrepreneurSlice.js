@@ -54,7 +54,6 @@ export const EntrepreneurSlice = createSlice({
         builder.addCase(getEntrepreneurDetailAsync.fulfilled, (state, action) => {
             state.isLoading = false;
             state.entrepreneur = action.payload;
-            console.log(action.payload);
         })
         builder.addCase(getEntrepreneurDetailAsync.rejected, (state, action) => {
             state.error = action.error.message
