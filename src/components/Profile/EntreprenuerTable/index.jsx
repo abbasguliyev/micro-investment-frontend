@@ -1,25 +1,83 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import { NavLink } from 'react-router-dom'
+import { useSelector, useDispatch } from 'react-redux'
+import { Pagination } from 'antd'
+import { getMeAsync } from '../../../redux/AuthSlice/AuthSlice'
+import { getAllEntrepreneurAsync } from '../../../redux/EntrepreneurSlice/EntrepreneurSlice'
 
 const EntreprenuerTable = () => {
+  let [currentPage, setCurrentPage] = useState(1);
+  
+  const dispatch = useDispatch()
+  
+  let me = useSelector((state) => state.auth.me)
+  let entrepreneurs = useSelector((state) => state.entrepreneur.entrepreneurs)
+  let totalPage = useSelector((state) => state.entrepreneur.totalPage)
+  let pageLimit = useSelector((state) => state.entrepreneur.pageLimit)
+
+  const changePage = (e) => {
+    setCurrentPage(e);
+    console.log(e);
+    let offset = (e - 1) * pageLimit;
+    dispatch(getAllEntrepreneurAsync({"owner":me?me.id:"", "offset": offset, "start_date": "", "end_date": ""}));
+  };
+
+  useEffect(() => {
+    dispatch(getMeAsync())
+    dispatch(getAllEntrepreneurAsync({"owner":me?me.id:"", "offset": 0, "start_date": "", "end_date": ""}))
+  }, [])
+
   return (
-    <div>
-      <table className='border-solid border border-white border-collapse ml-10 mt-10'>
-        <thead>
-          <tr>
-            <th className='border-solid border border-collapse border-black p-3'>a</th>
-            <th className='border-solid border border-collapse border-black p-3'>b</th>
-            <th className='border-solid border border-collapse border-black p-3'>c</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td className='border-solid border border-collapse border-black p-5'>a</td>
-            <td className='border-solid border border-collapse border-black p-5'>b</td>
-            <td className='border-solid border border-collapse border-black p-5'>c</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    <>
+      <div className='mt-4 mx-4 flex flex-col'>
+        <div>
+          <div className="justify-start mb-5">
+            <Pagination
+                onChange={(e) => {
+                  changePage(e);
+                }}
+                className="pagination"
+                current={currentPage}
+                total={totalPage}
+                defaultPageSize={pageLimit}
+                showSizeChanger={false}
+            />
+          </div>
+        </div>
+        <table className="table-auto w-full">
+          <thead>
+            <tr>
+              <th className="border border-slate-600">Adı</th>
+              <th className="border border-slate-600">Ümumi investisiya</th>
+              <th className="border border-slate-600">Ümumi gəlir</th>
+              <th className="border border-slate-600">Yekun mənfəət</th>
+              <th className="border border-slate-600">Yekunlaşma tarixi</th>
+              <th className="border border-slate-600">Başlama tarixi</th>
+              <th className="border border-slate-600">Bitmə tarixi</th>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              entrepreneurs.map((entrepreneur) => (
+                <tr key={entrepreneur.id}>
+                  <td className="border border-slate-700">
+                    <NavLink to={`/entrepreneur-detail/${entrepreneur.id}`} className="text-blue-700">
+                      {entrepreneur.project_name}
+                    </NavLink>
+                  </td>
+                  <td className="border border-slate-700">{entrepreneur.total_investment}</td>
+                  <td className="border border-slate-700">{entrepreneur.gross_income}</td>
+                  <td className="border border-slate-700">{entrepreneur.final_profit}</td>
+                  <td className="border border-slate-700">{entrepreneur.finished_date}</td>
+                  <td className="border border-slate-700">{entrepreneur.start_date}</td>
+                  <td className="border border-slate-700">{entrepreneur.end_date}</td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+      </div>
+    </>
   )
 }
 

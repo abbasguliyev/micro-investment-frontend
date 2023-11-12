@@ -6,6 +6,7 @@ import { postLoginAsync } from '../../redux/AuthSlice/AuthSlice';
 import validations from './validation';
 import style from "./style.module.css"
 import AuthInput from '../../components/InputComponents/AuthInput';
+import ResponseMessage from '../../components/ResponseMessage';
 
 
 function Login() {
@@ -42,14 +43,7 @@ function Login() {
   return (
     <>
         <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
-        {
-          errorMsg && (
-          <div className="error-div">
-            <span>
-              {errorMsg}
-            </span>
-          </div>)
-        }
+        {errorMsg && (<ResponseMessage message={errorMsg} type="error" />)}
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
             Hesabınıza daxil olun:

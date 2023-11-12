@@ -17,7 +17,6 @@ function Home() {
   let entrepreneurs = useSelector((state) => state.entrepreneur.entrepreneurs)
   let totalPage = useSelector((state) => state.entrepreneur.totalPage)
   let pageLimit = useSelector((state) => state.entrepreneur.pageLimit)
-  const { RangePicker } = DatePicker;
 
   const formik = useFormik({
     initialValues: {
@@ -34,6 +33,7 @@ function Home() {
   })
 
   useEffect((values) => {
+    formik.values.owner = ""
     let filteredValues = { ...formik.values };
     dispatch(getAllEntrepreneurAsync(filteredValues));
     dispatch(getMeAsync());
@@ -122,19 +122,19 @@ function Home() {
           </div>
           {/* ***************** Pagination ********************* */}
           <div>
-          <div className="flex justify-center mt-10">
+            <div className="flex justify-center mt-10">
 
-            <Pagination
-                onChange={(e) => {
-                  changePage(e);
-                }}
-                className="pagination"
-                current={currentPage}
-                total={totalPage}
-                defaultPageSize={pageLimit}
-                showSizeChanger={false}
-            />
-          </div>
+              <Pagination
+                  onChange={(e) => {
+                    changePage(e);
+                  }}
+                  className="pagination"
+                  current={currentPage}
+                  total={totalPage}
+                  defaultPageSize={pageLimit}
+                  showSizeChanger={false}
+              />
+            </div>
           
           </div>
         </div>

@@ -14,17 +14,17 @@ function Header() {
   const navigate = useNavigate();
 
   let me = useSelector((state) => state.auth.me)
+  let isLoggedIn = useSelector((state) => state.auth.isLoggedIn)
 
   useEffect(() => {
     dispatch(getMeAsync());
   }, [dispatch])
 
   useEffect(() => {
-    if (me != null) {
-        navigate("/login");
+    if (me == null  ) {
+      navigate("/login");
     }
-}, []);
-
+  }, [navigate]);
 
   function logout() {
     localStorage.removeItem('access')
@@ -35,12 +35,13 @@ function Header() {
   const navigation = [
     { name: 'Ana Səhifə', href: '/', current: location.pathname == '/' ? true : false },
     { name: 'Haqqımızda', href: '/about', current: location.pathname == '/about' ? true : false },
+    { name: 'Formaçı ol', href: '/entrepreneur', current: location.pathname == '/entrepreneur' ? true : false },
   ]
   
   function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
   }
-  
+
   return (
     <Disclosure as="nav" className="header">
       {({ open }) => (

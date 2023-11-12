@@ -16,8 +16,6 @@ export const postRegisterAsync = createAsyncThunk('postRegisterAsync', async (da
         const res = await axios.post('users/', data)
         return res.data;
     } catch (error) {
-        console.log(error)
-        // If the API call fails, the error will be thrown and caught here.
         throw {'message': error.response.data.detail};
     }
 })
@@ -61,18 +59,27 @@ export const AuthSlice = createSlice({
         builder.addCase(postLoginAsync.pending, (state, action) => {
             state.isLoading = true;
             state.isLoggedIn = false;
+            state.error = null;
+            state.successMsg = null;
         })
         builder.addCase(postLoginAsync.fulfilled, (state, action) => {
+            console.log(action);
             state.isLoading = false;
             localStorage.setItem("access", action.payload.access)
             state.me = action.payload.user_details;
             state.access = action.payload.access;
             state.refresh = action.payload.refresh;
             state.isLoggedIn = true;
+            state.error = null;
+            state.successMsg = null;
         })
         builder.addCase(postLoginAsync.rejected, (state, action) => {
             state.error = action.error.message;
             state.isLoggedIn = false;
+            state.isLoading = false;
+
+            state.error = null;
+            state.successMsg = null;
         })
         // Register Reducers
         builder.addCase(postRegisterAsync.pending, (state, action) => {
@@ -85,10 +92,14 @@ export const AuthSlice = createSlice({
         builder.addCase(postRegisterAsync.rejected, (state, action) => {
             state.error = action.error.message;
             state.isLoggedIn = false;
+            state.isLoading = false;
         })
         // Me Reducers
         builder.addCase(getMeAsync.pending, (state, action) => {
             state.isLoading = true;
+            state.isLoggedIn = false;
+            state.error = null;
+            state.successMsg = null;
         })
         builder.addCase(getMeAsync.fulfilled, (state, action) => {
             state.isLoading = false;
@@ -98,6 +109,8 @@ export const AuthSlice = createSlice({
         builder.addCase(getMeAsync.rejected, (state, action) => {
             state.error = action.error.message;
             state.isLoggedIn = false;
+            state.isLoading = false;
+            state.successMsg = null;
         })
         // All Users Reducers
         builder.addCase(getAllUsersAsync.pending, (state, action) => {
@@ -109,6 +122,7 @@ export const AuthSlice = createSlice({
         })
         builder.addCase(getAllUsersAsync.rejected, (state, action) => {
             state.error = action.error.message;
+            state.isLoading = false;
         })
     }
 })

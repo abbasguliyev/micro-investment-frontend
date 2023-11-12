@@ -33,8 +33,9 @@ body {
 
 /* Error */
 .error-div {
-    display: flex;
-    justify-content: center;
+    position: fixed;
+    right: 10px;
+    bottom: 50px;
 }
 
 .error-div span {
@@ -47,6 +48,25 @@ body {
 .error {
     color: #B00020;
 }
+
+/* Success */
+.success-div {
+    position: fixed;
+    right: 10px;
+    bottom: 50px;
+}
+
+.success-div span {
+    background-color: #12C99B;
+    color: #fff;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.success {
+    color: #12C99B;
+}
+
 
 :root {
     --main: #132043;

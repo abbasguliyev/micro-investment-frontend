@@ -2,13 +2,13 @@ import React, { useEffect, useState } from 'react'
 import { NavLink, useLocation, Routes, Route } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import EntreprenuerTable from '../../components/Profile/EntreprenuerTable'
-import Orders from '../../components/Profile/Orders'
 import Education from '../../components/Profile/Education'
 import Experience from '../../components/Profile/Experience'
 import { getMeAsync } from '../../redux/AuthSlice/AuthSlice'
+import Investments from '../../components/Profile/Investments'
 
 function Profile() {
-  const [showTab, setShowTab] =useState(<EntreprenuerTable/>);
+  const [showTab, setShowTab] =useState(<Investments/>);
 
   const dispatch = useDispatch()
   
@@ -161,10 +161,10 @@ function Profile() {
           </div>
         </div>
       </div>
-      <div className='w-full h-96 border pt-4 mt-5 mr-2 rounded drop-shadow-md'>
+      <div className='w-full h-96 border pt-4 mt-5 mr-2 pb-7 rounded drop-shadow-md overflow-auto'>
         <div>
-            <button onClick={()=>{setShowTab(<EntreprenuerTable/>)}} className={`p-2 ml-2 rounded btn-main-bg`}>Yatırımlarım</button>
-            <button onClick={()=>{setShowTab(<Orders/>)}} className={`p-2 ml-2 rounded btn-main-bg`}>Sifarişlərim</button>
+            <button onClick={()=>{setShowTab(<Investments/>)}} className={`p-2 ml-2 rounded btn-main-bg`}>Yatırımlarım</button>
+            <button onClick={()=>{setShowTab(<EntreprenuerTable/>)}} className={`p-2 ml-2 rounded btn-main-bg`}>Sifarişlərim</button>
             <button onClick={()=>{setShowTab(<Education/>)}} className={`p-2 ml-2 rounded btn-main-bg`}>Təhsilim</button>
             <button onClick={()=>{setShowTab(<Experience/>)}} className={`p-2 ml-2 rounded btn-main-bg`}>Təcrübələrim</button>
         </div>

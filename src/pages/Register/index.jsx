@@ -10,6 +10,7 @@ import FileInput from "../../components/InputComponents/FileInput";
 import MultiSelectDropdown from "../../components/InputComponents/MultiSelectDropdown";
 import TextAreaInput from "../../components/InputComponents/TextAreaInput";
 import { getAllUsersAsync, postRegisterAsync } from "../../redux/AuthSlice/AuthSlice";
+import ResponseMessage from "../../components/ResponseMessage";
 
 
 function Register() {
@@ -65,22 +66,8 @@ function Register() {
     return (
         <>
             <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
-                {
-                    errorMsg && (
-                    <div className="error-div">
-                        <span>
-                        {errorMsg}
-                        </span>
-                    </div>)
-                }
-                {
-                    successMsg && (
-                    <div className="error-div">
-                        <span>
-                        {successMsg}
-                        </span>
-                    </div>)
-                }
+                {errorMsg && (<ResponseMessage message={errorMsg} type="error" />)}
+                {successMsg && (<ResponseMessage message={successMsg} type="success" />)}
                 <div className="sm:mx-auto sm:w-full sm:max-w-sm">
                     <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
                         Qeydiyyatdan keçin:
