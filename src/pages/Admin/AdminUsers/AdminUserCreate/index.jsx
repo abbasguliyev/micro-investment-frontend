@@ -2,18 +2,18 @@ import { useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useFormik } from "formik";
-import AuthInput from "../../components/InputComponents/AuthInput";
-import RadioInput from "../../components/InputComponents/RadioInput";
 import style from "./style.module.css"
-import FileInput from "../../components/InputComponents/FileInput";
-import MultiSelectDropdown from "../../components/InputComponents/MultiSelectDropdown";
-import TextAreaInput from "../../components/InputComponents/TextAreaInput";
-import { getAllUsersAsync, postRegisterAsync, resetAuthSlice } from "../../redux/AuthSlice/AuthSlice";
-import ResponseMessage from "../../components/ResponseMessage";
 import validations from "./validation";
+import { getAllUsersAsync, postRegisterAsync, resetAuthSlice } from "../../../../redux/AuthSlice/AuthSlice";
+import ResponseMessage from "../../../../components/ResponseMessage";
+import AuthInput from "../../../../components/InputComponents/AuthInput";
+import RadioInput from "../../../../components/InputComponents/RadioInput";
+import FileInput from "../../../../components/InputComponents/FileInput";
+import MultiSelectDropdown from "../../../../components/InputComponents/MultiSelectDropdown";
+import TextAreaInput from "../../../../components/InputComponents/TextAreaInput";
 
 
-function Register() {
+function AdminUserCreate() {
     const dispatch = useDispatch();
     const navigate = useNavigate()
 
@@ -61,10 +61,10 @@ function Register() {
             values.references = refr
             dispatch(postRegisterAsync(values))
             .then(() => {
-                navigate("/login")
+                navigate("/admin")
             })
             .catch((err) => {
-                navigate("/register")
+                navigate("/admin")
             });
         },
         validationSchema: validations
@@ -75,21 +75,13 @@ function Register() {
     }, [dispatch])
 
 
-    const access = localStorage.getItem("access");
-
-    useEffect(() => {
-        if (access != null) {
-            navigate("/");
-        }
-    }, [navigate, access]);
-
     return (
         <>
             <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
                 {errorMsg && (<ResponseMessage message={errorMsg} type="error" slice={resetAuthSlice()} />)}
                 <div className="sm:mx-auto sm:w-full sm:max-w-sm">
                     <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-                        Qeydiyyatdan keçin:
+                        İstifadəçi əlavə edin:
                     </h2>
                 </div>
 
@@ -364,24 +356,14 @@ function Register() {
                                 type="submit"
                                 className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                             >
-                                Qeydiyyatdan keç
+                                Əlavə et
                             </button>
                         </div>
                     </form>
-
-                    <p className="mt-10 text-center text-sm text-gray-500">
-                        Hesabınız var?{" "}
-                        <NavLink
-                            to="/login"
-                            className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
-                        >
-                            Daxil olun
-                        </NavLink>
-                    </p>
                 </div>
             </div>
         </>
     );
 }
 
-export default Register;
+export default AdminUserCreate;

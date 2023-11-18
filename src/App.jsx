@@ -14,18 +14,18 @@ import { getMeAsync } from './redux/AuthSlice/AuthSlice'
 import { useEffect } from 'react'
 import EntrepreneurCreate from './pages/EntrepreneurCreate'
 import EntrepreneurImageCreate from './components/EntrepreneurImageCreate'
+import ExperienceCreate from './pages/ExperienceCreate'
+import EducationCreate from './pages/EducationCreate'
+import EducationUpdate from './pages/EducationUpdate'
+import ExperienceUpdate from './pages/ExperienceUpdate'
+import AdminUserCreate from './pages/Admin/AdminUsers/AdminUserCreate'
+import Admin from './pages/Admin'
 
 function App() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const access = localStorage.getItem("access");
-  let me = useSelector((state) => state.auth.me)
-  let isLoggedIn = useSelector((state) => state.auth.isLoggedIn)
-
-  useEffect(() => {
-    dispatch(getMeAsync());
-  }, [dispatch])
 
   return (
     <>
@@ -55,8 +55,16 @@ function App() {
                         <Route path='profile-update' element={<ProfileUpdate/>} />
                       </Route>
                       <Route path='/login' element={<Login/>} />
+                      <Route path='/experience-create' element={<ExperienceCreate/>} />
+                      <Route path='/education-create' element={<EducationCreate/>} />
+                      <Route path='/education-update/:id' element={<EducationUpdate/>} />
+                      <Route path='/experience-update/:id' element={<ExperienceUpdate/>} />
                       <Route path='/register' element={<Register/>} />
                       <Route path='*' element={<NotFoundPage/>} />
+                      <Route path='/admin' element={<Outlet/>}>
+                        <Route path='' element={<Admin/>} />
+                        <Route path='user-create' element={<AdminUserCreate/>} />
+                      </Route>
                     </Routes>
                   </div>
                 </div>

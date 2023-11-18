@@ -19,7 +19,7 @@ function TextAreaInput({label, id, name, type, value, onChange, onBlur, touched,
                 </textarea>
             </div>
             {
-                {touched} && {error} && (<div className='error'>{error}</div>)
+                touched && error && (<div className='error'>{error}</div>)
             }
         </div>
     </>

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { postEntrepreneurCreateAsync } from "../../redux/EntrepreneurSlice/EntrepreneurSlice";
+import { postEntrepreneurCreateAsync, resetEntrepreneurSlice } from "../../redux/EntrepreneurSlice/EntrepreneurSlice";
 import { useFormik } from "formik";
 import AuthInput from "../../components/InputComponents/AuthInput";
 import TextAreaInput from "../../components/InputComponents/TextAreaInput";
@@ -51,8 +51,8 @@ function EntrepreneurCreate() {
     return (
         <>
             <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
-                {errorMsg && (<ResponseMessage message={errorMsg} type="error" />)}
-                {successMsg && (<ResponseMessage message={successMsg} type="success" />)}
+                {errorMsg && (<ResponseMessage message={errorMsg} type="error" slice={resetEntrepreneurSlice()} />)}
+                {successMsg && (<ResponseMessage message={successMsg} type="success" slice={resetEntrepreneurSlice()} />)}
                 <div className="sm:mx-auto sm:w-full sm:max-w-sm">
                     <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
                         Sifariş:

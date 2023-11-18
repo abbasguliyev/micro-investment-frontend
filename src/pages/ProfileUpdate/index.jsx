@@ -6,17 +6,20 @@ import RadioInput from "../../components/InputComponents/RadioInput";
 import style from "./style.module.css"
 import FileInput from "../../components/InputComponents/FileInput";
 import TextAreaInput from "../../components/InputComponents/TextAreaInput";
-import { getMeAsync } from "../../redux/AuthSlice/AuthSlice";
+import { getMeAsync, putUserProfileAsync, resetAuthSlice } from "../../redux/AuthSlice/AuthSlice";
 import ResponseMessage from "../../components/ResponseMessage";
+import { useNavigate } from "react-router-dom";
 
 
 function ProfileUpdate() {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     let me = useSelector((state) => state.auth.me)
     
     const formik = useFormik({
         initialValues: {
+            id: me ? me.id || "" : "",
             first_name: me ? me.user.first_name || "" : "",
             last_name: me ? me.user.last_name || "" : "",
             email: me ? me.user.email || "" : "",
@@ -35,6 +38,12 @@ function ProfileUpdate() {
         },
         onSubmit: (values) => {
             console.log(values);
+            values.id = me.id
+            dispatch(putUserProfileAsync(values))
+            .then(() => {
+                navigate("/profile")
+            })
+            .catch((err) => {console.log(err);})
         },
     });
 
@@ -73,8 +82,8 @@ function ProfileUpdate() {
     return (
         <>
             <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
-                {errorMsg && (<ResponseMessage message={errorMsg} type="error" />)}
-                {successMsg && (<ResponseMessage message={successMsg} type="success" />)}
+                {errorMsg && (<ResponseMessage message={errorMsg} type="error" slice={resetAuthSlice()} />)}
+                {successMsg && (<ResponseMessage message={successMsg} type="success" slice={resetAuthSlice()} />)}
                 <div className="sm:mx-auto sm:w-full sm:max-w-sm">
                     <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
                         Məlumatları yenilə:
@@ -158,7 +167,7 @@ function ProfileUpdate() {
                                     onChange={formik.handleChange}
                                     onBlur={formik.handleBlur}
                                     style={style}
-                                    checked={me ? me.marital_status : "" === "married"}
+                                    checked={formik.values.marital_status == "married" ? "checked": ""}
                                 />
                                 <RadioInput
                                     label="Subay"
@@ -169,7 +178,7 @@ function ProfileUpdate() {
                                     onChange={formik.handleChange}
                                     onBlur={formik.handleBlur}
                                     style={style}
-                                    checked={me ? me.marital_status : "" === "single"}
+                                    checked={formik.values.marital_status == "single" ? "checked": ""}
                                 />
                             </div>
                         </div>
@@ -188,7 +197,7 @@ function ProfileUpdate() {
                                     onChange={formik.handleChange}
                                     onBlur={formik.handleBlur}
                                     style={style}
-                                    checked={me ? me.employment_status : "" === "working"}
+                                    checked={formik.values.employment_status == "working" ? "checked": ""}
                                 />
                                 <RadioInput
                                     label="İşsizəm"
@@ -199,7 +208,7 @@ function ProfileUpdate() {
                                     onChange={formik.handleChange}
                                     onBlur={formik.handleBlur}
                                     style={style}
-                                    checked={me ? me.employment_status : "" === "unemployed"}
+                                    checked={formik.values.employment_status == "unemployed" ? "checked": ""}
                                 />
                             </div>
                         </div>
@@ -218,7 +227,7 @@ function ProfileUpdate() {
                                     onChange={formik.handleChange}
                                     onBlur={formik.handleBlur}
                                     style={style}
-                                    checked={me ? me.housing_status : "" == "own home"}
+                                    checked={formik.values.housing_status == "own home" ? "checked": ""}
                                 />
                                 <RadioInput
                                     label="Kirayədə qalıram"
@@ -229,7 +238,7 @@ function ProfileUpdate() {
                                     onChange={formik.handleChange}
                                     onBlur={formik.handleBlur}
                                     style={style}
-                                    checked={me ? me.housing_status : "" === "renting"}
+                                    checked={formik.values.housing_status == "renting" ? "checked": ""}
                                 />
                             </div>
                         </div>
@@ -286,11 +295,8 @@ function ProfileUpdate() {
                             id="profile_picture"
                             name="profile_picture"
                             type="file"
-                            value={formik.values.profile_picture}
-                            onChange={formik.handleChange}
+                            onChange={e=>{formik.setFieldValue("profile_picture", e.target.files[0])}}
                             onBlur={formik.handleBlur}
-                            touched={formik.touched.profile_picture}
-                            error={formik.errors.profile_picture}
                             style={style}
                         />
                         <TextAreaInput

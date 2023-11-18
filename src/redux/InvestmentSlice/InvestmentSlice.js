@@ -15,7 +15,7 @@ export const postInvestmentAsync = createAsyncThunk('postInvestmentAsync', async
         const res = await axios.post('investments/', data)
         return res.data;
     } catch (error) {
-        throw {'message': error.response.data.data};
+        throw {'message': error.response.data.detail};
     }
 })
 
@@ -32,7 +32,7 @@ export const InvestmentSlice = createSlice({
     },
     reducers: {
         resetInvestmentSlice: (state) => {
-            return { ...state, investments: [], isLoading: false, error: null, successMsg: null, totalPage: 0 };
+            return { ...state, isLoading: false, error: null, successMsg: null };
         }
     },
     extraReducers: (builder) => {

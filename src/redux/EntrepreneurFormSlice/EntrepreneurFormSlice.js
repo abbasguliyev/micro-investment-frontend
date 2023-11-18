@@ -23,7 +23,11 @@ export const EntrepreneurFormSlice = createSlice({
         totalPage: 0,   
         pageLimit: 10
     },
-    reducers: {},
+    reducers: {
+        resetEntrepreneurFormSlice: (state) => {
+            return { ...state, isLoading: false, error: null, successMsg: null };
+        }
+    },
     extraReducers: (builder) => {
         // GET All Entrepreneur Form Reducers
         builder.addCase(getAllEntrepreneurFormAsync.pending, (state, action) => {
@@ -41,4 +45,5 @@ export const EntrepreneurFormSlice = createSlice({
     }
 })
 
+export const { resetEntrepreneurFormSlice } = EntrepreneurFormSlice.actions;
 export default EntrepreneurFormSlice.reducer;

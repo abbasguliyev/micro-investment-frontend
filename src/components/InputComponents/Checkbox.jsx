@@ -1,12 +1,12 @@
 import React from 'react'
 
-function RadioInput({label, id, name, type, value, onChange, onBlur, style, checked}) {
+function Checkbox({label, id, name, value, onChange, onBlur, touched, error, style, checked}) {
   return (
     <>
         <input
             id={id}
             name={name}
-            type="radio"
+            type="checkbox"
             value={value}
             onChange={onChange}
             onBlur={onBlur}
@@ -18,4 +18,4 @@ function RadioInput({label, id, name, type, value, onChange, onBlur, style, chec
   )
 }
 
-export default RadioInput
+export default Checkbox

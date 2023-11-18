@@ -37,7 +37,7 @@ export const postEntrepreneurImageCreateAsync = createAsyncThunk('postEntreprene
         const form = new FormData();
         form.append('entrepreneur', data.entrepreneur)
         form.append('image', data.image)
-        const res = await axios.post('entrepreneurs/images/', data, { headers: { 'Content-Type': 'multipart/form-data' }});
+        const res = await axios.post('entrepreneurs/images/', form, { headers: { 'Content-Type': 'multipart/form-data' }});
         return res.data;
     } catch (error) {
         throw {'message': error.response.data.detail};
@@ -67,7 +67,11 @@ export const EntrepreneurSlice = createSlice({
         totalPage: 0,   
         pageLimit: 10
     },
-    reducers: {},
+    reducers: {
+        resetEntrepreneurSlice: (state) => {
+            return { ...state, isLoading: false, error: null, successMsg: null };
+        }
+    },
     extraReducers: (builder) => {
         // Entrepreneur Reducers
         builder.addCase(getAllEntrepreneurAsync.pending, (state, action) => {
@@ -157,4 +161,5 @@ export const EntrepreneurSlice = createSlice({
     }
 })
 
+export const { resetEntrepreneurSlice } = EntrepreneurSlice.actions;
 export default EntrepreneurSlice.reducer;

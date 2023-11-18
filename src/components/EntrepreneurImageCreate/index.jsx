@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllEntrepreneurFormAsync } from "../../redux/EntrepreneurFormSlice/EntrepreneurFormSlice";
 import { useLocation } from "react-router-dom";
-import { getAllEntrepreneurImageAsync, postEntrepreneurImageCreateAsync } from "../../redux/EntrepreneurSlice/EntrepreneurSlice";
+import { getAllEntrepreneurImageAsync, postEntrepreneurImageCreateAsync, resetEntrepreneurSlice } from "../../redux/EntrepreneurSlice/EntrepreneurSlice";
 import { useFormik } from "formik";
 import ResponseMessage from "../ResponseMessage";
 
@@ -24,7 +24,10 @@ function EntrepreneurImageCreate() {
         },
         onSubmit: (values, { resetForm }) => {
             dispatch(postEntrepreneurImageCreateAsync(values))
-            resetForm();
+            .then(() => {
+                resetForm();
+                dispatch(getAllEntrepreneurImageAsync({"entrepreneur": id}))
+            })
         }
     })
 
@@ -42,8 +45,8 @@ function EntrepreneurImageCreate() {
                 </div>
             </header>
             <div className="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8 flex flex-col">
-                {errorMsg && (<ResponseMessage message={errorMsg} type="error" />)}
-                {successMsg && (<ResponseMessage message={successMsg} type="success" />)}
+                {errorMsg && (<ResponseMessage message={errorMsg} type="error" slice={resetEntrepreneurSlice()} />)}
+                {successMsg && (<ResponseMessage message={successMsg} type="success" slice={resetEntrepreneurSlice()} />)}
                 <form className="flex items-center justify-center flex-col" onSubmit={formik.handleSubmit}>
                     <label
                         htmlFor="image"

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { useFormik } from 'formik';
-import { postLoginAsync } from '../../redux/AuthSlice/AuthSlice';
+import { postLoginAsync, resetAuthSlice } from '../../redux/AuthSlice/AuthSlice';
 import validations from './validation';
 import style from "./style.module.css"
 import AuthInput from '../../components/InputComponents/AuthInput';
@@ -32,6 +32,7 @@ function Login() {
   const access = localStorage.getItem("access");
 
   const errorMsg = useSelector((state) => state.auth.error);
+  const successMsg = useSelector((state) => state.auth.successMsg)
 
   useEffect(() => {
     if (access != null) {
@@ -43,7 +44,9 @@ function Login() {
   return (
     <>
         <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
-        {errorMsg && (<ResponseMessage message={errorMsg} type="error" />)}
+        {errorMsg && (<ResponseMessage message={errorMsg} type="error" slice={resetAuthSlice()} />)}
+        {successMsg && (<ResponseMessage message={successMsg} type="success" slice={resetAuthSlice()} />)}
+
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
             Hesabınıza daxil olun:

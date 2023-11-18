@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getEntrepreneurDetailAsync } from "../../redux/EntrepreneurSlice/EntrepreneurSlice";
 import { useFormik } from "formik";
-import { postInvestmentAsync } from "../../redux/InvestmentSlice/InvestmentSlice";
+import { postInvestmentAsync, resetInvestmentSlice } from "../../redux/InvestmentSlice/InvestmentSlice";
 import validations from "./validation";
 import ResponseMessage from "../../components/ResponseMessage";
 
@@ -25,9 +25,13 @@ function EntrepreneurDetail() {
         initialValues: {
             amount: 0,
         },
-        onSubmit: (values) => {
+        onSubmit: (values, { resetForm }) => {
             values.entrepreneur = entrepreneur.id;
-            dispatch(postInvestmentAsync(values));
+            dispatch(postInvestmentAsync(values))
+            .then(() => {
+                resetForm();
+                dispatch(getEntrepreneurDetailAsync(id));
+            });
         },
         validationSchema: validations,
     });
@@ -50,12 +54,14 @@ function EntrepreneurDetail() {
                     <ResponseMessage
                         message={investErrorMsg}
                         type="error"
+                        slice={resetInvestmentSlice()}
                     />
                 )}
                 {investSuccessMsg && (
                     <ResponseMessage
                         message={investSuccessMsg}
                         type="success"
+                        slice={resetInvestmentSlice()}
                     />
                 )}
                 <h1 className="text-6xl text-center mt-10">
@@ -281,7 +287,7 @@ function EntrepreneurDetail() {
                                     <p className="text-slate-400">
                                         Mənfəət əmsalı:
                                     </p>
-                                    <b>{entrepreneur.profit_ratio} AZN</b>
+                                    <b>{entrepreneur.profit_ratio}</b>
                                 </div>
                                 <div className="w-full flex flex-col md:flex-col lg:flex-col xl:flex-row justify-between">
                                     <p className="text-slate-400">

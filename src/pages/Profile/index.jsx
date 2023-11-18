@@ -4,8 +4,11 @@ import { useSelector, useDispatch } from 'react-redux'
 import EntreprenuerTable from '../../components/Profile/EntreprenuerTable'
 import Education from '../../components/Profile/Education'
 import Experience from '../../components/Profile/Experience'
-import { getMeAsync } from '../../redux/AuthSlice/AuthSlice'
+import { getMeAsync, resetAuthSlice } from '../../redux/AuthSlice/AuthSlice'
 import Investments from '../../components/Profile/Investments'
+import ResponseMessage from '../../components/ResponseMessage'
+import { resetEducationSlice } from '../../redux/EducationSlice/EducationSlice'
+import { resetExperienceSlice } from '../../redux/ExperienceSlice/ExperienceSlice'
 
 function Profile() {
   const [showTab, setShowTab] =useState(<Investments/>);
@@ -13,6 +16,12 @@ function Profile() {
   const dispatch = useDispatch()
   
   let me = useSelector((state) => state.auth.me)
+  let successMsg = useSelector((state) => state.auth.successMsg)
+  let errorMsg = useSelector((state) => state.auth.error)
+  let educationSuccessMsg = useSelector((state) => state.education.successMsg)
+  let educationErrorMsg = useSelector((state) => state.education.error)
+  let experienceSuccessMsg = useSelector((state) => state.experience.successMsg)
+  let experienceErrorMsg = useSelector((state) => state.experience.error)
 
   useEffect(() => {
     dispatch(getMeAsync())
@@ -20,17 +29,23 @@ function Profile() {
   
   return (
     <div className="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8 w-full">
-      <div className='flex flex-row'>
-        <div className='w-2/5 h-96 border mr-2 rounded drop-shadow'>
+      {errorMsg && (<ResponseMessage message={errorMsg} type="error" slice={resetAuthSlice()} />)}
+      {successMsg && (<ResponseMessage message={successMsg} type="success" slice={resetAuthSlice()} />)}
+      {educationErrorMsg && (<ResponseMessage message={educationErrorMsg} type="error" slice={resetEducationSlice()} />)}
+      {educationSuccessMsg && (<ResponseMessage message={educationSuccessMsg} type="success" slice={resetEducationSlice()} />)}
+      {experienceErrorMsg && (<ResponseMessage message={experienceErrorMsg} type="error" slice={resetExperienceSlice()} />)}
+      {experienceSuccessMsg && (<ResponseMessage message={experienceSuccessMsg} type="success" slice={resetExperienceSlice()} />)}
+      <div className='flex flex-col md:flex-row lg:flex-row xl:flex-row'>
+        <div className='w-full sm:w-full md:w-2/5 lg:w-2/5 xl:md:w-2/5 h-96 border mr-2 mb-2 rounded drop-shadow'>
           {
             me ?
             <img src={me.profile_picture} alt="default" className='w-full h-full object-cover rounded' />
             : <img src="/src/assets/images/default_avatar.png" alt="default" className='w-full h-full object-cover rounded' />
           }
         </div>
-        <div className='w-3/5 h-96 border rounded drop-shadow-md'>
-          <div className='w-full h-20 flex flex-col md:flex-col lg:flex-col xl:flex-row justify-between'>
-            <p className='text-5xl m-4'>
+        <div className='w-full sm:w-full md:w-3/5 lg:w-3/5 xl:md:w-3/5 h-96 mb-2 border rounded drop-shadow-md'>
+          <div className='w-full h-20 mb-20 md:mb-20 lg:mb-20 xl:mb-4 flex flex-col md:flex-col lg:flex-col xl:flex-row justify-between'>
+            <p className='md:text-4xl lg:text-4xl xl:text-5xl m-4'>
               {
                 me ? <>
                   {
@@ -44,7 +59,7 @@ function Profile() {
             <NavLink to="profile-update" className={`rounded btn-main-bg w-50 h-10 p-2 m-4`}>Məlumatları Dəyiş</NavLink>
           </div>
           <div className={`w-full h-72 flex flex-col justify-between p-4 rounded overflow-auto`}>
-              <div>
+              <div className='mb-20 md:mb-20 lg:mb-20 xl:mb-4 overflow-auto'>
                 <div className='w-full flex flex-col md:flex-col lg:flex-col xl:flex-row justify-between'>
                   <p className='text-slate-400'>Email:</p>
                   <span>

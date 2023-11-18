@@ -121,13 +121,3 @@ body {
 .footer a {
     color: #F8DC20;
 }
-
-/* Icon */
-
-.delete {
-    color: #B00020 !important;
-}
-
-.edit {
-    color: #F8DC20 !important;
-}

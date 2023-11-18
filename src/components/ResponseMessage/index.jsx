@@ -3,7 +3,7 @@ import { Button, notification, Space } from 'antd';
 import { resetInvestmentSlice } from "../../redux/InvestmentSlice/InvestmentSlice";
 import { useDispatch } from "react-redux";
 
-function ResponseMessage({message="", type="success"}) {
+function ResponseMessage({message="", type="success", slice}) {
     const dispatch = useDispatch();
     const openNotification = () => {
         if (type == "success") {
@@ -11,7 +11,7 @@ function ResponseMessage({message="", type="success"}) {
                 message: message ? message : "",
                 description: "",
                 onClick: () => {
-                  dispatch(resetInvestmentSlice());
+                  dispatch(slice);
                 },
                 placement: "bottomRight"
               });
@@ -20,12 +20,12 @@ function ResponseMessage({message="", type="success"}) {
                 message: message ? message : "",
                 description: "",
                 onClick: () => {
-                  dispatch(resetInvestmentSlice());
+                  dispatch(slice);
                 },
                 placement: "bottomRight"
               });
         }
-        dispatch(resetInvestmentSlice());
+        dispatch(slice);
     };
     useEffect(() => {
         openNotification("")

@@ -24,7 +24,7 @@ function FileInput({label, id, name, type, value, onChange, onBlur, touched, err
                 />
             </div>
             {
-                {touched} && {error} && (<div className='error'>{error}</div>)
+                touched && error && (<div className='error'>{error}</div>)
             }
         </div>
     </>

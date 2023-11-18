@@ -25,7 +25,7 @@ function MultiSelectDropdown({label, id, name, type, value, options, onChange, o
             />
             </div>
             {
-                {touched} && {error} && (<div className='error'>{error}</div>)
+                touched && error && (<div className='error'>{error}</div>)
             }
         </div>
     </>
