@@ -28,9 +28,12 @@ export const postRegisterAsync = createAsyncThunk('postRegisterAsync', async (da
         form.append("monthly_income", data.monthly_income)
         form.append("about", data.about)
         form.append("business_activities", data.business_activities)
-        form.append("profile_picture", data.profile_picture)
+        if (data.profile_picture != null) {
+            form.append("profile_picture", data.profile_picture)
+        }
         form.append("references", data.references)
         form.append("password", data.password)
+        
         const res = await axios.post('users/', form, { headers: { 'Content-Type': 'multipart/form-data', 'Authorization': "" }})
         return res.data;
     } catch (error) {
@@ -55,7 +58,9 @@ export const putUserProfileAsync = createAsyncThunk('putUserProfileAsync', async
         form.append("debt_amount", data.debt_amount)
         form.append("monthly_income", data.monthly_income)
         form.append("about", data.about)
-        form.append("profile_picture", data.profile_picture)
+        if (data.profile_picture != null) {
+            form.append("profile_picture", data.profile_picture)
+        }
         form.append("business_activities", data.business_activities)
         const res = await axios.put(`users/${data.id}/`, form, { headers: { 'Content-Type': 'multipart/form-data' }});
         return res.data;

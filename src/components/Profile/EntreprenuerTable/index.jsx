@@ -19,12 +19,12 @@ const EntreprenuerTable = () => {
     setCurrentPage(e);
     console.log(e);
     let offset = (e - 1) * pageLimit;
-    dispatch(getAllEntrepreneurAsync({"owner":me?me.id:"", "offset": offset, "start_date": "", "end_date": ""}));
+    dispatch(getAllEntrepreneurAsync({owner:me?me.id:"", offset: offset, start_date: "", end_date: "", is_active: true, is_finished: false}));
   };
 
   useEffect(() => {
     dispatch(getMeAsync())
-    dispatch(getAllEntrepreneurAsync({"owner":me?me.id:"", "offset": 0, "start_date": "", "end_date": ""}))
+    dispatch(getAllEntrepreneurAsync({owner:me?me.id:"", offset: 0, start_date: "", end_date: "", is_active: true, is_finished: false}))
   }, [])
 
   return (

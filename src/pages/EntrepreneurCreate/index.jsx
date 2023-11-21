@@ -5,8 +5,6 @@ import AuthInput from "../../components/InputComponents/AuthInput";
 import TextAreaInput from "../../components/InputComponents/TextAreaInput";
 import style from "./style.module.css"
 import { useDispatch, useSelector } from "react-redux";
-import { Button, Modal } from 'antd';
-import EntrepreneurCreateForm from "../../components/EntrepreneurCreateForm";
 import { useNavigate } from "react-router-dom";
 import ResponseMessage from "../../components/ResponseMessage";
 
@@ -31,14 +29,8 @@ function EntrepreneurCreate() {
             entrepreneur_share_percentage: 63,
             debt_to_the_fund_percentage: 5,
             charity_to_the_fund_percentage: 7,
-            entrepreneur_form: []
         },
         onSubmit: (values) => {
-            let eForm = localStorage.getItem("entrepreneurForm");
-            console.log(eForm);
-            if(eForm != null) {
-                values.entrepreneur_form = eForm;
-            }
             console.log(values);
             dispatch(postEntrepreneurCreateAsync(values))
             .then(res => {
@@ -192,7 +184,6 @@ function EntrepreneurCreate() {
                             error={formik.errors.charity_to_the_fund_percentage}
                             style={style}
                         />
-                        <EntrepreneurCreateForm />
                         <div>
                             <button
                                 type="submit"

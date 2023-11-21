@@ -12,7 +12,6 @@ function EntrepreneurDetail() {
     const dispatch = useDispatch();
 
     const { id } = useParams();
-    
 
     let entrepreneur = useSelector((state) => state.entrepreneur.entrepreneur);
     let investErrorMsg = useSelector((state) => state.investment.error);
@@ -26,6 +25,7 @@ function EntrepreneurDetail() {
             amount: 0,
         },
         onSubmit: (values, { resetForm }) => {
+            values.investor = me.id;
             values.entrepreneur = entrepreneur.id;
             dispatch(postInvestmentAsync(values))
             .then(() => {

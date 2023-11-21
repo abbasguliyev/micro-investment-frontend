@@ -19,6 +19,15 @@ export const postInvestmentAsync = createAsyncThunk('postInvestmentAsync', async
     }
 })
 
+export const putInvestmentAsync = createAsyncThunk('putInvestmentAsync', async (data) => {
+    try {
+        const res = await axios.put(`investments/${data.id}/`, data)
+        return res.data;
+    } catch (error) {
+        throw {'message': error.response.data.detail};
+    }
+})
+
 
 export const InvestmentSlice = createSlice({
     name: 'auth',
@@ -66,6 +75,22 @@ export const InvestmentSlice = createSlice({
             state.error = null;
         })
         builder.addCase(postInvestmentAsync.rejected, (state, action) => {
+            state.error = action.error.message;
+            state.isLoading = false;
+            state.successMsg = null;
+        })
+        // Investments Update Reducers
+        builder.addCase(putInvestmentAsync.pending, (state, action) => {
+            state.isLoading = true;
+            state.error =null;
+            state.successMsg =null;
+        })
+        builder.addCase(putInvestmentAsync.fulfilled, (state, action) => {
+            state.isLoading = false;
+            state.successMsg = action.payload.detail;
+            state.error = null;
+        })
+        builder.addCase(putInvestmentAsync.rejected, (state, action) => {
             state.error = action.error.message;
             state.isLoading = false;
             state.successMsg = null;

@@ -12,6 +12,7 @@ import { resetExperienceSlice } from '../../redux/ExperienceSlice/ExperienceSlic
 
 function Profile() {
   const [showTab, setShowTab] =useState(<Investments/>);
+  const [title, setTitle] =useState("Yatırımlarım");
 
   const dispatch = useDispatch()
   
@@ -178,12 +179,26 @@ function Profile() {
       </div>
       <div className='w-full h-96 border pt-4 mt-5 mr-2 pb-7 rounded drop-shadow-md overflow-auto'>
         <div>
-            <button onClick={()=>{setShowTab(<Investments/>)}} className={`p-2 ml-2 rounded btn-main-bg`}>Yatırımlarım</button>
-            <button onClick={()=>{setShowTab(<EntreprenuerTable/>)}} className={`p-2 ml-2 rounded btn-main-bg`}>Sifarişlərim</button>
-            <button onClick={()=>{setShowTab(<Education/>)}} className={`p-2 ml-2 rounded btn-main-bg`}>Təhsilim</button>
-            <button onClick={()=>{setShowTab(<Experience/>)}} className={`p-2 ml-2 rounded btn-main-bg`}>Təcrübələrim</button>
+            <button onClick={()=>{
+              setShowTab(<Investments/>)
+              setTitle("Yatırımlarım")
+            }} className={`p-2 ml-2 rounded btn-main-bg`}>Yatırımlarım</button>
+            <button onClick={()=>{
+              setShowTab(<EntreprenuerTable/>)
+              setTitle("Sifarişlərim")
+            }} className={`p-2 ml-2 rounded btn-main-bg`}>Sifarişlərim</button>
+            <button onClick={()=>{
+              setShowTab(<Education/>)
+              setTitle("Təhsilim")
+            }} className={`p-2 ml-2 rounded btn-main-bg`}>Təhsilim</button>
+            <button onClick={()=>{
+              setShowTab(<Experience/>)
+              setTitle("Təcrübələrim")
+            }} className={`p-2 ml-2 rounded btn-main-bg`}>Təcrübələrim</button>
         </div>
         <div>
+          <h4 className='mx-auto max-w-7xl py-6 sm:px-6 lg:px-8 flex flex-col text-lg text-xl font-bold'>{title}</h4>
+
           {
             showTab
           }
