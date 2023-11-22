@@ -22,8 +22,8 @@ function Admin() {
             }} className={'btn-main-bg p-2 ml-2 rounded'}>Yatırımlar</button>
             <button onClick={()=>{
               setShowTab(<AdminEntrepreneurs/>) 
-              setTitle("Sifarişlər")
-            }} className={'btn-main-bg p-2 ml-2 rounded'}>Sifarişlər</button>
+              setTitle("Lahiyələr")
+            }} className={'btn-main-bg p-2 ml-2 rounded'}>Lahiyələr</button>
         </div>
         <div>
           <h4 className='mx-auto max-w-7xl py-6 sm:px-6 lg:px-8 flex flex-col text-lg text-xl font-bold'>{title}</h4>

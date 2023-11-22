@@ -15,7 +15,7 @@ const Investments = () => {
   let investments = useSelector((state) => state.investment.investments)
   let totalPage = useSelector((state) => state.investment.totalPage)
   let pageLimit = useSelector((state) => state.investment.pageLimit)
-
+  
   const changePage = (e) => {
     setCurrentPage(e);
     let offset = (e - 1) * pageLimit;
@@ -53,13 +53,16 @@ const Investments = () => {
               <th className="border border-slate-600">Yekun</th>
               <th className="border border-slate-600">İnvest tarixi</th>
               <th className="border border-slate-600">Sifarişin başlama tarixi</th>
-              <th className="border border-slate-600">Sifarişin bitmə tarixi</th>
+              <th className="border border-slate-600">Sifarişin planlanan bitmə tarixi</th>
+              <th className="border border-slate-600">Sifarişin yekunlaşdığı tarixi</th>
+              <th className="border border-slate-600">Təsdiqlənib</th>
+              <th className="border border-slate-600">Sifariş bitibmi</th>
             </tr>
           </thead>
           <tbody>
             {
               investments.map((investment) => (
-                <tr key={investment.id}>
+                <tr className='text-center' key={investment.id}>
                   <td className="border border-slate-700">
                     <NavLink to={`/entrepreneur-detail/${investment.entrepreneur.id}`} className="text-blue-700">
                       {investment.entrepreneur ? investment.entrepreneur.project_name : "-"}
@@ -71,6 +74,9 @@ const Investments = () => {
                   <td className="border border-slate-700">{investment.investment_date}</td>
                   <td className="border border-slate-700">{investment.entrepreneur ? investment.entrepreneur.start_date : "-"}</td>
                   <td className="border border-slate-700">{investment.entrepreneur ? investment.entrepreneur.end_date : "-"}</td>
+                  <td className="border border-slate-700">{investment.entrepreneur && investment.entrepreneur.finished_date ? investment.entrepreneur.finished_date : "-"}</td>
+                  <td className="border border-slate-700">{investment.is_submitted ? <p className='success'>Təsdiqlənib</p> : <p className='error'>Təsdiqlənməyib</p>}</td>
+                  <td className="border border-slate-700">{investment.entrepreneur && investment.entrepreneur.is_finished ? <p className='error'>Bitib</p> : <p className='success'>Davam edir</p>}</td>
                 </tr>
               ))
             }

@@ -185,8 +185,8 @@ function Profile() {
             }} className={`p-2 ml-2 rounded btn-main-bg`}>Yatırımlarım</button>
             <button onClick={()=>{
               setShowTab(<EntreprenuerTable/>)
-              setTitle("Sifarişlərim")
-            }} className={`p-2 ml-2 rounded btn-main-bg`}>Sifarişlərim</button>
+              setTitle("Lahiyələrim")
+            }} className={`p-2 ml-2 rounded btn-main-bg`}>Lahiyələrim</button>
             <button onClick={()=>{
               setShowTab(<Education/>)
               setTitle("Təhsilim")

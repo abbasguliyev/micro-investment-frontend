@@ -16,7 +16,7 @@ import validations from "./validation";
 import style from "./style.module.css";
 import {
     getAllEntrepreneurAsync,
-    putEntrepreneurCreateAsync,
+    putEntrepreneurAsync,
     resetEntrepreneurSlice,
 } from "../../../redux/EntrepreneurSlice/EntrepreneurSlice";
 import Checkbox from "../../../components/InputComponents/Checkbox";
@@ -31,6 +31,14 @@ function AdminEntrepreneurs() {
     const [entrepreneur, setEntrepreneur] = useState(null);
     const [investment, setInvestment] = useState(null);
     const dispatch = useDispatch();
+
+    let entrepreneurs = useSelector((state) => state.entrepreneur.entrepreneurs);
+    const errorMsg = useSelector((state) => state.entrepreneur.error);
+    const successMsg = useSelector((state) => state.entrepreneur.successMsg);
+    const investmentErrorMsg = useSelector((state) => state.investment.error);
+    const investmentSuccessMsg = useSelector((state) => state.investment.successMsg);
+    let totalPage = useSelector((state) => state.entrepreneur.totalPage);
+    let pageLimit = useSelector((state) => state.entrepreneur.pageLimit);
 
     const showEntrepreneurInvestmentsModal = (entrepreneur) => {
         setEntrepreneur(entrepreneur);
@@ -52,6 +60,19 @@ function AdminEntrepreneurs() {
 
     const handleEntrepreneurFinishedModalOk = () => {
         setIsEntrepreneurFinishedModalOpen(false);
+        dispatch(putEntrepreneurAsync({"id": entrepreneur.id, "is_finished": true}))
+        .then(() => {
+            let offset = (currentPage - 1) * pageLimit;
+            dispatch(
+                getAllEntrepreneurAsync({
+                    offset: offset,
+                    owner: "",
+                    start_date: "",
+                    end_date: "",
+                    is_active: ""
+                })
+            );
+        })
     };
 
     const handleEntrepreneurFinishedModalCancel = () => {
@@ -93,14 +114,6 @@ function AdminEntrepreneurs() {
     const handleEntrepreneurInvestmentUpdateModalCancel = () => {
         setIsEntrepreneurInvestmentUpdateModalOpen(false);
     };
-
-    let entrepreneurs = useSelector((state) => state.entrepreneur.entrepreneurs);
-    const errorMsg = useSelector((state) => state.entrepreneur.error);
-    const successMsg = useSelector((state) => state.entrepreneur.successMsg);
-    const investmentErrorMsg = useSelector((state) => state.investment.error);
-    const investmentSuccessMsg = useSelector((state) => state.investment.successMsg);
-    let totalPage = useSelector((state) => state.entrepreneur.totalPage);
-    let pageLimit = useSelector((state) => state.entrepreneur.pageLimit);
 
     const formik = useFormik({
         initialValues: {
@@ -149,7 +162,7 @@ function AdminEntrepreneurs() {
     };
 
     const changeEntrepreneurActivity = (entrepreneur) => {
-        dispatch(putEntrepreneurCreateAsync({"id": entrepreneur.id, "is_active": !entrepreneur.is_active}))
+        dispatch(putEntrepreneurAsync({"id": entrepreneur.id, "is_active": !entrepreneur.is_active}))
         .then(() => {
             let offset = (currentPage - 1) * pageLimit;
             dispatch(
@@ -230,7 +243,7 @@ function AdminEntrepreneurs() {
                 <tbody className="text-center">
                     {entrepreneurs.map((entrepreneur) => (
                         <tr key={entrepreneur.id}>
-                            <td className="border border-slate-700">
+                            <td className="border border-slate-700 py-1">
                                 <NavLink
                                     to={`/entrepreneur-detail/${entrepreneur.id}`}
                                     className="text-blue-700"
@@ -238,45 +251,59 @@ function AdminEntrepreneurs() {
                                     {entrepreneur.project_name}
                                 </NavLink>
                             </td>
-                            <td className="border border-slate-700">
+                            <td className="border border-slate-700 py-1">
                                 {entrepreneur.total_investment}
                             </td>
-                            <td className="border border-slate-700">
+                            <td className="border border-slate-700 py-1">
                                 {entrepreneur.gross_income}
                             </td>
-                            <td className="border border-slate-700">
+                            <td className="border border-slate-700 py-1">
                                 {entrepreneur.final_profit}
                             </td>
-                            <td className="border border-slate-700">
+                            <td className="border border-slate-700 py-1">
                                 {entrepreneur.amount_collected}
                             </td>
-                            <td className="border border-slate-700">
+                            <td className="border border-slate-700 py-1">
                                 {entrepreneur.finished_date}
                             </td>
-                            <td className="border border-slate-700">
+                            <td className="border border-slate-700 py-1">
                                 {entrepreneur.start_date}
                             </td>
-                            <td className="border border-slate-700">
+                            <td className="border border-slate-700 py-1">
                                 {entrepreneur.end_date}
                             </td>
-                            <td onClick={() => showEntrepreneurInvestmentsModal(entrepreneur)} className="border border-slate-700 cursor-pointer text-sky-700">
+                            <td onClick={() => showEntrepreneurInvestmentsModal(entrepreneur)} className="border border-slate-700 cursor-pointer text-sky-700 py-1">
                                 Bax
                             </td>
-                            <td className="border border-slate-700 cursor-pointer text-sky-700 px-14">
+                            <td className="border border-slate-700 cursor-pointer text-sky-700 px-14 py-1">
                                 {
-                                    entrepreneur.is_active ? (
-                                        <div onClick={() => changeEntrepreneurActivity(entrepreneur)} className="ml-auto pointer-events-auto h-6 w-10 rounded-full p-1 ring-1 ring-inset transition duration-200 ease-in-out bg-indigo-600 ring-black/20">
-                                            <div className="h-4 w-4 rounded-full bg-white shadow-sm ring-1 ring-slate-700/10 transition duration-200 ease-in-out translate-x-4"></div>
-                                        </div>
+                                    entrepreneur.is_finished ? (
+                                        entrepreneur.is_active ? (
+                                            <div className="ml-auto pointer-events-none h-6 w-10 rounded-full p-1 ring-1 ring-inset transition duration-200 ease-in-out bg-indigo-600 ring-black/20">
+                                                <div className="h-4 w-4 rounded-full bg-white shadow-sm ring-1 ring-slate-700/10 transition duration-200 ease-in-out translate-x-4"></div>
+                                            </div>
+                                        ) : (
+                                            <div className="pointer-events-none h-6 w-10 rounded-full p-1 ring-1 ring-inset transition duration-200 ease-in-out bg-slate-900/10 ring-slate-900/5">
+                                                <div className="h-4 w-4 rounded-full bg-white shadow-sm ring-1 ring-slate-700/10 transition duration-200 ease-in-out"></div>
+                                            </div>
+                                        )
                                     ) : (
-                                        <div onClick={() => changeEntrepreneurActivity(entrepreneur)} className="pointer-events-auto h-6 w-10 rounded-full p-1 ring-1 ring-inset transition duration-200 ease-in-out bg-slate-900/10 ring-slate-900/5">
-                                            <div className="h-4 w-4 rounded-full bg-white shadow-sm ring-1 ring-slate-700/10 transition duration-200 ease-in-out"></div>
-                                        </div>
+                                        entrepreneur.is_active ? (
+                                            <div onClick={() => changeEntrepreneurActivity(entrepreneur)} className="ml-auto pointer-events-auto h-6 w-10 rounded-full p-1 ring-1 ring-inset transition duration-200 ease-in-out bg-indigo-600 ring-black/20">
+                                                <div className="h-4 w-4 rounded-full bg-white shadow-sm ring-1 ring-slate-700/10 transition duration-200 ease-in-out translate-x-4"></div>
+                                            </div>
+                                        ) : (
+                                            <div onClick={() => changeEntrepreneurActivity(entrepreneur)} className="pointer-events-auto h-6 w-10 rounded-full p-1 ring-1 ring-inset transition duration-200 ease-in-out bg-slate-900/10 ring-slate-900/5">
+                                                <div className="h-4 w-4 rounded-full bg-white shadow-sm ring-1 ring-slate-700/10 transition duration-200 ease-in-out"></div>
+                                            </div>
+                                        )
                                     )
                                 }
                             </td>
-                            <td onClick={() => showEntrepreneurFinishedModal(entrepreneur)} className="border border-slate-700 cursor-pointer text-sky-700">
-                                Bitir
+                            <td className="border border-slate-700 text-sky-700 py-1">
+                                {
+                                    entrepreneur.is_finished ? <p className="error">Artıq bitib</p> : <p onClick={() => showEntrepreneurFinishedModal(entrepreneur)} className="success cursor-pointer">Bitir</p>
+                                }
                             </td>
                         </tr>
                     ))}

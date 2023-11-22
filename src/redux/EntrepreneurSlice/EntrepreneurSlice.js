@@ -32,7 +32,7 @@ export const postEntrepreneurCreateAsync = createAsyncThunk('postEntrepreneurCre
     }
 })
 
-export const putEntrepreneurCreateAsync = createAsyncThunk('putEntrepreneurCreateAsync', async (data) => {
+export const putEntrepreneurAsync = createAsyncThunk('putEntrepreneurAsync', async (data) => {
     try {
         const res = await axios.put(`entrepreneurs/${data.id}/`, data);
         return res.data;
@@ -134,17 +134,17 @@ export const EntrepreneurSlice = createSlice({
             state.successMsg = null;
         })
         // Entrepreneur Update Reducers
-        builder.addCase(putEntrepreneurCreateAsync.pending, (state, action) => {
+        builder.addCase(putEntrepreneurAsync.pending, (state, action) => {
             state.isLoading = true;
             state.successMsg = null;
             state.error = null;
         })
-        builder.addCase(putEntrepreneurCreateAsync.fulfilled, (state, action) => {
+        builder.addCase(putEntrepreneurAsync.fulfilled, (state, action) => {
             state.isLoading = false;
             state.successMsg = action.payload.detail;
             state.error = null;
         })
-        builder.addCase(putEntrepreneurCreateAsync.rejected, (state, action) => {
+        builder.addCase(putEntrepreneurAsync.rejected, (state, action) => {
             state.error = action.error.message
             state.isLoading = false;
             state.successMsg = null;
