@@ -23,6 +23,8 @@ function Profile() {
   let educationErrorMsg = useSelector((state) => state.education.error)
   let experienceSuccessMsg = useSelector((state) => state.experience.successMsg)
   let experienceErrorMsg = useSelector((state) => state.experience.error)
+  let investmentSuccessMsg = useSelector((state) => state.investment.successMsg)
+  let investmentErrorMsg = useSelector((state) => state.investment.error)
 
   useEffect(() => {
     dispatch(getMeAsync())
@@ -36,6 +38,9 @@ function Profile() {
       {educationSuccessMsg && (<ResponseMessage message={educationSuccessMsg} type="success" slice={resetEducationSlice()} />)}
       {experienceErrorMsg && (<ResponseMessage message={experienceErrorMsg} type="error" slice={resetExperienceSlice()} />)}
       {experienceSuccessMsg && (<ResponseMessage message={experienceSuccessMsg} type="success" slice={resetExperienceSlice()} />)}
+      {investmentErrorMsg && (<ResponseMessage message={investmentErrorMsg} type="error" slice={resetEducationSlice()} />)}
+      {investmentSuccessMsg && (<ResponseMessage message={investmentSuccessMsg} type="success" slice={resetEducationSlice()} />)}
+      
       <div className='flex flex-col md:flex-row lg:flex-row xl:flex-row'>
         <div className='w-full sm:w-full md:w-2/5 lg:w-2/5 xl:md:w-2/5 h-96 border mr-2 mb-2 rounded drop-shadow'>
           {
