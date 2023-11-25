@@ -62,6 +62,7 @@ export const putUserProfileAsync = createAsyncThunk('putUserProfileAsync', async
             form.append("profile_picture", data.profile_picture)
         }
         form.append("business_activities", data.business_activities)
+        console.log(form);
         const res = await axios.put(`users/${data.id}/`, form, { headers: { 'Content-Type': 'multipart/form-data' }});
         return res.data;
     } catch (error) {
