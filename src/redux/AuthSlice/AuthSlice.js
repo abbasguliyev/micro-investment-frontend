@@ -81,8 +81,12 @@ export const getMeAsync = createAsyncThunk('getMeAsync', async () => {
 })
 
 export const getAllUsersAsync = createAsyncThunk('getAllUsersAsync', async (values) => {
+    if (values.fullname == undefined) {
+        values.fullname = ""
+    }
+    
     try {
-        const res = await axios.get(`users/?limit=10&offset=${values.offset}&birthdate=${values.birthdate}&marital_status=${values.marital_status}&employment_status=${values.employment_status}&housing_status=${values.housing_status}&phone_number=${values.phone_number}&monthly_income=${values.monthly_income}&monthly_income__gte=${values.monthly_income__gte}&monthly_income__lte=${values.monthly_income__lte}`, { headers: { 'Authorization': '' }})
+        const res = await axios.get(`users/?limit=10&offset=${values.offset}&fullname=${values.fullname}&birthdate=${values.birthdate}&marital_status=${values.marital_status}&employment_status=${values.employment_status}&housing_status=${values.housing_status}&phone_number=${values.phone_number}&monthly_income=${values.monthly_income}&monthly_income__gte=${values.monthly_income__gte}&monthly_income__lte=${values.monthly_income__lte}`, { headers: { 'Authorization': '' }})
         return res.data;
     } catch (error) {
         console.log(error);

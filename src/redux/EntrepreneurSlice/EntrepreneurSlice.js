@@ -2,8 +2,11 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "../../axios";
 
 export const getAllEntrepreneurAsync = createAsyncThunk('getAllEntrepreneurAsync', async (values) => {
+    if (values.project_name == undefined) {
+        values.project_name = ""
+    }
     try {
-        const res = await axios.get(`entrepreneurs/?limit=10&offset=${values.offset}&owner=${values.owner}&start_date__gte=${values.start_date}&end_date__gte=${values.end_date}&is_active=${values.is_active}&is_finished=${values.is_finished}`)
+        const res = await axios.get(`entrepreneurs/?limit=10&offset=${values.offset}&owner=${values.owner}&project_name__icontains=${values.project_name}&start_date__gte=${values.start_date}&end_date__gte=${values.end_date}&is_active=${values.is_active}&is_finished=${values.is_finished}`)
         return res.data;
     } catch (error) {
         console.log(error);

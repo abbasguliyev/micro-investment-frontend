@@ -11,6 +11,8 @@ import { FaCheck } from "react-icons/fa";
 import { FaXmark } from "react-icons/fa6";
 import { useFormik } from 'formik'
 import AuthInput from '../../InputComponents/AuthInput'
+import TextAreaInput from '../../InputComponents/TextAreaInput'
+import { getCompanyBalanceAsync } from '../../../redux/CompanyBalanceSlice/CompanyBalanceSlice'
 
 const Investments = () => {
   let [currentPage, setCurrentPage] = useState(1);
@@ -23,6 +25,7 @@ const Investments = () => {
   let investments = useSelector((state) => state.investment.investments)
   let totalPage = useSelector((state) => state.investment.totalPage)
   let pageLimit = useSelector((state) => state.investment.pageLimit)
+  let companyBalance = useSelector((state) => state.companyBalance.companyBalances)
 
   const showInvestorInvestmentFinishModal = (investment) => {
     setIsInvestorInvestmentFinishModalOpen(true);
@@ -39,6 +42,7 @@ const Investments = () => {
           dispatch(
             getAllInvestmentsAsync({"investor":me?me.id:"", "entrepreneur": "", "offset": offset})
           );
+          dispatch(getCompanyBalanceAsync())
       })
   };
 
@@ -71,11 +75,19 @@ const Investments = () => {
   useEffect(() => {
     dispatch(getMeAsync())
     dispatch(getAllInvestmentsAsync({"investor":me?me.id:"", "entrepreneur": "", "offset": 0}))
+    dispatch(getCompanyBalanceAsync())
   }, [dispatch])
 
   return (
     <>
       <div className='mt-4 mx-4 flex flex-col'>
+      <div>
+        {
+          companyBalance ? companyBalance.map((balance) => (
+            <p key={balance.id}>Sədəqə fondu: {balance.charity_fund} </p>
+          )) : ""
+        }
+      </div>
         <div>
           <div className="justify-start mb-5">
             <Pagination
@@ -126,7 +138,12 @@ const Investments = () => {
                   <td className="border border-slate-700">{investment.entrepreneur && investment.entrepreneur.is_finished ? <p className='error'>Bitib</p> : <p className='success'>Davam edir</p>}</td>
                   <td className="border border-slate-700 text-sky-700 py-1">
                       {
-                          investment.entrepreneur && investment.entrepreneur.is_finished  ? <NavLink onClick={() => showInvestorInvestmentFinishModal(investment)} className={`rounded btn-main-bg text-center p-1`}>Daxil ol</NavLink> : <p>-</p> 
+                        investment.entrepreneur && investment.entrepreneur.is_finished ? (
+                          investment.investment_report && investment.investment_report.length > 0  ? 
+                          <NavLink onClick={() => showInvestorInvestmentFinishModal(investment)} className={`rounded btn-main-bg text-center p-1`}>Yenilə</NavLink> 
+                          : 
+                          <NavLink onClick={() => showInvestorInvestmentFinishModal(investment)} className={`rounded btn-main-bg text-center p-1`}>Daxil ol</NavLink>
+                        ) : <p>-</p> 
                       }
                   </td>
                 </tr>
@@ -187,6 +204,17 @@ const Investments = () => {
                   onBlur={formik.handleBlur}
                   touched={formik.touched.amount_want_to_send_to_debt_fund}
                   error={formik.errors.amount_want_to_send_to_debt_fund}
+                  style={style}
+              />
+              <TextAreaInput
+                  label="Qeyd:"
+                  id="note"
+                  name="note"
+                  value={formik.values.note}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  touched={formik.touched.note}
+                  error={formik.errors.note}
                   style={style}
               />
           </Modal>
