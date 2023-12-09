@@ -410,7 +410,7 @@ function AdminEntrepreneurs() {
                     </form>
                 </div>
                 <div className="w-full sm:w-full md:w-full lg:w-3/4 grid gap-4 lg:grid-cols-2 md:grid-cols-1 sm:grid-cols-1">
-                    <table className="table-auto w-full">
+                    <table className="table-auto w-full h-fit">
                         <thead>
                             <tr>
                                 <th className="border border-slate-600">Adı</th>
@@ -525,8 +525,10 @@ function AdminEntrepreneurs() {
                 >
                     {
                         entrepreneur && entrepreneur.investments ? (
-                            <>
-                                <a onClick={() => showInvestmentAddNewInvestorModal(entrepreneur)} className="cursor-pointer inline-block px-3 mb-2 border rounded">Yeni İnvestor</a>
+                            <>  
+                                {
+                                    !entrepreneur.is_finished && <a onClick={() => showInvestmentAddNewInvestorModal(entrepreneur)} className="cursor-pointer inline-block px-3 mb-2 border rounded">Yeni İnvestor</a>
+                                }
                                 <table className="table-auto w-full">
                                     <thead>
                                         <tr>
