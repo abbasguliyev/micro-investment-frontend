@@ -25,11 +25,15 @@ import Checkbox from "../../../components/InputComponents/Checkbox";
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import RadioInput from "../../../components/InputComponents/RadioInput";
 import { getAllUsersAsync } from "../../../redux/AuthSlice/AuthSlice";
+import { FaCheck } from "react-icons/fa";
+import { FaXmark } from "react-icons/fa6";
+
 
 function AdminEntrepreneurs() {
     let [currentPage, setCurrentPage] = useState(1);
     const [startDate, setStartDate] = useState("");
     const [endDate, setEndDate] = useState("");
+    const [users, setUsers] = useState([]);
 
     const [isEntrepreneurInvestmentsModalOpen, setIsEntrepreneurInvestmentsModalOpen] =useState(false);
     const [isEntrepreneurInvestmentsReportModalOpen, setIsEntrepreneurInvestmentsReportModalOpen] =useState(false);
@@ -50,21 +54,13 @@ function AdminEntrepreneurs() {
     const investmentSuccessMsg = useSelector((state) => state.investment.successMsg);
     let totalPage = useSelector((state) => state.entrepreneur.totalPage);
     let pageLimit = useSelector((state) => state.entrepreneur.pageLimit);
-    let users = [];
-    let userOptions = [];
 
-    const searchInvestor = (fullname) => {
-        dispatch(getAllUsersAsync({"offset": 0, "fullname": e, "birthdate":"", "marital_status":"", "employment_status":"", "housing_status":"", "phone_number":"", "monthly_income":"", "monthly_income__gte": "", "monthly_income__lte": ""}))
-        .then(() => {
-            users = useSelector((state) => state.auth.users)
-        })
-        let users = useSelector((state) => state.auth.users);
-        if (users && users.length > 0) {
-            userOptions = users.map((user) => ({
-                label: `${user.user.first_name} ${user.user.last_name}`,
-                value: user.id
-            }));
-        }
+    const searchInvestor = (e) => {
+        console.log(e.target.value);
+        dispatch(getAllUsersAsync({"offset": 0, "fullname": e.target.value, "birthdate":"", "marital_status":"", "employment_status":"", "housing_status":"", "phone_number":"", "monthly_income":"", "monthly_income__gte": "", "monthly_income__lte": ""}))
+        .then((res) => (
+            setUsers(res.payload.results)
+        ))
     }
 
     // ENTREPRENEUR INVESTMENTS SHOW MODAL
@@ -89,6 +85,18 @@ function AdminEntrepreneurs() {
 
     const handleInvestmentAddNewInvestorModalOk = () => {
         setInvestmentAddNewInvestorModalOpen(false);
+        addNewInvestorFormik.values.entrepreneur = entrepreneur.id
+        dispatch(postInvestmentAsync(addNewInvestorFormik.values)).then(() => {
+            dispatch(
+                getAllEntrepreneurAsync({
+                    offset: 0,
+                    owner: "",
+                    start_date: "",
+                    end_date: "",
+                    is_active: ""
+                })
+            );
+        })
     };
 
     const handleInvestmentAddNewInvestorModalCancel = () => {
@@ -143,8 +151,6 @@ function AdminEntrepreneurs() {
     };
 
     const handleEntrepreneurInvestmentUpdateModalOk = () => {
-        console.log(investment);
-        console.log(entrepreneur);
         setIsEntrepreneurInvestmentUpdateModalOpen(false);
         formik.values.id = investment && investment.id
         dispatch(putInvestmentAsync(formik.values))
@@ -211,22 +217,25 @@ function AdminEntrepreneurs() {
         },
         onSubmit: (values) => {
             values.entrepreneur = entrepreneur.id
-            dispatch(
-                getAllEntrepreneurAsync({
-                    offset: offset,
-                    owner: "",
-                    start_date: "",
-                    end_date: "",
-                    is_active: ""
-                })
-            );
-            dispatch(
-                getAllInvestmentsAsync({
-                    offset: 0,
-                    investor: investment.investor.id,
-                    entrepreneur: entrepreneur.id
-                })
-            );
+            dispatch(postInvestmentAsync(values))
+            .then(() => {
+                dispatch(
+                    getAllEntrepreneurAsync({
+                        offset: offset,
+                        owner: "",
+                        start_date: "",
+                        end_date: "",
+                        is_active: ""
+                    })
+                );
+                dispatch(
+                    getAllInvestmentsAsync({
+                        offset: 0,
+                        investor: investment.investor.id,
+                        entrepreneur: entrepreneur.id
+                    })
+                );
+            })
         },
     })
 
@@ -534,10 +543,12 @@ function AdminEntrepreneurs() {
                                         <tr>
                                             <th className="border border-slate-600">Adı Soyadı</th>
                                             <th className="border border-slate-600">Sifariş</th>
+                                            <th className="border border-slate-600">Balans</th>
                                             <th className="border border-slate-600">Yatırılan məbləğ</th>
                                             <th className="border border-slate-600">Əmsal</th>
                                             <th className="border border-slate-600">Yekun qazanc</th>
                                             <th className="border border-slate-600">İnvestisiya tarixi</th>
+                                            <th className="border border-slate-600">Status</th>
                                             <th className="border border-slate-600"></th>
                                         </tr>
                                     </thead>
@@ -551,6 +562,9 @@ function AdminEntrepreneurs() {
                                                     {entrepreneur.project_name}
                                                 </td>
                                                 <td className="border border-slate-700">
+                                                    {investment.investor.user.balance} AZN
+                                                </td>
+                                                <td className="border border-slate-700">
                                                     {investment.amount}
                                                 </td>
                                                 <td className="border border-slate-700">
@@ -561,6 +575,9 @@ function AdminEntrepreneurs() {
                                                 </td>
                                                 <td className="border border-slate-700">
                                                     {investment.investment_date}
+                                                </td>
+                                                <td className="border border-slate-700">
+                                                    {investment.is_submitted ? <FaCheck className='success mx-14' /> : <FaXmark className='error mx-14' />}
                                                 </td>
                                                 {
                                                     entrepreneur.is_finished ? 
@@ -628,62 +645,49 @@ function AdminEntrepreneurs() {
                     open={isInvestmentAddNewInvestorModalOpen}
                     onOk={handleInvestmentAddNewInvestorModalOk}
                     onCancel={handleInvestmentAddNewInvestorModalCancel}
-                >   
-                    <SelectDropdown
-                        label="investor"
-                        id="investor"
-                        name="investor"
-                        options={userOptions}
-                        onChange={(e)=>{
-                            console.log(e);
-                            
-                        }}
-                        onBlur={addNewInvestorFormik.handleBlur}
-                        touched={addNewInvestorFormik.touched.references}
-                        error={addNewInvestorFormik.errors.references}
-                        style={style}
-                    />
-                    {/* <Select
-                        showSearch
-                        style={{
-                            width: "100%",
-                        }}
-                        placeholder="Axtar"
-                        optionFilterProp="children"
-                        filterOption={(input, option) => {
-                            let user_name = ""
-                            dispatch(getAllUsersAsync({"offset": 0, "fullname": input, "birthdate":"", "marital_status":"", "employment_status":"", "housing_status":"", "phone_number":"", "monthly_income":"", "monthly_income__gte": "", "monthly_income__lte": ""}))
-                            .then(() => {
-                                let users = useSelector((state) => state.auth.users)
-                                console.log(users);
-                                users.map((user) => {
-                                    user_name = `${user.user.first_name} ${user.user.last_name}`
-                                    userOptions.push({value: user.id, label: `${user.user.first_name} ${user.user.last_name}`})
-                                })
-                            })
-                            (option?.label ?? '').includes(user_name)
-                            console.log(input);
-                            console.log(option);
-                            console.log(userOptions);
-                            
-                        }}
-                        filterSort={(optionA, optionB) =>
-                            (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
-                        }
-                        options={userOptions}
-                    /> */}
-                    <AuthInput
-                        label="Məbləğ"
-                        id="amount"
-                        name="amount"
-                        type="number"
-                        value={formik.values.amount}
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        touched={formik.touched.amount}
-                        error={formik.errors.amount}
-                        style={style}
-                    />
+                >
+                    <form onSubmit={addNewInvestorFormik.handleSubmit}>
+                        <AuthInput
+                            label="Məbləğ"
+                            id="amount"
+                            name="amount"
+                            type="text"
+                            onChange={(e)=>(searchInvestor(e))}
+                            style={style}
+                        />
+                        <br />
+                        <ul>
+                            {
+                                users.map((user, i) => (
+                                    <li key={user ? user.id : i}>
+                                        <RadioInput
+                                            label={`${user.user.first_name} ${user.user.last_name} | ${user.user.email} | Balans: ${user.user.balance} AZN`}
+                                            id={user.id}
+                                            name="user"
+                                            type="radio"
+                                            value={user.id}
+                                            onChange={e => addNewInvestorFormik.setFieldValue("investor", user.id)}
+                                            style={style}
+                                        />
+                                        <hr />
+                                    </li>
+                                ))
+                            }
+                        </ul>
+                        <br />
+                        <AuthInput
+                            label="Məbləğ"
+                            id="amount"
+                            name="amount"
+                            type="number"
+                            value={addNewInvestorFormik.values.amount}
+                            onChange={addNewInvestorFormik.handleChange}
+                            onBlur={addNewInvestorFormik.handleBlur}
+                            touched={addNewInvestorFormik.touched.amount}
+                            error={addNewInvestorFormik.errors.amount}
+                            style={style}
+                        />
+                    </form>
                 </Modal>
                 
                 <Modal

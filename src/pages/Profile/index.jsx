@@ -51,17 +51,20 @@ function Profile() {
         </div>
         <div className='w-full sm:w-full md:w-3/5 lg:w-3/5 xl:md:w-3/5 h-96 mb-2 border rounded drop-shadow-md'>
           <div className='w-full h-20 mb-20 md:mb-20 lg:mb-20 xl:mb-4 flex flex-col md:flex-col lg:flex-col xl:flex-row justify-between'>
-            <p className='md:text-4xl lg:text-4xl xl:text-5xl m-4'>
-              {
-                me ? <>
-                  {
-                    me.user ? <>
-                      {me.user.first_name} {me.user.last_name}
-                    </> : ""
-                  }
-                </>:""
-              }
-            </p>
+            <div>
+              <p className='md:text-4xl lg:text-4xl xl:text-5xl m-4'>
+                {
+                  me ? <>
+                    {
+                      me.user ? <>
+                        {me.user.first_name} {me.user.last_name}
+                      </> : ""
+                    }
+                  </>:""
+                }
+              </p>
+              <p className='md:text-1xl lg:text-1xl xl:text-2xl m-4'>Balans: {me && me.user ? me.user.balance : 0} AZN</p>
+            </div>
             <NavLink to="profile-update" className={`rounded btn-main-bg w-50 h-10 p-2 m-4`}>Məlumatları Dəyiş</NavLink>
           </div>
           <div className={`w-full h-72 flex flex-col justify-between p-4 rounded overflow-auto`}>
