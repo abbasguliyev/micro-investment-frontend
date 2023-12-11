@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useFormik } from "formik";
 import style from "./style.module.css"
@@ -50,7 +50,6 @@ function AdminUserCreate() {
             password: "",
         },
         onSubmit: (values) => {
-            console.log(values);
             if (values.profile_picture == "") {
                 values.profile_picture = null;
             }

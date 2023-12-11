@@ -1,12 +1,11 @@
 import { useEffect, useState } from 'react'
-import { NavLink, useNavigate } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { useFormik } from 'formik';
 import style from "./style.module.css"
 import { getAllEntrepreneurAsync } from '../../redux/EntrepreneurSlice/EntrepreneurSlice';
 import { getMeAsync } from '../../redux/AuthSlice/AuthSlice';
-import { Pagination, DatePicker, Space } from 'antd';
-import EntrepreneurDetail from '../EntrepreneurDetail';
+import { Pagination, DatePicker } from 'antd';
 
 
 function Home() {

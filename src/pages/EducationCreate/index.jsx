@@ -1,20 +1,12 @@
-import { useEffect, useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useFormik } from "formik";
 import validations from "./validation";
 import style from "./style.module.css";
 import AuthInput from "../../components/InputComponents/AuthInput";
 import ResponseMessage from "../../components/ResponseMessage";
-import {
-    postExperiencesAsync,
-    putExperiencesAsync,
-    resetExperienceSlice,
-} from "../../redux/ExperienceSlice/ExperienceSlice";
-import TextAreaInput from "../../components/InputComponents/TextAreaInput";
 import { postEducationAsync, resetEducationSlice } from "../../redux/EducationSlice/EducationSlice";
 import Checkbox from "../../components/InputComponents/Checkbox";
-import * as yup from 'yup';
 
 function EducationCreate() {
     const dispatch = useDispatch();

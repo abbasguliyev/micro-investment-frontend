@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
-import { Button, notification, Space } from 'antd';
-import { resetInvestmentSlice } from "../../redux/InvestmentSlice/InvestmentSlice";
+import { notification } from 'antd';
 import { useDispatch } from "react-redux";
 
 function ResponseMessage({message="", type="success", slice}) {

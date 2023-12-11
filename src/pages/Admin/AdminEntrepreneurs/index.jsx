@@ -10,11 +10,8 @@ import {
 } from "../../../redux/InvestmentSlice/InvestmentSlice";
 import ResponseMessage from "../../../components/ResponseMessage";
 import { NavLink } from "react-router-dom";
-import { MdDelete } from "react-icons/md";
 import AuthInput from "../../../components/InputComponents/AuthInput";
-import SelectDropdown from "../../../components/InputComponents/SelectDropdown";
-import { setIn, useFormik } from "formik";
-import validations from "./validation";
+import { useFormik } from "formik";
 import style from "./style.module.css";
 import {
     getAllEntrepreneurAsync,
@@ -22,7 +19,6 @@ import {
     resetEntrepreneurSlice,
 } from "../../../redux/EntrepreneurSlice/EntrepreneurSlice";
 import Checkbox from "../../../components/InputComponents/Checkbox";
-import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import RadioInput from "../../../components/InputComponents/RadioInput";
 import { getAllUsersAsync } from "../../../redux/AuthSlice/AuthSlice";
 import { FaCheck } from "react-icons/fa";
@@ -40,10 +36,8 @@ function AdminEntrepreneurs() {
     const [isEntrepreneurInvestmentUpdateModalOpen, setIsEntrepreneurInvestmentUpdateModalOpen] =useState(false);
     const [isInvestmentAddNewInvestorModalOpen, setInvestmentAddNewInvestorModalOpen] =useState(false);
     const [isEntrepreneurFinishedModalOpen, setIsEntrepreneurFinishedModalOpen] =useState(false);
-    const [entrepreneurId, setEntrepreneurId] = useState(null);
     const [entrepreneur, setEntrepreneur] = useState(null);
     const [investment, setInvestment] = useState(null);
-    const [investor, setInvestor] = useState(null);
     const dispatch = useDispatch();
 
     let entrepreneurs = useSelector((state) => state.entrepreneur.entrepreneurs);
@@ -56,7 +50,6 @@ function AdminEntrepreneurs() {
     let pageLimit = useSelector((state) => state.entrepreneur.pageLimit);
 
     const searchInvestor = (e) => {
-        console.log(e.target.value);
         dispatch(getAllUsersAsync({"offset": 0, "fullname": e.target.value, "birthdate":"", "marital_status":"", "employment_status":"", "housing_status":"", "phone_number":"", "monthly_income":"", "monthly_income__gte": "", "monthly_income__lte": ""}))
         .then((res) => (
             setUsers(res.payload.results)

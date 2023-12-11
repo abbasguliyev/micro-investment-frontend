@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { postEntrepreneurCreateAsync, resetEntrepreneurSlice } from "../../redux/EntrepreneurSlice/EntrepreneurSlice";
 import { useFormik } from "formik";
 import AuthInput from "../../components/InputComponents/AuthInput";
@@ -31,11 +31,9 @@ function EntrepreneurCreate() {
             charity_to_the_fund_percentage: 7,
         },
         onSubmit: (values) => {
-            console.log(values);
             dispatch(postEntrepreneurCreateAsync(values))
             .then(res => {
                 localStorage.removeItem("entrepreneurForm")
-                console.log(res);
                 navigate("/entrepreneur-image-create", {state: {id: res.payload.id, project_name: res.payload.project_name}});
             });
         }
