@@ -74,7 +74,7 @@ const EntreprenuerTable = () => {
                   <td className="border border-slate-700">{entrepreneur.start_date}</td>
                   <td className="border border-slate-700">{entrepreneur.end_date}</td>
                   <td className="border border-slate-700">{entrepreneur.is_active ? <p className='success'>Aktiv</p> : <p className='error'>Deaktiv</p>}</td>
-                  <td className="border border-slate-700">{entrepreneur.is_finished ? <p className='success'>Bitib</p> : <p className='error'>Davam edir</p>}</td>
+                  <td className="border border-slate-700">{entrepreneur.is_finished ? <p className='error'>Bitib</p> : <p className='success'>Davam edir</p>}</td>
                 </tr>
               ))
             }
