@@ -37,7 +37,6 @@ export const postRegisterAsync = createAsyncThunk('postRegisterAsync', async (da
         const res = await axios.post('users/', form, { headers: { 'Content-Type': 'multipart/form-data', 'Authorization': "" }})
         return res.data;
     } catch (error) {
-        console.log(error);
         throw {'message': error.response.data.detail};
     }
 })
@@ -62,7 +61,6 @@ export const putUserProfileAsync = createAsyncThunk('putUserProfileAsync', async
             form.append("profile_picture", data.profile_picture)
         }
         form.append("business_activities", data.business_activities)
-        console.log(form);
         const res = await axios.put(`users/${data.id}/`, form, { headers: { 'Content-Type': 'multipart/form-data' }});
         return res.data;
     } catch (error) {
@@ -89,7 +87,6 @@ export const getAllUsersAsync = createAsyncThunk('getAllUsersAsync', async (valu
         const res = await axios.get(`users/?limit=10&offset=${values.offset}&fullname=${values.fullname}&birthdate=${values.birthdate}&marital_status=${values.marital_status}&employment_status=${values.employment_status}&housing_status=${values.housing_status}&phone_number=${values.phone_number}&monthly_income=${values.monthly_income}&monthly_income__gte=${values.monthly_income__gte}&monthly_income__lte=${values.monthly_income__lte}`, { headers: { 'Authorization': '' }})
         return res.data;
     } catch (error) {
-        console.log(error);
         // If the API call fails, the error will be thrown and caught here.
         throw {'message': error.response.data.detail};
     }
@@ -123,7 +120,6 @@ export const AuthSlice = createSlice({
             state.successMsg = null;
         })
         builder.addCase(postLoginAsync.fulfilled, (state, action) => {
-            console.log(action);
             state.isLoading = false;
             localStorage.setItem("access", action.payload.access)
             state.me = action.payload.user_details;

@@ -9,7 +9,6 @@ export const getAllEntrepreneurAsync = createAsyncThunk('getAllEntrepreneurAsync
         const res = await axios.get(`entrepreneurs/?limit=10&offset=${values.offset}&owner=${values.owner}&project_name__icontains=${values.project_name}&start_date__gte=${values.start_date}&end_date__gte=${values.end_date}&is_active=${values.is_active}&is_finished=${values.is_finished}`)
         return res.data;
     } catch (error) {
-        console.log(error);
         // If the API call fails, the error will be thrown and caught here.
         throw {'message': error.response.data.detail};
     }
@@ -20,7 +19,6 @@ export const getEntrepreneurDetailAsync = createAsyncThunk('getEntrepreneurDetai
         const res = await axios.get(`entrepreneurs/${id}`)
         return res.data
     } catch (error) {
-        console.log(error);
         // If the API call fails, the error will be thrown and caught here.
         throw {'message': error.response.data.detail};
     }
@@ -61,7 +59,6 @@ export const getAllEntrepreneurImageAsync = createAsyncThunk('getAllEntrepreneur
         const res = await axios.get(`entrepreneurs/images/?entrepreneur=${values.entrepreneur}`)
         return res.data;
     } catch (error) {
-        console.log(error);
         // If the API call fails, the error will be thrown and caught here.
         throw {'message': error.response.data.detail};
     }

@@ -1,14 +1,10 @@
-import { Modal, Pagination } from "antd";
+import { Pagination } from "antd";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllInvestmentsAsync, resetInvestmentSlice } from "../../../redux/InvestmentSlice/InvestmentSlice";
 import ResponseMessage from "../../../components/ResponseMessage";
-import { NavLink } from "react-router-dom";
-import { MdDelete } from "react-icons/md";
-import AuthInput from "../../../components/InputComponents/AuthInput";
 import { useFormik } from "formik";
 import validations from "./validation";
-import style from './style.module.css'
 
 function AdminInvestments() {
     let [currentPage, setCurrentPage] = useState(1);
@@ -55,7 +51,6 @@ function AdminInvestments() {
             amount: ""
         },
         onSubmit: (values) => {
-            console.log(values);
             if (values.profile_picture == "") {
                 values.profile_picture = null;
             }

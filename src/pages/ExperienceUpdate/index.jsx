@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { NavLink, useNavigate, useParams } from "react-router-dom";
+import { useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useFormik } from "formik";
 import validations from "./validation";
@@ -8,7 +8,6 @@ import AuthInput from "../../components/InputComponents/AuthInput";
 import ResponseMessage from "../../components/ResponseMessage";
 import {
     getExperienceDetailsAsync,
-    postExperiencesAsync,
     putExperiencesAsync,
     resetExperienceSlice,
 } from "../../redux/ExperienceSlice/ExperienceSlice";

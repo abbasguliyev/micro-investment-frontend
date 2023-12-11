@@ -17,7 +17,6 @@ const EntreprenuerTable = () => {
 
   const changePage = (e) => {
     setCurrentPage(e);
-    console.log(e);
     let offset = (e - 1) * pageLimit;
     dispatch(getAllEntrepreneurAsync({owner:me?me.id:"", offset: offset, start_date: "", end_date: ""}));
   };

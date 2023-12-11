@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useFormik } from "formik";
@@ -49,7 +49,6 @@ function Register() {
             password: "",
         },
         onSubmit: (values) => {
-            console.log(values);
             if (values.profile_picture == "") {
                 values.profile_picture = null;
             }

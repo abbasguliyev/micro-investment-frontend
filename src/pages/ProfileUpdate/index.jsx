@@ -38,7 +38,6 @@ function ProfileUpdate() {
             business_activities: me ? me.business_activities || "" : ""
         },
         onSubmit: (values) => {
-            console.log(values);
             values.id = me.id
             values.profile_picture = profilePicture
             if (values.profile_picture == "") {
@@ -48,7 +47,6 @@ function ProfileUpdate() {
             .then(() => {
                 navigate("/profile")
             })
-            .catch((err) => {console.log(err);})
         },
     });
 
@@ -58,9 +56,6 @@ function ProfileUpdate() {
     useEffect(() => {
         dispatch(getMeAsync())
     }, [])
-
-    console.log(formik.values);
-    console.log(formik.values.employment_status === "working");
 
     useEffect(() => {
         if (me) {

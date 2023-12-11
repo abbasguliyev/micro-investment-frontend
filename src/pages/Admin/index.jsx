@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import AdminUsers from './AdminUsers';
 import AdminInvestments from './AdminInvestments';
 import AdminEntrepreneurs from './AdminEntrepreneurs';

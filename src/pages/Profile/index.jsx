@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { NavLink, useLocation, Routes, Route } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import EntreprenuerTable from '../../components/Profile/EntreprenuerTable'
 import Education from '../../components/Profile/Education'
