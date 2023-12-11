@@ -104,6 +104,18 @@ body {
     transition: all ease 0.4s;
 }
 
+.active-btn-main-bg {
+    background-color: var(--second);
+    color: var(--main);
+}
+
+.active-btn-main-bg:hover {
+    background-color: var(--main);
+    color: var(--second);
+    border: 1px solid var(--second);
+    transition: all ease 0.4s;
+}
+
 /* Header */
 
 .header {

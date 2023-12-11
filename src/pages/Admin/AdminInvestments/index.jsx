@@ -100,13 +100,7 @@ function AdminInvestments() {
                     slice={resetInvestmentSlice()}
                 />
             )}
-            <NavLink
-                onClick={showInvestmentCreateModal}
-                className={`rounded btn-main-bg text-center w-40 h-10 p-2 mb-2`}
-            >
-                Yeni əlavə et
-            </NavLink>
-            <table className="table-auto w-full">
+            <table className="table-auto w-full text-center">
                 <thead>
                     <tr>
                         <th className="border border-slate-600">Adı Soyadı</th>
@@ -115,7 +109,8 @@ function AdminInvestments() {
                         <th className="border border-slate-600">Əmsal</th>
                         <th className="border border-slate-600">Yekun qazanc</th>
                         <th className="border border-slate-600">İnvestisiya tarixi</th>
-                        <th className="border border-slate-600"></th>
+                        <th className="border border-slate-600">Aktiv/Deaktiv</th>
+                        {/* <th className="border border-slate-600"></th> */}
                     </tr>
                 </thead>
                 <tbody>
@@ -139,52 +134,21 @@ function AdminInvestments() {
                             <td className="border border-slate-700">
                                 {investment.investment_date}
                             </td>
-                            <td className="border border-slate-700 text-center">
-                                <NavLink
-                                    className={`p-2`}
-                                    onClick={() => showInvestmentDeleteModal(investment.id)}
-                                >
-                                    <MdDelete
-                                        className="inline"
-                                        style={{
-                                            color: "#CF4B44",
-                                            fontSize: "20px",
-                                        }}
-                                    />
-                                </NavLink>
+                            <td className="border border-slate-700">
+                                {investment.is_submitted ? (<p className="success">Aktiv</p>) : (<p className="error">Deaktiv</p>)}
                             </td>
                         </tr>
                     ))}
                 </tbody>
             </table>
 
-            <Modal
+            {/* <Modal
                 title={`Silmək istədiyinizə əminsinizmi?`}
                 okType="default"
                 open={isInvestmentDeleteModalOpen}
                 onOk={handleInvestmentDeleteModalOk}
                 onCancel={handleInvestmentDeleteModalCancel}
-            ></Modal>
-            <Modal
-                title={`Investisiya əlavə edin`}
-                okType="default"
-                open={isInvestmentCreateModalOpen}
-                onOk={handleInvestmentCreateModalOk}
-                onCancel={handleInvestmentCreateModalCancel}
-            >
-                <AuthInput
-                    label="Investisiya məbləği"
-                    id="amount"
-                    name="amount"
-                    type="number"
-                    value={formik.values.amount}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    touched={formik.touched.amount}
-                    error={formik.errors.amount}
-                    style={style}
-                />
-            </Modal>
+            ></Modal> */}
             {/* ***************** Pagination ********************* */}
             <div>
                 <div className="flex justify-center mt-10">

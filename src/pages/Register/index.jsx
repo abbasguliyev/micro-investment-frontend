@@ -27,7 +27,6 @@ function Register() {
             value: user.id
         }));
     }
-    
 
     const formik = useFormik({
         initialValues: {

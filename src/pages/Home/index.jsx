@@ -27,6 +27,8 @@ function Home() {
     onSubmit: (values) => {
       values.start_date = startDate;
       values.end_date = endDate;
+      values.is_active = true
+      values.is_finished = false
       let filteredValues = { ...values };
       dispatch(getAllEntrepreneurAsync(filteredValues));
     },
@@ -34,6 +36,8 @@ function Home() {
 
   useEffect((values) => {
     formik.values.owner = ""
+    formik.values.is_active = true
+    formik.values.is_finished = false
     let filteredValues = { ...formik.values };
     dispatch(getAllEntrepreneurAsync(filteredValues));
     dispatch(getMeAsync());
@@ -45,6 +49,8 @@ function Home() {
       setCurrentPage(e);
       let offset = (e - 1) * pageLimit;
       formik.values.offset = offset;
+      formik.values.is_active = true
+      formik.values.is_finished = false
       let filteredValues = { ...formik.values };
       dispatch(getAllEntrepreneurAsync(filteredValues));
   };

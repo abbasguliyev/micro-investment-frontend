@@ -28,9 +28,12 @@ export const postRegisterAsync = createAsyncThunk('postRegisterAsync', async (da
         form.append("monthly_income", data.monthly_income)
         form.append("about", data.about)
         form.append("business_activities", data.business_activities)
-        form.append("profile_picture", data.profile_picture)
+        if (data.profile_picture != null) {
+            form.append("profile_picture", data.profile_picture)
+        }
         form.append("references", data.references)
         form.append("password", data.password)
+        
         const res = await axios.post('users/', form, { headers: { 'Content-Type': 'multipart/form-data', 'Authorization': "" }})
         return res.data;
     } catch (error) {
@@ -55,8 +58,11 @@ export const putUserProfileAsync = createAsyncThunk('putUserProfileAsync', async
         form.append("debt_amount", data.debt_amount)
         form.append("monthly_income", data.monthly_income)
         form.append("about", data.about)
-        form.append("profile_picture", data.profile_picture)
+        if (data.profile_picture != null) {
+            form.append("profile_picture", data.profile_picture)
+        }
         form.append("business_activities", data.business_activities)
+        console.log(form);
         const res = await axios.put(`users/${data.id}/`, form, { headers: { 'Content-Type': 'multipart/form-data' }});
         return res.data;
     } catch (error) {
@@ -75,8 +81,12 @@ export const getMeAsync = createAsyncThunk('getMeAsync', async () => {
 })
 
 export const getAllUsersAsync = createAsyncThunk('getAllUsersAsync', async (values) => {
+    if (values.fullname == undefined) {
+        values.fullname = ""
+    }
+    
     try {
-        const res = await axios.get(`users/?limit=10&offset=${values.offset}&birthdate=${values.birthdate}&marital_status=${values.marital_status}&employment_status=${values.employment_status}&housing_status=${values.housing_status}&phone_number=${values.phone_number}&monthly_income=${values.monthly_income}&monthly_income__gte=${values.monthly_income__gte}&monthly_income__lte=${values.monthly_income__lte}`, { headers: { 'Authorization': '' }})
+        const res = await axios.get(`users/?limit=10&offset=${values.offset}&fullname=${values.fullname}&birthdate=${values.birthdate}&marital_status=${values.marital_status}&employment_status=${values.employment_status}&housing_status=${values.housing_status}&phone_number=${values.phone_number}&monthly_income=${values.monthly_income}&monthly_income__gte=${values.monthly_income__gte}&monthly_income__lte=${values.monthly_income__lte}`, { headers: { 'Authorization': '' }})
         return res.data;
     } catch (error) {
         console.log(error);

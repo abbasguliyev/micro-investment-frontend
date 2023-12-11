@@ -12,6 +12,7 @@ import { resetExperienceSlice } from '../../redux/ExperienceSlice/ExperienceSlic
 
 function Profile() {
   const [showTab, setShowTab] =useState(<Investments/>);
+  const [title, setTitle] =useState("Yatırımlarım");
 
   const dispatch = useDispatch()
   
@@ -22,6 +23,8 @@ function Profile() {
   let educationErrorMsg = useSelector((state) => state.education.error)
   let experienceSuccessMsg = useSelector((state) => state.experience.successMsg)
   let experienceErrorMsg = useSelector((state) => state.experience.error)
+  let investmentSuccessMsg = useSelector((state) => state.investment.successMsg)
+  let investmentErrorMsg = useSelector((state) => state.investment.error)
 
   useEffect(() => {
     dispatch(getMeAsync())
@@ -35,6 +38,9 @@ function Profile() {
       {educationSuccessMsg && (<ResponseMessage message={educationSuccessMsg} type="success" slice={resetEducationSlice()} />)}
       {experienceErrorMsg && (<ResponseMessage message={experienceErrorMsg} type="error" slice={resetExperienceSlice()} />)}
       {experienceSuccessMsg && (<ResponseMessage message={experienceSuccessMsg} type="success" slice={resetExperienceSlice()} />)}
+      {investmentErrorMsg && (<ResponseMessage message={investmentErrorMsg} type="error" slice={resetEducationSlice()} />)}
+      {investmentSuccessMsg && (<ResponseMessage message={investmentSuccessMsg} type="success" slice={resetEducationSlice()} />)}
+      
       <div className='flex flex-col md:flex-row lg:flex-row xl:flex-row'>
         <div className='w-full sm:w-full md:w-2/5 lg:w-2/5 xl:md:w-2/5 h-96 border mr-2 mb-2 rounded drop-shadow'>
           {
@@ -45,17 +51,20 @@ function Profile() {
         </div>
         <div className='w-full sm:w-full md:w-3/5 lg:w-3/5 xl:md:w-3/5 h-96 mb-2 border rounded drop-shadow-md'>
           <div className='w-full h-20 mb-20 md:mb-20 lg:mb-20 xl:mb-4 flex flex-col md:flex-col lg:flex-col xl:flex-row justify-between'>
-            <p className='md:text-4xl lg:text-4xl xl:text-5xl m-4'>
-              {
-                me ? <>
-                  {
-                    me.user ? <>
-                      {me.user.first_name} {me.user.last_name}
-                    </> : ""
-                  }
-                </>:""
-              }
-            </p>
+            <div>
+              <p className='md:text-4xl lg:text-4xl xl:text-5xl m-4'>
+                {
+                  me ? <>
+                    {
+                      me.user ? <>
+                        {me.user.first_name} {me.user.last_name}
+                      </> : ""
+                    }
+                  </>:""
+                }
+              </p>
+              <p className='md:text-1xl lg:text-1xl xl:text-2xl m-4'>Balans: {me && me.user ? me.user.balance : 0} AZN</p>
+            </div>
             <NavLink to="profile-update" className={`rounded btn-main-bg w-50 h-10 p-2 m-4`}>Məlumatları Dəyiş</NavLink>
           </div>
           <div className={`w-full h-72 flex flex-col justify-between p-4 rounded overflow-auto`}>
@@ -178,12 +187,26 @@ function Profile() {
       </div>
       <div className='w-full h-96 border pt-4 mt-5 mr-2 pb-7 rounded drop-shadow-md overflow-auto'>
         <div>
-            <button onClick={()=>{setShowTab(<Investments/>)}} className={`p-2 ml-2 rounded btn-main-bg`}>Yatırımlarım</button>
-            <button onClick={()=>{setShowTab(<EntreprenuerTable/>)}} className={`p-2 ml-2 rounded btn-main-bg`}>Sifarişlərim</button>
-            <button onClick={()=>{setShowTab(<Education/>)}} className={`p-2 ml-2 rounded btn-main-bg`}>Təhsilim</button>
-            <button onClick={()=>{setShowTab(<Experience/>)}} className={`p-2 ml-2 rounded btn-main-bg`}>Təcrübələrim</button>
+            <button onClick={()=>{
+              setShowTab(<Investments/>)
+              setTitle("Yatırımlarım")
+            }} className={`p-2 ml-2 rounded btn-main-bg`}>Yatırımlarım</button>
+            <button onClick={()=>{
+              setShowTab(<EntreprenuerTable/>)
+              setTitle("Lahiyələrim")
+            }} className={`p-2 ml-2 rounded btn-main-bg`}>Lahiyələrim</button>
+            <button onClick={()=>{
+              setShowTab(<Education/>)
+              setTitle("Təhsilim")
+            }} className={`p-2 ml-2 rounded btn-main-bg`}>Təhsilim</button>
+            <button onClick={()=>{
+              setShowTab(<Experience/>)
+              setTitle("Təcrübələrim")
+            }} className={`p-2 ml-2 rounded btn-main-bg`}>Təcrübələrim</button>
         </div>
         <div>
+          <h4 className='mx-auto max-w-7xl py-6 sm:px-6 lg:px-8 flex flex-col text-lg text-xl font-bold'>{title}</h4>
+
           {
             showTab
           }

@@ -12,6 +12,7 @@ import { useNavigate } from "react-router-dom";
 
 
 function ProfileUpdate() {
+    const [profilePicture, setProfilePicture] = useState(null);
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -39,6 +40,10 @@ function ProfileUpdate() {
         onSubmit: (values) => {
             console.log(values);
             values.id = me.id
+            values.profile_picture = profilePicture
+            if (values.profile_picture == "") {
+                values.profile_picture = null;
+            }
             dispatch(putUserProfileAsync(values))
             .then(() => {
                 navigate("/profile")
@@ -295,7 +300,8 @@ function ProfileUpdate() {
                             id="profile_picture"
                             name="profile_picture"
                             type="file"
-                            onChange={e=>{formik.setFieldValue("profile_picture", e.target.files[0])}}
+                            // onChange={e=>{formik.setFieldValue("profile_picture", e.target.files[0])}}
+                            onChange={e=>{setProfilePicture(e.target.files[0])}}
                             onBlur={formik.handleBlur}
                             style={style}
                         />

@@ -19,12 +19,12 @@ const EntreprenuerTable = () => {
     setCurrentPage(e);
     console.log(e);
     let offset = (e - 1) * pageLimit;
-    dispatch(getAllEntrepreneurAsync({"owner":me?me.id:"", "offset": offset, "start_date": "", "end_date": ""}));
+    dispatch(getAllEntrepreneurAsync({owner:me?me.id:"", offset: offset, start_date: "", end_date: ""}));
   };
 
   useEffect(() => {
     dispatch(getMeAsync())
-    dispatch(getAllEntrepreneurAsync({"owner":me?me.id:"", "offset": 0, "start_date": "", "end_date": ""}))
+    dispatch(getAllEntrepreneurAsync({owner:me?me.id:"", offset: 0, start_date: "", end_date: ""}))
   }, [])
 
   return (
@@ -54,6 +54,8 @@ const EntreprenuerTable = () => {
               <th className="border border-slate-600">Yekunlaşma tarixi</th>
               <th className="border border-slate-600">Başlama tarixi</th>
               <th className="border border-slate-600">Bitmə tarixi</th>
+              <th className="border border-slate-600">Aktiv/deaktiv</th>
+              <th className="border border-slate-600">Davam edirmi</th>
             </tr>
           </thead>
           <tbody>
@@ -71,6 +73,8 @@ const EntreprenuerTable = () => {
                   <td className="border border-slate-700">{entrepreneur.finished_date}</td>
                   <td className="border border-slate-700">{entrepreneur.start_date}</td>
                   <td className="border border-slate-700">{entrepreneur.end_date}</td>
+                  <td className="border border-slate-700">{entrepreneur.is_active ? <p className='success'>Aktiv</p> : <p className='error'>Deaktiv</p>}</td>
+                  <td className="border border-slate-700">{entrepreneur.is_finished ? <p className='error'>Bitib</p> : <p className='success'>Davam edir</p>}</td>
                 </tr>
               ))
             }

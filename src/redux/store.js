@@ -4,7 +4,7 @@ import InvestmentSlice from "./InvestmentSlice/InvestmentSlice";
 import EntrepreneurSlice from "./EntrepreneurSlice/EntrepreneurSlice";
 import EducationSlice from "./EducationSlice/EducationSlice";
 import ExperienceSlice from "./ExperienceSlice/ExperienceSlice";
-import EntrepreneurFormSlice from "./EntrepreneurFormSlice/EntrepreneurFormSlice";
+import CompanyBalanceSlice from "./CompanyBalanceSlice/CompanyBalanceSlice";
 
 export default configureStore({
     reducer: {
@@ -13,6 +13,6 @@ export default configureStore({
         experience: ExperienceSlice,
         investment: InvestmentSlice,
         entrepreneur: EntrepreneurSlice,
-        entrepreneurForm: EntrepreneurFormSlice
+        companyBalance: CompanyBalanceSlice
     }
 })

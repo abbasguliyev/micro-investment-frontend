@@ -2,8 +2,11 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "../../axios";
 
 export const getAllEntrepreneurAsync = createAsyncThunk('getAllEntrepreneurAsync', async (values) => {
+    if (values.project_name == undefined) {
+        values.project_name = ""
+    }
     try {
-        const res = await axios.get(`entrepreneurs/?limit=10&offset=${values.offset}&owner=${values.owner}&start_date__gte=${values.start_date}&end_date__gte=${values.end_date}&is_active=true`)
+        const res = await axios.get(`entrepreneurs/?limit=10&offset=${values.offset}&owner=${values.owner}&project_name__icontains=${values.project_name}&start_date__gte=${values.start_date}&end_date__gte=${values.end_date}&is_active=${values.is_active}&is_finished=${values.is_finished}`)
         return res.data;
     } catch (error) {
         console.log(error);
@@ -26,6 +29,15 @@ export const getEntrepreneurDetailAsync = createAsyncThunk('getEntrepreneurDetai
 export const postEntrepreneurCreateAsync = createAsyncThunk('postEntrepreneurCreateAsync', async (data) => {
     try {
         const res = await axios.post('entrepreneurs/', data);
+        return res.data;
+    } catch (error) {
+        throw {'message': error.response.data.detail};
+    }
+})
+
+export const putEntrepreneurAsync = createAsyncThunk('putEntrepreneurAsync', async (data) => {
+    try {
+        const res = await axios.put(`entrepreneurs/${data.id}/`, data);
         return res.data;
     } catch (error) {
         throw {'message': error.response.data.detail};
@@ -120,6 +132,22 @@ export const EntrepreneurSlice = createSlice({
             state.error = null;
         })
         builder.addCase(postEntrepreneurCreateAsync.rejected, (state, action) => {
+            state.error = action.error.message
+            state.isLoading = false;
+            state.successMsg = null;
+        })
+        // Entrepreneur Update Reducers
+        builder.addCase(putEntrepreneurAsync.pending, (state, action) => {
+            state.isLoading = true;
+            state.successMsg = null;
+            state.error = null;
+        })
+        builder.addCase(putEntrepreneurAsync.fulfilled, (state, action) => {
+            state.isLoading = false;
+            state.successMsg = action.payload.detail;
+            state.error = null;
+        })
+        builder.addCase(putEntrepreneurAsync.rejected, (state, action) => {
             state.error = action.error.message
             state.isLoading = false;
             state.successMsg = null;

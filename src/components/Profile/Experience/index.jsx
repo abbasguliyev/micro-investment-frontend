@@ -105,7 +105,7 @@ const Experience = () => {
                                         className="inline"
                                         style={{
                                             color: "#56AF55",
-                                            "font-size": "20px",
+                                            fontSize: "20px",
                                         }}
                                     />
                                 </NavLink>

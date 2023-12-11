@@ -1,7 +1,5 @@
-import { Button, Modal } from "antd";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getAllEntrepreneurFormAsync } from "../../redux/EntrepreneurFormSlice/EntrepreneurFormSlice";
 import { useLocation } from "react-router-dom";
 import { getAllEntrepreneurImageAsync, postEntrepreneurImageCreateAsync, resetEntrepreneurSlice } from "../../redux/EntrepreneurSlice/EntrepreneurSlice";
 import { useFormik } from "formik";
