@@ -83,7 +83,7 @@ function Header() {
               <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
                 {/* Profile dropdown */}
                 <p className=' text-white'>
-                  {me != null ? <>{me.user.first_name} {me.user.last_name}</>: ""}
+                  {me && me.user ? <>{me.user.first_name} {me.user.last_name}</>: ""}
                 </p>
                 <Menu as="div" className="relative ml-3">
                   <div>
