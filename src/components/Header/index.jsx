@@ -16,14 +16,6 @@ function Header() {
 
   useEffect(() => {
     dispatch(getMeAsync())
-    .then(() => {
-      if (me == null) {
-        navigate("/login");
-      }
-    })
-    .catch((err) => {
-      navigate("/");
-    });
   }, [dispatch])
 
 

@@ -411,7 +411,7 @@ function AdminEntrepreneurs() {
                         <button type='submit' className={`${style.search_btn} btn-main-bg rounded mt-4`}>Axtar</button>
                     </form>
                 </div>
-                <div className="w-full sm:w-full md:w-full lg:w-3/4 grid gap-4 lg:grid-cols-2 md:grid-cols-1 sm:grid-cols-1">
+                <div className="w-full sm:w-full md:w-full lg:w-3/4 grid gap-4 lg:grid-cols-2 md:grid-cols-1 sm:grid-cols-1 text-sm overflow-y-hidden overflow-x-auto">
                     <table className="table-auto w-full h-fit">
                         <thead>
                             <tr>
@@ -527,10 +527,11 @@ function AdminEntrepreneurs() {
                 >
                     {
                         entrepreneur && entrepreneur.investments ? (
-                            <>  
+                            <div className=" overflow-y-hidden overflow-x-auto">  
                                 {
                                     !entrepreneur.is_finished && <a onClick={() => showInvestmentAddNewInvestorModal(entrepreneur)} className="cursor-pointer inline-block px-3 mb-2 border rounded">Yeni İnvestor</a>
                                 }
+                                
                                 <table className="table-auto w-full">
                                     <thead>
                                         <tr>
@@ -594,7 +595,7 @@ function AdminEntrepreneurs() {
                                         ))}
                                     </tbody>
                                 </table>
-                            </>
+                            </div>
                         ) : ""
                     }
                 </Modal>

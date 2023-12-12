@@ -80,7 +80,7 @@ function AdminInvestments() {
         dispatch(getAllInvestmentsAsync({offset: offset,investor: "",entrepreneur: ""}));
     };
     return (
-        <div className="mt-4 mx-4 flex flex-col">
+        <div className="mt-4 mx-4 flex flex-col overflow-x-auto overflow-y-hidden">
             {errorMsg && (
                 <ResponseMessage
                     message={errorMsg}

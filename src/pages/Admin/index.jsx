@@ -1,12 +1,21 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import AdminUsers from './AdminUsers';
 import AdminInvestments from './AdminInvestments';
 import AdminEntrepreneurs from './AdminEntrepreneurs';
 import AdminInvestorPayments from './AdminInvestorPayments';
+import { useDispatch, useSelector } from 'react-redux';
+import { getCompanyBalanceAsync } from '../../redux/CompanyBalanceSlice/CompanyBalanceSlice';
 
 function Admin() {
   const [showTab, setShowTab] =useState(<AdminUsers />);
   const [title, setTitle] =useState("İstifadəçilər");
+  const dispatch = useDispatch();
+
+  let companyBalance = useSelector((state) => state.companyBalance.companyBalances)
+
+  useEffect(() => {
+    dispatch(getCompanyBalanceAsync())
+  }, [dispatch])
 
 
   return (
@@ -30,6 +39,14 @@ function Admin() {
               setTitle("Ödəniş Hesabatı")
             }} className={'btn-main-bg p-2 ml-2 rounded'}>Ödəniş Hesabatı</button>
         </div>
+        {
+          companyBalance ? companyBalance.map((balance) => (
+            <div key={balance.id} className='mx-auto max-w-7xl py-6 sm:px-6 lg:px-8 flex flex-col text-lg text-xl font-bold'>
+              <p>Sədəqə fondu: {balance.charity_fund} AZN</p>
+              <p>Borc Fondu: {balance.debt_fund} AZN</p> 
+            </div>
+          )) : ""
+        }
         <div>
           <h4 className='mx-auto max-w-7xl py-6 sm:px-6 lg:px-8 flex flex-col text-lg text-xl font-bold'>{title}</h4>
           {
