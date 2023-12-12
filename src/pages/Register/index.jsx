@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useFormik } from "formik";
@@ -11,6 +11,7 @@ import TextAreaInput from "../../components/InputComponents/TextAreaInput";
 import { getAllUsersAsync, postRegisterAsync, resetAuthSlice } from "../../redux/AuthSlice/AuthSlice";
 import ResponseMessage from "../../components/ResponseMessage";
 import validations from "./validation";
+import Checkbox from "../../components/InputComponents/Checkbox";
 
 
 function Register() {
@@ -19,13 +20,9 @@ function Register() {
 
     let users = useSelector((state) => state.auth.users)
     let errorMsg = useSelector((state) => state.auth.error)
-    
-    let users_name = []
-    if (users && users.length > 0) {
-        users_name = users.map((user) => ({
-            label: `${user.user.first_name} ${user.user.last_name}`,
-            value: user.id
-        }));
+
+    const searchInvestor = (e) => {
+        dispatch(getAllUsersAsync({"offset": 0, "fullname": e.target.value, "birthdate":"", "marital_status":"", "employment_status":"", "housing_status":"", "phone_number":"", "monthly_income":"", "monthly_income__gte": "", "monthly_income__lte": ""}))
     }
 
     const formik = useFormik({
@@ -52,11 +49,6 @@ function Register() {
             if (values.profile_picture == "") {
                 values.profile_picture = null;
             }
-            let refr = [];
-            values.references.map((r) => {
-                refr.push(r.value)
-            })
-            values.references = refr
             dispatch(postRegisterAsync(values))
             .then(() => {
                 navigate("/login")
@@ -67,11 +59,6 @@ function Register() {
         },
         validationSchema: validations
     });
-
-    useEffect(() => {
-        dispatch(getAllUsersAsync({"birthdate":"", "marital_status":"", "employment_status":"", "housing_status":"", "phone_number":"", "monthly_income":"", "monthly_income__gte": "", "monthly_income__lte": ""}))
-    }, [dispatch])
-
 
     const access = localStorage.getItem("access");
 
@@ -311,17 +298,35 @@ function Register() {
                             error={formik.errors.profile_picture}
                             style={style}
                         />
-                        <MultiSelectDropdown
+                        <AuthInput
                             label="Referanslar"
                             id="references"
                             name="references"
-                            options={users_name}
-                            onChange={e=>{formik.setFieldValue("references", e)}}
-                            onBlur={formik.handleBlur}
-                            touched={formik.touched.references}
-                            error={formik.errors.references}
+                            type="text"
+                            onChange={(e)=>(searchInvestor(e))}
                             style={style}
                         />
+                        <br />
+                        <ul>
+                            {
+                                users.map((user, i) => (
+                                    <li key={user ? user.id : i}>
+                                        <Checkbox
+                                            label={
+                                                user && user.user ? (`${user.about} ${user.user.last_name} | ${user.user.email}`) : ""
+                                            }
+                                            id={user.id}
+                                            name="references"
+                                            type="checkbox"
+                                            value={user.id}
+                                            onChange={formik.handleChange}
+                                            style={style}
+                                        />
+                                        <hr />
+                                    </li>
+                                ))
+                            }
+                        </ul>
                         <TextAreaInput
                             label="Biznez Fəaliyyətləri"
                             id="business_activities"

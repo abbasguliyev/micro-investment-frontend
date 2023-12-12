@@ -98,7 +98,13 @@ function AdminUsers() {
                     {users.map((user) => (
                         <tr key={user.id}>
                             <td className="border border-slate-700">
-                                {user.user.first_name} {user.user.last_name}
+                                <NavLink
+                                    to="/profile"
+                                    state={{id: user.id}}
+                                    className="text-blue-700"
+                                >
+                                    {user.user.first_name} {user.user.last_name}
+                                </NavLink>
                             </td>
                             <td className="border border-slate-700">
                                 {user.user.email}

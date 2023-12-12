@@ -5,7 +5,7 @@ import { Modal, Pagination } from 'antd'
 
 import style from "./style.module.css"
 
-import { getMeAsync } from '../../../redux/AuthSlice/AuthSlice'
+import { getMeAsync, getUserDetailAsync } from '../../../redux/AuthSlice/AuthSlice'
 import { getAllInvestmentsAsync, postInvestmentReportAsync } from '../../../redux/InvestmentSlice/InvestmentSlice'
 import { FaCheck } from "react-icons/fa";
 import { FaXmark } from "react-icons/fa6";
@@ -14,14 +14,12 @@ import AuthInput from '../../InputComponents/AuthInput'
 import TextAreaInput from '../../InputComponents/TextAreaInput'
 import { getCompanyBalanceAsync } from '../../../redux/CompanyBalanceSlice/CompanyBalanceSlice'
 
-const Investments = () => {
+const Investments = ({userId}) => {
   let [currentPage, setCurrentPage] = useState(1);
   const [isInvestorInvestmentFinishModalOpen, setIsInvestorInvestmentFinishModalOpen] =useState(false);
   const [investment, setInvestment] = useState(null);
 
   const dispatch = useDispatch()
-  
-  let me = useSelector((state) => state.auth.me)
   let investments = useSelector((state) => state.investment.investments)
   let totalPage = useSelector((state) => state.investment.totalPage)
   let pageLimit = useSelector((state) => state.investment.pageLimit)
@@ -34,13 +32,13 @@ const Investments = () => {
 
   const handleIsInvestorInvestmentFinishModalOk = () => {
     setIsInvestorInvestmentFinishModalOpen(false);
-    formik.values.investor = me && me.id
+    formik.values.investor = userId
     formik.values.investment = investment && investment.id
     dispatch(postInvestmentReportAsync(formik.values))
       .then(() => {
           let offset = (currentPage - 1) * pageLimit;
           dispatch(
-            getAllInvestmentsAsync({"investor":me?me.id:"", "entrepreneur": "", "offset": offset})
+            getAllInvestmentsAsync({"investor": userId, "entrepreneur": "", "offset": offset})
           );
           dispatch(getCompanyBalanceAsync())
       })
@@ -69,12 +67,13 @@ const Investments = () => {
   const changePage = (e) => {
     setCurrentPage(e);
     let offset = (e - 1) * pageLimit;
-    dispatch(getAllInvestmentsAsync({"investor":me?me.id:"", "entrepreneur": "", "offset": offset}));
+    dispatch(getAllInvestmentsAsync({"investor": userId, "entrepreneur": "", "offset": offset}));
   };
 
   useEffect(() => {
-    dispatch(getMeAsync())
-    dispatch(getAllInvestmentsAsync({"investor":me?me.id:"", "entrepreneur": "", "offset": 0}))
+    dispatch(getUserDetailAsync({"id": userId}))
+
+    dispatch(getAllInvestmentsAsync({"investor": userId, "entrepreneur": "", "offset": 0}))
     dispatch(getCompanyBalanceAsync())
   }, [dispatch])
 

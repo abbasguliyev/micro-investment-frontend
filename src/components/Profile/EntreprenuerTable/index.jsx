@@ -2,15 +2,13 @@ import React, { useEffect, useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { Pagination } from 'antd'
-import { getMeAsync } from '../../../redux/AuthSlice/AuthSlice'
+import { getMeAsync, getUserDetailAsync } from '../../../redux/AuthSlice/AuthSlice'
 import { getAllEntrepreneurAsync } from '../../../redux/EntrepreneurSlice/EntrepreneurSlice'
 
-const EntreprenuerTable = () => {
+const EntreprenuerTable = ({userId}) => {
   let [currentPage, setCurrentPage] = useState(1);
-  
   const dispatch = useDispatch()
-  
-  let me = useSelector((state) => state.auth.me)
+
   let entrepreneurs = useSelector((state) => state.entrepreneur.entrepreneurs)
   let totalPage = useSelector((state) => state.entrepreneur.totalPage)
   let pageLimit = useSelector((state) => state.entrepreneur.pageLimit)
@@ -18,12 +16,12 @@ const EntreprenuerTable = () => {
   const changePage = (e) => {
     setCurrentPage(e);
     let offset = (e - 1) * pageLimit;
-    dispatch(getAllEntrepreneurAsync({owner:me?me.id:"", offset: offset, start_date: "", end_date: ""}));
+    dispatch(getAllEntrepreneurAsync({owner: userId, offset: offset, start_date: "", end_date: ""}));
   };
 
   useEffect(() => {
-    dispatch(getMeAsync())
-    dispatch(getAllEntrepreneurAsync({owner:me?me.id:"", offset: 0, start_date: "", end_date: ""}))
+    dispatch(getUserDetailAsync({"id": userId}))
+    dispatch(getAllEntrepreneurAsync({owner: userId, offset: 0, start_date: "", end_date: ""}))
   }, [])
 
   return (

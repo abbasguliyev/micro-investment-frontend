@@ -95,7 +95,6 @@ export const putUserProfileAsync = createAsyncThunk('putUserProfileAsync', async
         if (data.business_activities != null) {
             form.append("business_activities", data.business_activities)
         }
-        console.log(form);
         const res = await axios.put(`users/${data.id}/`, form, { headers: { 'Content-Type': 'multipart/form-data' }});
         return res.data;
     } catch (error) {
@@ -127,11 +126,22 @@ export const getAllUsersAsync = createAsyncThunk('getAllUsersAsync', async (valu
     }
 })
 
+export const getUserDetailAsync = createAsyncThunk('getUserDetailAsync', async (values) => {
+    try {
+        const res = await axios.get(`users/${values.id}/`)
+        return res.data;
+    } catch (error) {
+        // If the API call fails, the error will be thrown and caught here.
+        throw {'message': error.response.data.detail};
+    }
+})
+
 export const AuthSlice = createSlice({
     name: 'auth',
     initialState: {
         me: null,
         users: [],
+        user: null,
         access: "",
         refresh: "",
         isLoggedIn: false,
@@ -223,6 +233,18 @@ export const AuthSlice = createSlice({
             state.totalPage = action.payload.count;
         })
         builder.addCase(getAllUsersAsync.rejected, (state, action) => {
+            state.error = action.error.message;
+            state.isLoading = false;
+        })
+        // User Detail Reducers
+        builder.addCase(getUserDetailAsync.pending, (state, action) => {
+            state.isLoading = true;
+        })
+        builder.addCase(getUserDetailAsync.fulfilled, (state, action) => {
+            state.isLoading = false;
+            state.user = action.payload;
+        })
+        builder.addCase(getUserDetailAsync.rejected, (state, action) => {
             state.error = action.error.message;
             state.isLoading = false;
         })

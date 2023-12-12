@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { getMeAsync } from "../../../redux/AuthSlice/AuthSlice";
+import { getMeAsync, getUserDetailAsync } from "../../../redux/AuthSlice/AuthSlice";
 import {
     deleteExperienceAsync,
     getExperiencesAsync,
@@ -9,7 +9,7 @@ import {
 import { Modal, Tooltip } from "antd";
 import { MdDelete, MdModeEditOutline } from "react-icons/md";
 
-const Experience = () => {
+const Experience = ({userId}) => {
     const [isExperienceModalOpen, setIsExperienceModalOpen] = useState(false);
     const [experienceId, setExperienceId] = useState(null);
     const dispatch = useDispatch();
@@ -22,7 +22,7 @@ const Experience = () => {
     const handleOk = () => {
         setIsExperienceModalOpen(false);
         dispatch(deleteExperienceAsync({ id: experienceId })).then(() => {
-            dispatch(getExperiencesAsync({ me: me.id }));
+            dispatch(getExperiencesAsync({ me: userId }));
         });
     };
 
@@ -30,22 +30,27 @@ const Experience = () => {
         setIsExperienceModalOpen(false);
     };
 
-    let me = useSelector((state) => state.auth.me);
+    let me = useSelector((state) => state.auth.me)
     let experiences = useSelector((state) => state.experience.experiences);
 
     useEffect(() => {
-        dispatch(getMeAsync());
-        dispatch(getExperiencesAsync({ me: me.id }));
+        dispatch(getMeAsync())
+        dispatch(getUserDetailAsync({"id": userId}))
+        dispatch(getExperiencesAsync({ me: userId }));
     }, []);
 
     return (
         <div className="mt-4 mx-4 flex flex-col">
-            <NavLink
-                to="/experience-create"
-                className={`rounded btn-main-bg text-center w-40 h-10 p-2 mb-2`}
-            >
-                Yeni əlavə et
-            </NavLink>
+            {
+                me && me.id == userId && (
+                    <NavLink
+                        to="/experience-create"
+                        className={`rounded btn-main-bg text-center w-40 h-10 p-2 mb-2`}
+                    >
+                        Yeni əlavə et
+                    </NavLink>
+                )
+            }
             <table className="table-auto w-full">
                 <thead>
                     <tr>

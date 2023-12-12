@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { getMeAsync } from "../../../redux/AuthSlice/AuthSlice";
+import { getMeAsync, getUserDetailAsync } from "../../../redux/AuthSlice/AuthSlice";
 import {
     deleteEducationAsync,
     getEducationsAsync,
@@ -11,7 +11,7 @@ import { MdDelete, MdModeEditOutline } from "react-icons/md";
 import { Modal } from "antd";
 import ResponseMessage from "../../ResponseMessage";
 
-const Education = () => {
+const Education = ({userId}) => {
     const [isEducationModalOpen, setIsEducationModalOpen] = useState(false);
     const [educationId, setEducationId] = useState(null);
     const dispatch = useDispatch();
@@ -24,7 +24,7 @@ const Education = () => {
     const handleOk = () => {
         setIsEducationModalOpen(false);
         dispatch(deleteEducationAsync({ id: educationId })).then(() => {
-            dispatch(getEducationsAsync({ me: me.id }));
+            dispatch(getEducationsAsync({ me: userId }));
         });
     };
 
@@ -32,14 +32,15 @@ const Education = () => {
         setIsEducationModalOpen(false);
     };
 
-    let me = useSelector((state) => state.auth.me);
+    let me = useSelector((state) => state.auth.me)
     let educations = useSelector((state) => state.education.educations);
     const errorMsg = useSelector((state) => state.education.error);
     const successMsg = useSelector((state) => state.education.successMsg);
 
     useEffect(() => {
-        dispatch(getMeAsync());
-        dispatch(getEducationsAsync({ me: me.id }));
+        dispatch(getMeAsync())
+        dispatch(getUserDetailAsync({"id": userId}))
+        dispatch(getEducationsAsync({ me: userId }));
     }, []);
 
     return (
@@ -58,12 +59,16 @@ const Education = () => {
                     slice={resetEducationSlice()}
                 />
             )}
-            <NavLink
-                to="/education-create"
-                className={`rounded btn-main-bg text-center w-40 h-10 p-2 mb-2`}
-            >
-                Yeni əlavə et
-            </NavLink>
+            {
+                me && me.id == userId && (
+                    <NavLink
+                        to="/education-create"
+                        className={`rounded btn-main-bg text-center w-40 h-10 p-2 mb-2`}
+                    >
+                        Yeni əlavə et
+                    </NavLink>
+                )
+            }
             <table className="table-auto w-full">
                 <thead>
                     <tr>
