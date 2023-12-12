@@ -18,17 +18,22 @@ import EducationUpdate from './pages/EducationUpdate'
 import ExperienceUpdate from './pages/ExperienceUpdate'
 import AdminUserCreate from './pages/Admin/AdminUsers/AdminUserCreate'
 import Admin from './pages/Admin'
+import { useEffect, useState } from 'react'
 
 function App() {
+  const [token, setToken] = useState(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const access = localStorage.getItem("access");
+  useEffect(() => {
+    const access = localStorage.getItem("access");
+    setToken(access)
+  }, [token])
 
   return (
     <>
         {
-          !access ? (
+          !token ? (
             <>
               <Routes>
                 <Route path='/' element={<Login/>} />
@@ -57,6 +62,7 @@ function App() {
                       <Route path='/education-create' element={<EducationCreate/>} />
                       <Route path='/education-update/:id' element={<EducationUpdate/>} />
                       <Route path='/experience-update/:id' element={<ExperienceUpdate/>} />
+                      <Route path='/login' element={<Login/>} />
                       <Route path='/register' element={<Register/>} />
                       <Route path='*' element={<NotFoundPage/>} />
                       <Route path='/admin' element={<Outlet/>}>

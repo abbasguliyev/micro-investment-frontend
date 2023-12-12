@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useLocation } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import { getAllEntrepreneurImageAsync, postEntrepreneurImageCreateAsync, resetEntrepreneurSlice } from "../../redux/EntrepreneurSlice/EntrepreneurSlice";
 import { useFormik } from "formik";
 import ResponseMessage from "../ResponseMessage";
@@ -50,7 +50,7 @@ function EntrepreneurImageCreate() {
                         htmlFor="image"
                         className="cursor-pointer font-bold py-2 px-4 rounded-full"
                     >
-                        Şəkil seç
+                        Şəkil seçmək üçün bu yazıya toxunun
                     </label>
                     <input
                         type="file"
@@ -63,9 +63,14 @@ function EntrepreneurImageCreate() {
                     <small>{ formik.values.image ? formik.values.image.name : "" }</small>
                     <button type="submit"
                             className="flex w-90 justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-                                Əlavə et
+                                Şəkli təsdiqləmək üçün basın
                     </button>
+                    <NavLink to="/"
+                            className="flex w-90 justify-center rounded-md bg-indigo-600 mt-3 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                                Ana səhifəyə qayıt
+                    </NavLink>
                 </form>
+                    
                 <div className="flex flex-row flex-wrap m-4">
                     {
                         images.map((image) => (

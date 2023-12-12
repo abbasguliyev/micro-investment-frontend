@@ -7,7 +7,7 @@ export const postLoginAsync = createAsyncThunk('postLoginAsync', async (data) =>
         return res.data;
     } catch (error) {
         // If the API call fails, the error will be thrown and caught here.
-        throw {'message': error.response.data.detail};
+        throw {'message': "Məlumatları doğru daxil edin"};
     }
 })
 
@@ -44,23 +44,58 @@ export const postRegisterAsync = createAsyncThunk('postRegisterAsync', async (da
 export const putUserProfileAsync = createAsyncThunk('putUserProfileAsync', async (data) => {
     try {
         const form = new FormData();
-        form.append("first_name", data.first_name)
-        form.append("last_name", data.last_name)
-        form.append("email", data.email)
-        form.append("birthdate", data.birthdate)
-        form.append("address", data.address)
-        form.append("marital_status", data.marital_status)
-        form.append("employment_status", data.employment_status)
-        form.append("housing_status", data.housing_status)
-        form.append("phone_number", data.phone_number)
-        form.append("credit_cart_number", data.credit_cart_number)
-        form.append("debt_amount", data.debt_amount)
-        form.append("monthly_income", data.monthly_income)
-        form.append("about", data.about)
+        if (data.first_name != null){
+            form.append("first_name", data.first_name)
+        }
+        if (data.last_name != null){
+            form.append("last_name", data.last_name)
+        }
+        if (data.email != null){
+            form.append("email", data.email)
+        }
+        if (data.birthdate != null){
+            form.append("birthdate", data.birthdate)
+        }
+        if (data.address != null){
+            form.append("address", data.address)
+        }
+        if (data.marital_status != null){
+            form.append("marital_status", data.marital_status)
+        }
+        if (data.employment_status != null){
+            form.append("employment_status", data.employment_status)
+        }
+        if (data.housing_status != null){
+            form.append("housing_status", data.housing_status)
+        }
+        if (data.phone_number != null){
+            form.append("phone_number", data.phone_number)
+        }
+        if (data.credit_cart_number != null){
+            form.append("credit_cart_number", data.credit_cart_number)
+        }
+        if (data.debt_amount != null){
+            form.append("debt_amount", data.debt_amount)
+        }
+        if (data.monthly_income != null){
+            form.append("monthly_income", data.monthly_income)
+        }
+        if (data.about != null){
+            form.append("about", data.about)
+        }
         if (data.profile_picture != null) {
             form.append("profile_picture", data.profile_picture)
         }
-        form.append("business_activities", data.business_activities)
+        if (data.is_active != null) {
+            form.append("is_active", data.is_active)
+        }
+        if (data.is_superuser != null) {
+            form.append("is_superuser", data.is_superuser)
+        }
+        if (data.business_activities != null) {
+            form.append("business_activities", data.business_activities)
+        }
+        console.log(form);
         const res = await axios.put(`users/${data.id}/`, form, { headers: { 'Content-Type': 'multipart/form-data' }});
         return res.data;
     } catch (error) {
@@ -133,9 +168,6 @@ export const AuthSlice = createSlice({
             state.error = action.error.message;
             state.isLoggedIn = false;
             state.isLoading = false;
-
-            state.error = null;
-            state.successMsg = null;
         })
         // Register Reducers
         builder.addCase(postRegisterAsync.pending, (state, action) => {

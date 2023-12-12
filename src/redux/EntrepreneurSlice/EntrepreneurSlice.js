@@ -50,7 +50,7 @@ export const postEntrepreneurImageCreateAsync = createAsyncThunk('postEntreprene
         const res = await axios.post('entrepreneurs/images/', form, { headers: { 'Content-Type': 'multipart/form-data' }});
         return res.data;
     } catch (error) {
-        throw {'message': error.response.data.detail};
+        throw {'message': "Xəta baş verdi"};
     }
 })
 

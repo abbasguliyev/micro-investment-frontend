@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
-import { getAllUsersAsync, resetAuthSlice } from "../../../redux/AuthSlice/AuthSlice";
+import { getAllUsersAsync, putUserProfileAsync, resetAuthSlice } from "../../../redux/AuthSlice/AuthSlice";
 import { MdDelete } from "react-icons/md";
 import { Modal, Pagination } from "antd";
 import ResponseMessage from "../../../components/ResponseMessage";
+import { FaCheck } from "react-icons/fa";
+import { FaXmark } from "react-icons/fa6";
 
 function AdminUsers() {
     let [currentPage, setCurrentPage] = useState(1);
@@ -36,14 +38,32 @@ function AdminUsers() {
         dispatch(getAllUsersAsync({"offset": 0, "birthdate":"", "marital_status":"", "employment_status":"", "housing_status":"", "phone_number":"", "monthly_income":"", "monthly_income__gte": "", "monthly_income__lte": ""}))
     }, [dispatch])
 
+
     const changePage = (e) => {
         setCurrentPage(e);
         let offset = (e - 1) * pageLimit;
         dispatch(getAllUsersAsync({"offset": offset, "birthdate":"", "marital_status":"", "employment_status":"", "housing_status":"", "phone_number":"", "monthly_income":"", "monthly_income__gte": "", "monthly_income__lte": ""}));
     };
 
+    const changeUserActivity = (user) => {
+        dispatch(putUserProfileAsync({"id": user.id, "is_active": !user.user.is_active}))
+        .then(() => {
+            let offset = (currentPage - 1) * pageLimit;
+            dispatch(getAllUsersAsync({"offset": offset, "birthdate":"", "marital_status":"", "employment_status":"", "housing_status":"", "phone_number":"", "monthly_income":"", "monthly_income__gte": "", "monthly_income__lte": ""}))
+        })
+    }
+
+    const changeUserIsSuperuserStatus = (user) => {
+        dispatch(putUserProfileAsync({"id": user.id, "is_superuser": !user.user.is_superuser}))
+        .then(() => {
+            let offset = (currentPage - 1) * pageLimit;
+            dispatch(getAllUsersAsync({"offset": offset, "birthdate":"", "marital_status":"", "employment_status":"", "housing_status":"", "phone_number":"", "monthly_income":"", "monthly_income__gte": "", "monthly_income__lte": ""}))
+        })
+    }
+
+
     return (
-        <div className="mt-4 mx-4 flex flex-col">
+        <div className="mt-4 mx-4 flex flex-col overflow-x-auto overflow-y-hidden">
             {errorMsg && (
                 <ResponseMessage
                     message={errorMsg}
@@ -69,6 +89,8 @@ function AdminUsers() {
                     <tr>
                         <th className="border border-slate-600">Adı Soyadı</th>
                         <th className="border border-slate-600">email</th>
+                        <th className="border border-slate-600">Aktiv</th>
+                        <th className="border border-slate-600">Admin Status</th>
                         <th className="border border-slate-600"></th>
                     </tr>
                 </thead>
@@ -80,6 +102,32 @@ function AdminUsers() {
                             </td>
                             <td className="border border-slate-700">
                                 {user.user.email}
+                            </td>
+                            <td className="border border-slate-700 cursor-pointer text-sky-700 w-fit">
+                                {
+                                    user.user.is_active ? (
+                                        <div onClick={() => changeUserActivity(user)} className="mr-auto ml-auto pointer-events-auto h-6 w-10 rounded-full p-1 ring-1 ring-inset transition duration-200 ease-in-out bg-indigo-600 ring-black/20">
+                                            <div className="h-4 w-4 rounded-full bg-white shadow-sm ring-1 ring-slate-700/10 transition duration-200 ease-in-out translate-x-4"></div>
+                                        </div>
+                                    ) : (
+                                        <div onClick={() => changeUserActivity(user)} className="mr-auto ml-auto pointer-events-auto h-6 w-10 rounded-full p-1 ring-1 ring-inset transition duration-200 ease-in-out bg-slate-900/10 ring-slate-900/5">
+                                            <div className="h-4 w-4 rounded-full bg-white shadow-sm ring-1 ring-slate-700/10 transition duration-200 ease-in-out"></div>
+                                        </div>
+                                    )
+                                }
+                            </td>
+                            <td className="border border-slate-700 cursor-pointer text-sky-700 w-fit">
+                                {
+                                    user.user.is_superuser ? (
+                                        <div onClick={() => changeUserIsSuperuserStatus(user)} className="mr-auto ml-auto pointer-events-auto h-6 w-10 rounded-full p-1 ring-1 ring-inset transition duration-200 ease-in-out bg-indigo-600 ring-black/20">
+                                            <div className="h-4 w-4 rounded-full bg-white shadow-sm ring-1 ring-slate-700/10 transition duration-200 ease-in-out translate-x-4"></div>
+                                        </div>
+                                    ) : (
+                                        <div onClick={() => changeUserIsSuperuserStatus(user)} className="mr-auto ml-auto pointer-events-auto h-6 w-10 rounded-full p-1 ring-1 ring-inset transition duration-200 ease-in-out bg-slate-900/10 ring-slate-900/5">
+                                            <div className="h-4 w-4 rounded-full bg-white shadow-sm ring-1 ring-slate-700/10 transition duration-200 ease-in-out"></div>
+                                        </div>
+                                    )
+                                }
                             </td>
                             <td className="border border-slate-700 text-center">
                                 <NavLink
