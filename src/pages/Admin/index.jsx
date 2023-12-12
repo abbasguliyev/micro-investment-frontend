@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import AdminUsers from './AdminUsers';
 import AdminInvestments from './AdminInvestments';
 import AdminEntrepreneurs from './AdminEntrepreneurs';
+import AdminInvestorPayments from './AdminInvestorPayments';
 
 function Admin() {
   const [showTab, setShowTab] =useState(<AdminUsers />);
@@ -24,6 +25,10 @@ function Admin() {
               setShowTab(<AdminEntrepreneurs/>) 
               setTitle("Lahiyələr")
             }} className={'btn-main-bg p-2 ml-2 rounded'}>Lahiyələr</button>
+            <button onClick={()=>{
+              setShowTab(<AdminInvestorPayments/>) 
+              setTitle("Ödəniş Hesabatı")
+            }} className={'btn-main-bg p-2 ml-2 rounded'}>Ödəniş Hesabatı</button>
         </div>
         <div>
           <h4 className='mx-auto max-w-7xl py-6 sm:px-6 lg:px-8 flex flex-col text-lg text-xl font-bold'>{title}</h4>

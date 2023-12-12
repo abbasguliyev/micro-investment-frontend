@@ -536,7 +536,8 @@ function AdminEntrepreneurs() {
                                         <tr>
                                             <th className="border border-slate-600">Adı Soyadı</th>
                                             <th className="border border-slate-600">Sifariş</th>
-                                            <th className="border border-slate-600">Balans</th>
+                                            <th className="border border-slate-600">Balansından gələn</th>
+                                            <th className="border border-slate-600">Göndərməli olduğu</th>
                                             <th className="border border-slate-600">Yatırılan məbləğ</th>
                                             <th className="border border-slate-600">Əmsal</th>
                                             <th className="border border-slate-600">Yekun qazanc</th>
@@ -555,7 +556,10 @@ function AdminEntrepreneurs() {
                                                     {entrepreneur.project_name}
                                                 </td>
                                                 <td className="border border-slate-700">
-                                                    {investment.investor.user.balance} AZN
+                                                    {investment.amount_deducated_from_balance} AZN
+                                                </td>
+                                                <td className="border border-slate-700">
+                                                    {investment.amount_must_send} AZN
                                                 </td>
                                                 <td className="border border-slate-700">
                                                     {investment.amount}
@@ -641,7 +645,7 @@ function AdminEntrepreneurs() {
                 >
                     <form onSubmit={addNewInvestorFormik.handleSubmit}>
                         <AuthInput
-                            label="Məbləğ"
+                            label="Investor"
                             id="amount"
                             name="amount"
                             type="text"
