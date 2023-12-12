@@ -14,7 +14,6 @@ const validations = yup.object().shape({
     debt_amount: yup.number().default(0),
     monthly_income: yup.number().default(0),
     about: yup.string(),
-    references: yup.array().min(1, 'Ən az 1 referans əlavə edin'),
     password: yup.string().required()
 })
 

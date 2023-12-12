@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useFormik } from "formik";
@@ -11,23 +11,16 @@ import RadioInput from "../../../../components/InputComponents/RadioInput";
 import FileInput from "../../../../components/InputComponents/FileInput";
 import MultiSelectDropdown from "../../../../components/InputComponents/MultiSelectDropdown";
 import TextAreaInput from "../../../../components/InputComponents/TextAreaInput";
+import Checkbox from "../../../../components/InputComponents/Checkbox";
 
 
 function AdminUserCreate() {
+    const [userData, setUserData] = useState([])
     const dispatch = useDispatch();
     const navigate = useNavigate()
 
     let users = useSelector((state) => state.auth.users)
     let errorMsg = useSelector((state) => state.auth.error)
-    
-    let users_name = []
-    if (users && users.length > 0) {
-        users_name = users.map((user) => ({
-            label: `${user.user.first_name} ${user.user.last_name}`,
-            value: user.id
-        }));
-    }
-    
 
     const formik = useFormik({
         initialValues: {
@@ -53,11 +46,6 @@ function AdminUserCreate() {
             if (values.profile_picture == "") {
                 values.profile_picture = null;
             }
-            let refr = [];
-            values.references.map((r) => {
-                refr.push(r.value)
-            })
-            values.references = refr
             dispatch(postRegisterAsync(values))
             .then(() => {
                 navigate("/admin")
@@ -69,10 +57,10 @@ function AdminUserCreate() {
         validationSchema: validations
     });
 
-    useEffect(() => {
-        dispatch(getAllUsersAsync({"birthdate":"", "marital_status":"", "employment_status":"", "housing_status":"", "phone_number":"", "monthly_income":"", "monthly_income__gte": "", "monthly_income__lte": ""}))
-    }, [dispatch])
-
+    const searchInvestor = (e) => {
+        console.log(e.target.value);
+        dispatch(getAllUsersAsync({"offset": 0, "fullname": e.target.value, "birthdate":"", "marital_status":"", "employment_status":"", "housing_status":"", "phone_number":"", "monthly_income":"", "monthly_income__gte": "", "monthly_income__lte": ""}))
+    }
 
     return (
         <>
@@ -304,17 +292,38 @@ function AdminUserCreate() {
                             error={formik.errors.profile_picture}
                             style={style}
                         />
-                        <MultiSelectDropdown
+                        <AuthInput
                             label="Referanslar"
                             id="references"
                             name="references"
-                            options={users_name}
-                            onChange={e=>{formik.setFieldValue("references", e)}}
-                            onBlur={formik.handleBlur}
-                            touched={formik.touched.references}
-                            error={formik.errors.references}
+                            type="text"
+                            onChange={(e)=>(searchInvestor(e))}
                             style={style}
                         />
+                        <br />
+                        <ul>
+                            {
+                                users.map((user, i) => (
+                                    <li key={user ? user.id : i}>
+                                        <Checkbox
+                                            label={
+                                                user && user.user ? (`${user.about} ${user.user.last_name} | ${user.user.email}`) : ""
+                                            }
+                                            id={user.id}
+                                            name="references"
+                                            type="checkbox"
+                                            value={user.id}
+                                            onChange={formik.handleChange}
+                                            style={style}
+                                        />
+                                        <hr />
+                                    </li>
+                                ))
+                            }
+                        </ul>
+                        {
+                            formik.touched.references && formik.errors.references && (<div className='error'>{formik.errors.references}</div>)
+                        }
                         <TextAreaInput
                             label="Biznez Fəaliyyətləri"
                             id="business_activities"

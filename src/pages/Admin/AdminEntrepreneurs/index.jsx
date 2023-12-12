@@ -647,8 +647,8 @@ function AdminEntrepreneurs() {
                     <form onSubmit={addNewInvestorFormik.handleSubmit}>
                         <AuthInput
                             label="Investor"
-                            id="amount"
-                            name="amount"
+                            id="investor"
+                            name="investor"
                             type="text"
                             onChange={(e)=>(searchInvestor(e))}
                             style={style}
