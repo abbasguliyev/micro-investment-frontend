@@ -1,22 +1,33 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { NavLink, useLocation, useNavigate } from 'react-router-dom'
 import { Fragment } from 'react'
 import { Disclosure, Menu, Transition } from '@headlessui/react'
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { useDispatch, useSelector } from 'react-redux'
 import { getMeAsync } from '../../redux/AuthSlice/AuthSlice'
+import { getAllNotificationsAsync } from '../../redux/NotificationSlice/NotificationSlice'
+import { Modal } from 'antd'
 
 
 function Header() {
   const location = useLocation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  
+  const [notificationModal, setNotificationModal] = useState(false);
 
   let me = useSelector((state) => state.auth.me)
+  let notifications = useSelector((state) => state.notification.notifications)
+  console.log(notifications);
+  console.log(me);
 
   useEffect(() => {
     dispatch(getMeAsync())
   }, [dispatch])
+
+  useEffect(() => {
+    dispatch(getAllNotificationsAsync({"offset": "", "user": me && me.user.id}))
+  }, [dispatch, me])
 
 
   function logout() {
@@ -147,10 +158,45 @@ function Header() {
                     </Menu.Items>
                   </Transition>
                 </Menu>
+                <div className='relative'>
+
+                  <button onClick={() => setNotificationModal(!notificationModal)} type="button" className="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none">
+                    <span className="absolute -inset-1.5"></span>
+                    <span className="sr-only">View notifications</span>
+                    <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" aria-hidden="true">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
+                    </svg>
+                  </button>
+                  <div 
+                    className={notificationModal ? `block shadow-lg` : `hidden`} 
+                    style={{
+                      position: "absolute",
+                      top: 50,
+                      right: 5,
+                      backgroundColor: "#fff",
+                      padding: 20,
+                      color: "black",
+                      width: 500
+                    }}
+                  >
+                      <ul>
+                        {
+                          notifications.map((notification) => (
+                            <li>
+                              {notification.message}
+                              <br />
+                              {notification.created_at}
+                              <hr />
+                            </li>
+                          ))
+                        }
+                      </ul>
+                    </div>
+
+                  </div>
               </div>
             </div>
           </div>
-
           <Disclosure.Panel className="sm:hidden">
             <div className="space-y-1 px-2 pb-3 pt-2">
               {navigation.map((item) => (

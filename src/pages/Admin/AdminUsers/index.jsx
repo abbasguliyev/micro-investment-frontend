@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
-import { getAllUsersAsync, putUserProfileAsync, resetAuthSlice } from "../../../redux/AuthSlice/AuthSlice";
+import { deleteUserAsync, getAllUsersAsync, putUserProfileAsync, resetAuthSlice } from "../../../redux/AuthSlice/AuthSlice";
 import { MdDelete } from "react-icons/md";
 import { Modal, Pagination } from "antd";
 import ResponseMessage from "../../../components/ResponseMessage";
@@ -21,6 +21,11 @@ function AdminUsers() {
 
     const handleOk = () => {
         setIsUserModalOpen(false);
+        dispatch(deleteUserAsync({"id": userId}))
+        .then(() => {
+            let offset = (currentPage - 1) * pageLimit;
+            dispatch(getAllUsersAsync({"offset": offset, "birthdate":"", "marital_status":"", "employment_status":"", "housing_status":"", "phone_number":"", "monthly_income":"", "monthly_income__gte": "", "monthly_income__lte": ""}))
+        })
     };
 
     const handleCancel = () => {
