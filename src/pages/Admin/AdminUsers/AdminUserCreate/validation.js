@@ -9,7 +9,7 @@ const validations = yup.object().shape({
     marital_status: yup.string().required("Evlilik statusu mütləq daxil edilməlidir"),
     employment_status: yup.string().required("İşləmə statusu daxil edilməlidir"),
     housing_status: yup.string().required("Yaşayış statusu mütləq daxil edilməlidir"),
-    phone_number: yup.string().matches(phoneRegExp, 'Telefon nömrəsini düzgün daxil edin').required("Telefon nömrəsi mütləq daxil edilməlidir"),
+    phone_number: yup.string().required("Telefon nömrəsi mütləq daxil edilməlidir"),
     credit_cart_number: yup.string().required("Kart nömrəsi mütləq daxil edilməlidir"),
     debt_amount: yup.number().default(0),
     monthly_income: yup.number().default(0),
