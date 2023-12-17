@@ -19,6 +19,7 @@ function EntrepreneurCreate() {
     const formik = useFormik({
         initialValues: {
             project_name: "",
+            start_date: "",
             end_date: "",
             description: "",
             count: 1,
@@ -61,6 +62,18 @@ function EntrepreneurCreate() {
                             onBlur={formik.handleBlur}
                             touched={formik.touched.project_name}
                             error={formik.errors.project_name}
+                            style={style}
+                        />
+                        <AuthInput
+                            label="Başlanğıc tarixi"
+                            id="start_date"
+                            name="start_date"
+                            type="date"
+                            value={formik.values.start_date}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            touched={formik.touched.start_date}
+                            error={formik.errors.start_date}
                             style={style}
                         />
                         <AuthInput

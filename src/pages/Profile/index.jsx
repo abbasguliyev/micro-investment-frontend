@@ -11,8 +11,10 @@ import { resetEducationSlice } from '../../redux/EducationSlice/EducationSlice'
 import { resetExperienceSlice } from '../../redux/ExperienceSlice/ExperienceSlice'
 
 function Profile() {
+  const [id, setID] = useState();
   let location = useLocation();
-  const [showTab, setShowTab] =useState(<Investments userId={location.state.id}/>);
+  console.log(location);
+  const [showTab, setShowTab] =useState(<Investments userId={location.state ? location.state.id : ""}/>);
   const [title, setTitle] =useState("Yatırımlarım");
 
   const dispatch = useDispatch()
@@ -30,7 +32,8 @@ function Profile() {
 
   useEffect(() => {
     dispatch(getMeAsync())
-    dispatch(getUserDetailAsync({"id": location.state.id}))
+    dispatch(getUserDetailAsync({"id": location.state && location.state.id}))
+    setID(location.state && location.state.id)
   }, [dispatch])
 
   return (
@@ -69,7 +72,7 @@ function Profile() {
               <p className='md:text-1xl lg:text-1xl xl:text-2xl m-4'>Balans: {user && user.user ? user.user.balance : 0} AZN</p>
             </div>
             {
-              me && me.id == location.state.id && <NavLink to="profile-update" className={`rounded btn-main-bg w-50 h-10 p-2 m-4`}>Məlumatları Dəyiş</NavLink>
+              me && me.id == id && <NavLink to="profile-update" className={`rounded btn-main-bg w-50 h-10 p-2 m-4`}>Məlumatları Dəyiş</NavLink>
             }
           </div>
           <div className={`w-full h-72 flex flex-col justify-between p-4 rounded overflow-auto`}>

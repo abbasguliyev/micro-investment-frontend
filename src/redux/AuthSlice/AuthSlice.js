@@ -138,6 +138,16 @@ export const getUserDetailAsync = createAsyncThunk('getUserDetailAsync', async (
     }
 })
 
+export const deleteUserAsync = createAsyncThunk('deleteUserAsync', async (values) => {
+    try {
+        const res = await axios.delete(`users/${values.id}/`)
+        return res.data;
+    } catch (error) {
+        // If the API call fails, the error will be thrown and caught here.
+        throw {'message': error.response.data.detail};
+    }
+})
+
 export const AuthSlice = createSlice({
     name: 'auth',
     initialState: {
@@ -247,6 +257,18 @@ export const AuthSlice = createSlice({
             state.user = action.payload;
         })
         builder.addCase(getUserDetailAsync.rejected, (state, action) => {
+            state.error = action.error.message;
+            state.isLoading = false;
+        })
+        // User Delete Reducers
+        builder.addCase(deleteUserAsync.pending, (state, action) => {
+            state.isLoading = true;
+        })
+        builder.addCase(deleteUserAsync.fulfilled, (state, action) => {
+            state.isLoading = false;
+            state.successMsg = "Əməliyyat yerinə yetirildi";
+        })
+        builder.addCase(deleteUserAsync.rejected, (state, action) => {
             state.error = action.error.message;
             state.isLoading = false;
         })
