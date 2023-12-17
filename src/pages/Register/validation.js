@@ -1,20 +1,22 @@
 import * as yup from 'yup';
 
+const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/
+
 const validations = yup.object().shape({
-    first_name: yup.string().required(),
-    last_name: yup.string().required(),
-    email: yup.string().email().required(),
-    birthdate: yup.date().required(),
-    address: yup.string().required(),
-    marital_status: yup.string().required(),
-    employment_status: yup.string().required(),
-    housing_status: yup.string().required(),
-    phone_number: yup.string().required(),
-    credit_cart_number: yup.string().required(),
+    first_name: yup.string().required("Ad mütləq daxil edilməlidir"),
+    last_name: yup.string().required("Soyad mütləq daxil edilməlidir"),
+    email: yup.string().email().required("Email mütləq daxil edilməlidir"),
+    birthdate: yup.date().required("Doğum tarixi mütləq daxil edilməlidir"),
+    address: yup.string().required("Ünvan mütləq daxil edilməlidir"),
+    marital_status: yup.string().required("Evlilik statusu mütləq daxil edilməlidir"),
+    employment_status: yup.string().required("İşləmə statusu daxil edilməlidir"),
+    housing_status: yup.string().required("Yaşayış statusu mütləq daxil edilməlidir"),
+    phone_number: yup.string().matches(phoneRegExp, 'Telefon nömrəsini düzgün daxil edin').required("Telefon nömrəsi mütləq daxil edilməlidir"),
+    credit_cart_number: yup.string().required("Kart nömrəsi mütləq daxil edilməlidir"),
     debt_amount: yup.number().default(0),
     monthly_income: yup.number().default(0),
     about: yup.string(),
-    password: yup.string().required()
+    password: yup.string().required("Şifrə mütləq daxil edilməlidir")
 })
 
 export default validations;

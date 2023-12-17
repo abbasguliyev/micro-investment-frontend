@@ -37,6 +37,8 @@ export const postRegisterAsync = createAsyncThunk('postRegisterAsync', async (da
         const res = await axios.post('users/', form, { headers: { 'Content-Type': 'multipart/form-data', 'Authorization': "" }})
         return res.data;
     } catch (error) {
+        console.log(error);
+
         throw {'message': error.response.data.detail};
     }
 })
