@@ -15,6 +15,7 @@ const validations = yup.object().shape({
     credit_cart_number: yup.string().required("Kart nömrəsi mütləq daxil edilməlidir"),
     debt_amount: yup.number().default(0),
     monthly_income: yup.number().default(0),
+    references: yup.array().min(1, 'Ən az 1 referans əlavə edin'),
     about: yup.string(),
     password: yup.string().required("Şifrə mütləq daxil edilməlidir")
 })
