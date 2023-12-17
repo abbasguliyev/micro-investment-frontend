@@ -49,9 +49,7 @@ function Register() {
             if (values.profile_picture == "") {
                 values.profile_picture = null;
             }
-            if (values.references == []) {
-                values.references = null;
-            }
+            
             dispatch(postRegisterAsync(values))
             .then(() => {
                 navigate("/login")
