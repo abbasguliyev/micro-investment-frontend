@@ -64,6 +64,17 @@ export const getAllEntrepreneurImageAsync = createAsyncThunk('getAllEntrepreneur
     }
 })
 
+export const deleteEntrepreneurAsync = createAsyncThunk('deleteEntrepreneurAsync', async (values) => {
+    try {
+        const res = await axios.delete(`entrepreneurs/${values.id}/`)
+        return res.data;
+    } catch (error) {
+        // If the API call fails, the error will be thrown and caught here.
+        throw {'message': error.response.data.detail};
+    }
+})
+
+
 export const EntrepreneurSlice = createSlice({
     name: 'auth',
     initialState: {
@@ -125,7 +136,7 @@ export const EntrepreneurSlice = createSlice({
         })
         builder.addCase(postEntrepreneurCreateAsync.fulfilled, (state, action) => {
             state.isLoading = false;
-            state.successMsg = action.payload.detail;
+            state.successMsg = "Sifariş əlavə edildi";
             state.error = null;
         })
         builder.addCase(postEntrepreneurCreateAsync.rejected, (state, action) => {
@@ -182,6 +193,18 @@ export const EntrepreneurSlice = createSlice({
             state.error = action.error.message;
             state.isLoading = false;
             state.successMsg = null;
+        })
+        // Entrepreneur Delete Reducers
+        builder.addCase(deleteEntrepreneurAsync.pending, (state, action) => {
+            state.isLoading = true;
+        })
+        builder.addCase(deleteEntrepreneurAsync.fulfilled, (state, action) => {
+            state.isLoading = false;
+            state.successMsg = "Əməliyyat yerinə yetirildi";
+        })
+        builder.addCase(deleteEntrepreneurAsync.rejected, (state, action) => {
+            state.error = action.error.message;
+            state.isLoading = false;
         })
     }
 })

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import style from "./style.module.css";
-import { useParams } from "react-router-dom";
+import { NavLink, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getEntrepreneurDetailAsync } from "../../redux/EntrepreneurSlice/EntrepreneurSlice";
 import { useFormik } from "formik";
@@ -38,7 +38,6 @@ function EntrepreneurDetail() {
 
     useEffect(() => {
         dispatch(getEntrepreneurDetailAsync(id));
-        
     }, [dispatch]);
 
     useEffect(() => {
@@ -69,7 +68,7 @@ function EntrepreneurDetail() {
                 </h1>
                 <hr className="m-10" />
                 <div className="mx-auto flex flex-col md:flex-row lg:flex-row">
-                    <div className="h-96 flex flex-row md:flex-col mr-2 order-2 md:order-1 scroll-smooth overflow-y-auto overflow-x-hidden overflow-hidden">
+                    {/* <div className="h-96 flex flex-row md:flex-col mr-2 order-2 md:order-1 scroll-smooth overflow-y-auto overflow-x-hidden overflow-hidden">
                         {entrepreneur.images ? (
                             <>
                                 {entrepreneur.images.map((image) => (
@@ -85,8 +84,8 @@ function EntrepreneurDetail() {
                         ) : (
                             ""
                         )}
-                    </div>
-                    <div className="w-full h-96 order-1 md:order-2"> 
+                    </div> */}
+                    {/* <div className="w-full h-96 order-1 md:order-2"> 
                         {entrepreneur.images &&
                             entrepreneur.images.length > 0 ? (
                                 <>
@@ -110,11 +109,26 @@ function EntrepreneurDetail() {
                                     alt=""
                                 />
                         )}
-                    </div>
+                    </div> */}
                 </div>
                 <div className="flex flex-col md:flex-row lg:flex-row">
                     <div className="w-full sm:w-full md:w-2/3 lg:w-2/3">
-                        <h4 className="text-3xl mt-10">Açıqlama: </h4>
+                        <div className="flex justify-between align-center">
+                            <h4 className="text-3xl mt-10">Açıqlama: </h4>
+                            {me.user ? (
+                                    <>
+                                        {me.user.is_staff ||
+                                        me == entrepreneur.owner ? (
+                                            <NavLink to={`/entrepreneur-update/${entrepreneur.id}`} className={`px-10 py-1 btn-main-bg self-end rounded mt-4`}>
+                                                Redaktə et
+                                            </NavLink>
+                                        ) : (
+                                            ""
+                                        )}
+                                    </>
+                                ) : ""
+                            }
+                        </div>
                         <hr className="my-5" />
                         <p>{entrepreneur.description}</p>
                     </div>
@@ -170,6 +184,38 @@ function EntrepreneurDetail() {
                                                 {me.user.is_staff ||
                                                 me == entrepreneur.owner ? (
                                                     <>
+                                                        <div className="w-full flex flex-col md:flex-col lg:flex-col xl:flex-row justify-between">
+                                                            <p className="text-slate-400">
+                                                                Məhsul sayı:
+                                                            </p>
+                                                            <b>
+                                                                {
+                                                                    entrepreneur.count
+                                                                }
+                                                            </b>
+                                                        </div>
+                                                        <div className="w-full flex flex-col md:flex-col lg:flex-col xl:flex-row justify-between">
+                                                            <p className="text-slate-400">
+                                                                Alış qiyməti:
+                                                            </p>
+                                                            <b>
+                                                                {
+                                                                    entrepreneur.purchase_price
+                                                                }{" "}
+                                                                AZN
+                                                            </b>
+                                                        </div>
+                                                        <div className="w-full flex flex-col md:flex-col lg:flex-col xl:flex-row justify-between">
+                                                            <p className="text-slate-400">
+                                                                Satış qiyməti:
+                                                            </p>
+                                                            <b>
+                                                                {
+                                                                    entrepreneur.sale_price
+                                                                }{" "}
+                                                                AZN
+                                                            </b>
+                                                        </div>
                                                         <div className="w-full flex flex-col md:flex-col lg:flex-col xl:flex-row justify-between">
                                                             <p className="text-slate-400">
                                                                 Ümumi gəlir:

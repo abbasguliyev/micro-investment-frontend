@@ -19,9 +19,11 @@ import ExperienceUpdate from './pages/ExperienceUpdate'
 import AdminUserCreate from './pages/Admin/AdminUsers/AdminUserCreate'
 import Admin from './pages/Admin'
 import { useEffect, useState } from 'react'
+import EntrepreneurUpdate from './pages/EntrepreneurUpdate'
 
 function App() {
   const [token, setToken] = useState(null);
+  // const [refreshToken, setRefreshToken] = useState(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -51,6 +53,7 @@ function App() {
                       <Route path='/' element={<Home/>} />
                       <Route path='/about' element={<About/>} />
                       <Route path='/entrepreneur-detail/:id' element={<EntrepreneurDetail/>} />
+                      <Route path='/entrepreneur-update/:id' element={<EntrepreneurUpdate/>} />
                       <Route path='/entrepreneur' element={<EntrepreneurCreate/>} />
                       <Route path='/entrepreneur-image-create' element={<EntrepreneurImageCreate/>} />
                       <Route path='/profile' element={<Outlet/>}>

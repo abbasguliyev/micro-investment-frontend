@@ -14,6 +14,7 @@ import AuthInput from "../../../components/InputComponents/AuthInput";
 import { useFormik } from "formik";
 import style from "./style.module.css";
 import {
+    deleteEntrepreneurAsync,
     getAllEntrepreneurAsync,
     putEntrepreneurAsync,
     resetEntrepreneurSlice,
@@ -23,6 +24,7 @@ import RadioInput from "../../../components/InputComponents/RadioInput";
 import { getAllUsersAsync } from "../../../redux/AuthSlice/AuthSlice";
 import { FaCheck } from "react-icons/fa";
 import { FaXmark } from "react-icons/fa6";
+import { MdDelete } from "react-icons/md";
 
 
 function AdminEntrepreneurs() {
@@ -38,6 +40,7 @@ function AdminEntrepreneurs() {
     const [isEntrepreneurFinishedModalOpen, setIsEntrepreneurFinishedModalOpen] =useState(false);
     const [entrepreneur, setEntrepreneur] = useState(null);
     const [investment, setInvestment] = useState(null);
+    const [isEntrepreneurDeleteModalOpen, setIsEntrepreneurDeleteModalOpen] = useState(false);
     const dispatch = useDispatch();
 
     let entrepreneurs = useSelector((state) => state.entrepreneur.entrepreneurs);
@@ -55,6 +58,33 @@ function AdminEntrepreneurs() {
             setUsers(res.payload.results)
         ))
     }
+
+    // ENTREPRENEUR DELETE SHOW MODAL
+    const showEntrepreneurModal = (entrepreneur) => {
+        setIsEntrepreneurDeleteModalOpen(true);
+        setEntrepreneur(entrepreneur)
+    };
+
+    const handleEntrepreneurDeleteModalOk = () => {
+        setIsEntrepreneurDeleteModalOpen(false);
+        dispatch(deleteEntrepreneurAsync({"id": entrepreneur}))
+        .then(() => {
+            let offset = (currentPage - 1) * pageLimit;
+            dispatch(
+                getAllEntrepreneurAsync({
+                    offset: offset,
+                    owner: "",
+                    start_date: "",
+                    end_date: "",
+                    is_active: ""
+                })
+            )
+        })
+    };
+
+    const handleEntrepreneurDeleteModalCancel = () => {
+        setIsEntrepreneurDeleteModalOpen(false);
+    };
 
     // ENTREPRENEUR INVESTMENTS SHOW MODAL
     const showEntrepreneurInvestmentsModal = (entrepreneur) => {
@@ -301,7 +331,7 @@ function AdminEntrepreneurs() {
                         slice={resetInvestmentSlice()}
                     />
                 )}
-                <div className="w-full sm:w-full md:w-full lg:w-1/4 pr-3">
+                <div className="w-full sm:w-full md:w-full lg:w-1/5 pr-3">
                     <b>Filter</b>
                     <form className='rounded h-2/4 mb-5 mt-2 flex flex-col' onSubmit={filterFormik.handleSubmit}>
                         <AuthInput
@@ -411,7 +441,7 @@ function AdminEntrepreneurs() {
                         <button type='submit' className={`${style.search_btn} btn-main-bg rounded mt-4`}>Axtar</button>
                     </form>
                 </div>
-                <div className="w-full sm:w-full md:w-full lg:w-3/4 grid gap-4 lg:grid-cols-2 md:grid-cols-1 sm:grid-cols-1 text-sm overflow-y-hidden overflow-x-auto">
+                <div className="w-full sm:w-full md:w-full lg:w-4/5 grid gap-4 lg:grid-cols-2 md:grid-cols-1 sm:grid-cols-1 text-sm overflow-y-hidden overflow-x-auto">
                     <table className="table-auto w-full h-fit">
                         <thead>
                             <tr>
@@ -444,6 +474,8 @@ function AdminEntrepreneurs() {
                                 <th className="border border-slate-600">
                                     Sifarişi bitir
                                 </th>
+                                <th className="border border-slate-600"></th>
+
                             </tr>
                         </thead>
                         <tbody className="text-center">
@@ -511,11 +543,33 @@ function AdminEntrepreneurs() {
                                             entrepreneur.is_finished ? <p className="error">Artıq bitib</p> : <p onClick={() => showEntrepreneurFinishedModal(entrepreneur)} className="success cursor-pointer">Bitir</p>
                                         }
                                     </td>
+                                    <td className="border border-slate-700 text-center">
+                                        <NavLink
+                                            className={`p-2`}
+                                            onClick={() => showEntrepreneurModal(entrepreneur.id)}
+                                        >
+                                            <MdDelete
+                                                className="inline"
+                                                style={{
+                                                    color: "#CF4B44",
+                                                    fontSize: "20px",
+                                                }}
+                                            />
+                                        </NavLink>
+                                    </td>
                                 </tr>
                             ))}
                         </tbody>
                     </table>
                 </div>
+
+                <Modal
+                    title={`Silmək istədiyinizə əminsinizmi?`}
+                    okType="default"
+                    open={isEntrepreneurDeleteModalOpen}
+                    onOk={handleEntrepreneurDeleteModalOk}
+                    onCancel={handleEntrepreneurDeleteModalCancel}
+                ></Modal>
                 
                 <Modal
                     title={`İnvestisiyalar`}

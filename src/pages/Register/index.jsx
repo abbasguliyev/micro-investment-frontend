@@ -253,7 +253,7 @@ function Register() {
                             style={style}
                         />
                         <AuthInput
-                            label="Kredit kartı nömrəsi"
+                            label="Bank adı - Kart nömrəsi - Kart Sahibinin adı"
                             id="credit_cart_number"
                             name="credit_cart_number"
                             type="text"

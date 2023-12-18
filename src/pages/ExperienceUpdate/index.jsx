@@ -13,6 +13,7 @@ import {
 } from "../../redux/ExperienceSlice/ExperienceSlice";
 import TextAreaInput from "../../components/InputComponents/TextAreaInput";
 import Checkbox from "../../components/InputComponents/Checkbox";
+import { getMeAsync } from "../../redux/AuthSlice/AuthSlice";
 
 function ExperienceUpdate() {
     const dispatch = useDispatch();
@@ -23,6 +24,7 @@ function ExperienceUpdate() {
     let experience = useSelector((state) => state.experience.experience);
     const errorMsg = useSelector((state) => state.experience.error);
     const successMsg = useSelector((state) => state.experience.successMsg);
+    let me = useSelector(state => state.auth.me)
 
     const formik = useFormik({
         initialValues: {
@@ -42,7 +44,7 @@ function ExperienceUpdate() {
             dispatch(putExperiencesAsync(values))
                 .unwrap()
                 .then(() => {
-                    navigate("/profile");
+                    navigate("/profile", {state: {id: me && me.id}});
                 });
         },
         validationSchema: validations,
@@ -50,6 +52,7 @@ function ExperienceUpdate() {
 
     useEffect(() => {
         dispatch(getExperienceDetailsAsync({id}))
+        dispatch(getMeAsync())
     }, [dispatch])
 
     useEffect(() => {

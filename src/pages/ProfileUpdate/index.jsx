@@ -45,7 +45,7 @@ function ProfileUpdate() {
             }
             dispatch(putUserProfileAsync(values))
             .then(() => {
-                navigate("/profile")
+                navigate("/profile", {state: {id: me && me.id}})
             })
         },
     });
@@ -255,7 +255,7 @@ function ProfileUpdate() {
                             style={style}
                         />
                         <AuthInput
-                            label="Kredit kartı nömrəsi"
+                            label="Bank adı - Kart nömrəsi - Kart Sahibinin adı"
                             id="credit_cart_number"
                             name="credit_cart_number"
                             type="text"

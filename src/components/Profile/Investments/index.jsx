@@ -113,7 +113,7 @@ const Investments = ({userId}) => {
               <th className="border border-slate-600">Sifarişin planlanan bitmə tarixi</th>
               <th className="border border-slate-600">Sifarişin yekunlaşdığı tarixi</th>
               <th className="border border-slate-600">Təsdiqlənib</th>
-              <th className="border border-slate-600">Sifariş bitibmi</th>
+              <th className="border border-slate-600">Sifariş statusu</th>
               <th className="border border-slate-600">Hesabat</th>
             </tr>
           </thead>

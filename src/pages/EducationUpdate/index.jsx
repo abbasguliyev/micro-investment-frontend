@@ -9,6 +9,7 @@ import ResponseMessage from "../../components/ResponseMessage";
 
 import { getEducationDetailsAsync, putEducationAsync, resetEducationSlice } from "../../redux/EducationSlice/EducationSlice";
 import Checkbox from "../../components/InputComponents/Checkbox";
+import { getMeAsync } from "../../redux/AuthSlice/AuthSlice";
 
 function EducationUpdate() {
     const dispatch = useDispatch();
@@ -19,6 +20,7 @@ function EducationUpdate() {
     let education = useSelector((state) => state.education.education);
     const errorMsg = useSelector((state) => state.education.error);
     const successMsg = useSelector((state) => state.education.successMsg);
+    let me = useSelector(state => state.auth.me)
 
     const formik = useFormik({
         initialValues: {
@@ -37,7 +39,7 @@ function EducationUpdate() {
             dispatch(putEducationAsync(values))
                 .unwrap()
                 .then(() => {
-                    navigate("/profile");
+                    navigate("/profile", {state: {id: me && me.id}});
                 });
         },
         validationSchema: validations,
@@ -45,6 +47,7 @@ function EducationUpdate() {
 
     useEffect(() => {
         dispatch(getEducationDetailsAsync({id}))
+        dispatch(getMeAsync())
     }, [dispatch])
 
     useEffect(() => {

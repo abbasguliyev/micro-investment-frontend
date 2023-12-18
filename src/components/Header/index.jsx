@@ -4,7 +4,7 @@ import { Fragment } from 'react'
 import { Disclosure, Menu, Transition } from '@headlessui/react'
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { useDispatch, useSelector } from 'react-redux'
-import { getMeAsync } from '../../redux/AuthSlice/AuthSlice'
+import { getMeAsync, refreshTokenAsync } from '../../redux/AuthSlice/AuthSlice'
 import { getAllNotificationsAsync } from '../../redux/NotificationSlice/NotificationSlice'
 import { Modal } from 'antd'
 
@@ -18,8 +18,6 @@ function Header() {
 
   let me = useSelector((state) => state.auth.me)
   let notifications = useSelector((state) => state.notification.notifications)
-  console.log(notifications);
-  console.log(me);
 
   useEffect(() => {
     dispatch(getMeAsync())
@@ -29,9 +27,20 @@ function Header() {
     dispatch(getAllNotificationsAsync({"offset": "", "user": me && me.user.id}))
   }, [dispatch, me])
 
+  useEffect(()=>{
+    const REFRESH_INTERVAL = 1000 * 60 * 3 // 4 minutes
+    let interval = setInterval(()=>{
+        const refresh = localStorage.getItem("refresh");
+        if (refresh) {
+          dispatch(refreshTokenAsync({"refresh": refresh}))
+        }
+    }, REFRESH_INTERVAL)
+    return () => clearInterval(interval)
+  }, [])
 
   function logout() {
     localStorage.removeItem('access')
+    localStorage.removeItem('refresh')
     navigate("/");
     window.location.reload();
   }
@@ -160,14 +169,14 @@ function Header() {
                 </Menu>
                 <div className='relative'>
 
-                  <button onClick={() => setNotificationModal(!notificationModal)} type="button" className="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none">
+                  <button onClick={() => setNotificationModal(!notificationModal)} type="button" className="relative rounded-full p-1 text-gray-400 hover:text-white focus:outline-none ml-3">
                     <span className="absolute -inset-1.5"></span>
                     <span className="sr-only">View notifications</span>
                     <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" aria-hidden="true">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
                     </svg>
                   </button>
-                  <div 
+                  {/* <div 
                     className={notificationModal ? `block shadow-lg` : `hidden`} 
                     style={{
                       position: "absolute",
@@ -182,7 +191,7 @@ function Header() {
                       <ul>
                         {
                           notifications.map((notification) => (
-                            <li>
+                            <li key={notification.id}>
                               {notification.message}
                               <br />
                               {notification.created_at}
@@ -191,7 +200,7 @@ function Header() {
                           ))
                         }
                       </ul>
-                    </div>
+                    </div> */}
 
                   </div>
               </div>
