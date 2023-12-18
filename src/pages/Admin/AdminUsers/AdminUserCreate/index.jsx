@@ -306,7 +306,7 @@ function AdminUserCreate() {
                                     <li key={user ? user.id : i}>
                                         <Checkbox
                                             label={
-                                                user && user.user ? (`${user.about} ${user.user.last_name} | ${user.user.email}`) : ""
+                                                user && user.user ? (`${user.first_name} ${user.user.last_name} | ${user.user.email}`) : ""
                                             }
                                             id={user.id}
                                             name="references"

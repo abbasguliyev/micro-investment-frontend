@@ -20,17 +20,60 @@ import AdminUserCreate from './pages/Admin/AdminUsers/AdminUserCreate'
 import Admin from './pages/Admin'
 import { useEffect, useState } from 'react'
 import EntrepreneurUpdate from './pages/EntrepreneurUpdate'
+import { refreshTokenAsync } from './redux/AuthSlice/AuthSlice'
+import { jwtDecode } from "jwt-decode";
 
 function App() {
   const [token, setToken] = useState(null);
-  // const [refreshToken, setRefreshToken] = useState(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   useEffect(() => {
-    const access = localStorage.getItem("access");
-    setToken(access)
-  }, [token])
+      const access = localStorage.getItem("access");
+      setToken(access)
+
+      let timerRef = null;
+      try {
+        const decoded = jwtDecode(access);
+        const expiryTime = (new Date(decoded.exp * 1000)).getTime();
+        const currentTime = (new Date()).getTime();
+
+        const timeout = expiryTime - currentTime;
+        const onExpire = () => {
+            const refresh = localStorage.getItem("refresh");
+            if (refresh) {
+              dispatch(refreshTokenAsync({"refresh": refresh}))
+            } else {
+              navigate("/login");
+            }
+        };
+
+        if (timeout > 0) {
+          // token not expired, set future timeout to log out and redirect
+          timerRef = setTimeout(onExpire, timeout);
+        } else {
+          // token expired, log out and redirect
+          onExpire();
+        }
+      } catch (error) {
+        navigate("/login");
+      }
+      
+      return () => {
+        clearTimeout(timerRef);
+      };
+  }, [token]);
+
+  // useEffect(()=>{
+  //   const REFRESH_INTERVAL = 1000 * 60 * 3 // 4 minutes
+  //   let interval = setInterval(()=>{
+  //       const refresh = localStorage.getItem("refresh");
+  //       if (refresh) {
+  //         dispatch(refreshTokenAsync({"refresh": refresh}))
+  //       }
+  //   }, REFRESH_INTERVAL)
+  //   return () => clearInterval(interval)
+  // }, [])
 
   return (
     <>
