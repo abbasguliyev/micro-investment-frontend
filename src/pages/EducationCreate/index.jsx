@@ -7,6 +7,8 @@ import AuthInput from "../../components/InputComponents/AuthInput";
 import ResponseMessage from "../../components/ResponseMessage";
 import { postEducationAsync, resetEducationSlice } from "../../redux/EducationSlice/EducationSlice";
 import Checkbox from "../../components/InputComponents/Checkbox";
+import { useEffect } from "react";
+import { getMeAsync } from "../../redux/AuthSlice/AuthSlice";
 
 function EducationCreate() {
     const dispatch = useDispatch();
@@ -14,6 +16,8 @@ function EducationCreate() {
 
     const errorMsg = useSelector((state) => state.auth.error);
     const successMsg = useSelector((state) => state.auth.successMsg);
+
+    let me = useSelector(state => state.auth.me)
 
     const formik = useFormik({
         initialValues: {
@@ -31,11 +35,15 @@ function EducationCreate() {
             dispatch(postEducationAsync(values))
                 .unwrap()
                 .then(() => {
-                    navigate("/profile");
+                    navigate("/profile", {state: {id: me && me.id}});
                 });
         },
         validationSchema: validations,
     });
+    
+    useEffect(() => {
+        dispatch(getMeAsync())
+    }, [dispatch])
 
     return (
         <>

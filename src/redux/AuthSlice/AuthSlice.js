@@ -7,6 +7,16 @@ export const postLoginAsync = createAsyncThunk('postLoginAsync', async (data) =>
         return res.data;
     } catch (error) {
         // If the API call fails, the error will be thrown and caught here.
+        throw {'message': error.response.data.detail};
+    }
+})
+
+export const refreshTokenAsync = createAsyncThunk('refreshTokenAsync', async (data) => {
+    try {
+        const res = await axios.post('users/refresh/', data, { headers: { 'Authorization': "" }})
+        return res.data;
+    } catch (error) {
+        // If the API call fails, the error will be thrown and caught here.
         throw {'message': "Məlumatları doğru daxil edin"};
     }
 })
@@ -37,8 +47,6 @@ export const postRegisterAsync = createAsyncThunk('postRegisterAsync', async (da
         const res = await axios.post('users/', form, { headers: { 'Content-Type': 'multipart/form-data', 'Authorization': "" }})
         return res.data;
     } catch (error) {
-        console.log(error);
-
         throw {'message': error.response.data.detail};
     }
 })
@@ -179,6 +187,7 @@ export const AuthSlice = createSlice({
         builder.addCase(postLoginAsync.fulfilled, (state, action) => {
             state.isLoading = false;
             localStorage.setItem("access", action.payload.access)
+            localStorage.setItem("refresh", action.payload.refresh)
             state.me = action.payload.user_details;
             state.access = action.payload.access;
             state.refresh = action.payload.refresh;
@@ -187,6 +196,28 @@ export const AuthSlice = createSlice({
             state.successMsg = null;
         })
         builder.addCase(postLoginAsync.rejected, (state, action) => {
+            state.error = action.error.message;
+            state.isLoggedIn = false;
+            state.isLoading = false;
+        })
+        // Refresh Reducers
+        builder.addCase(refreshTokenAsync.pending, (state, action) => {
+            state.isLoading = true;
+            state.isLoggedIn = false;
+            state.error = null;
+            state.successMsg = null;
+        })
+        builder.addCase(refreshTokenAsync.fulfilled, (state, action) => {
+            state.isLoading = false;
+            localStorage.setItem("access", action.payload.access)
+            localStorage.setItem("refresh", action.payload.refresh)
+            state.access = action.payload.access;
+            state.refresh = action.payload.refresh;
+            state.isLoggedIn = true;
+            state.error = null;
+            state.successMsg = null;
+        })
+        builder.addCase(refreshTokenAsync.rejected, (state, action) => {
             state.error = action.error.message;
             state.isLoggedIn = false;
             state.isLoading = false;

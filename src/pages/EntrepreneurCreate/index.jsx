@@ -7,6 +7,7 @@ import style from "./style.module.css"
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import ResponseMessage from "../../components/ResponseMessage";
+import validations from "./validation";
 
 function EntrepreneurCreate() {
     const dispatch = useDispatch();
@@ -26,18 +27,18 @@ function EntrepreneurCreate() {
             purchase_price: 1,
             sale_price: 1,
             platform_cost_percentage: 2,
-            investor_share_percentage: 25,
-            entrepreneur_share_percentage: 63,
+            investor_share_percentage: 30,
+            entrepreneur_share_percentage: 65,
             debt_to_the_fund_percentage: 5,
-            charity_to_the_fund_percentage: 7,
+            charity_to_the_fund_percentage: 0,
         },
         onSubmit: (values) => {
             dispatch(postEntrepreneurCreateAsync(values))
             .then(res => {
-                localStorage.removeItem("entrepreneurForm")
                 navigate("/entrepreneur-image-create", {state: {id: res.payload.id, project_name: res.payload.project_name}});
             });
-        }
+        },
+        validationSchema: validations
     });
     return (
         <>

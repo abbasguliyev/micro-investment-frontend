@@ -13,7 +13,6 @@ import { resetExperienceSlice } from '../../redux/ExperienceSlice/ExperienceSlic
 function Profile() {
   const [id, setID] = useState();
   let location = useLocation();
-  console.log(location);
   const [showTab, setShowTab] =useState(<Investments userId={location.state ? location.state.id : ""}/>);
   const [title, setTitle] =useState("Yatırımlarım");
 
@@ -211,19 +210,19 @@ function Profile() {
       <div className='w-full h-96 border pt-4 mt-5 mr-2 pb-7 rounded drop-shadow-md overflow-auto'>
         <div>
             <button onClick={()=>{
-              setShowTab(<Investments userId={location.state.id}/>)
+              setShowTab(<Investments userId={location.state && location.state.id}/>)
               setTitle("Yatırımlarım")
             }} className={`p-2 ml-2 rounded btn-main-bg`}>Yatırımlar</button>
             <button onClick={()=>{
-              setShowTab(<EntreprenuerTable userId={location.state.id}/>)
+              setShowTab(<EntreprenuerTable userId={location.state && location.state.id}/>)
               setTitle("Lahiyələrim")
             }} className={`p-2 ml-2 rounded btn-main-bg`}>Lahiyələr</button>
             <button onClick={()=>{
-              setShowTab(<Education userId={location.state.id}/>)
+              setShowTab(<Education userId={location.state && location.state.id}/>)
               setTitle("Təhsilim")
             }} className={`p-2 ml-2 rounded btn-main-bg`}>Təhsil</button>
             <button onClick={()=>{
-              setShowTab(<Experience userId={location.state.id}/>)
+              setShowTab(<Experience userId={location.state && location.state.id}/>)
               setTitle("Təcrübələrim")
             }} className={`p-2 ml-2 rounded btn-main-bg`}>Təcrübə</button>
         </div>

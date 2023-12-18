@@ -58,7 +58,6 @@ function AdminUserCreate() {
     });
 
     const searchInvestor = (e) => {
-        console.log(e.target.value);
         dispatch(getAllUsersAsync({"offset": 0, "fullname": e.target.value, "birthdate":"", "marital_status":"", "employment_status":"", "housing_status":"", "phone_number":"", "monthly_income":"", "monthly_income__gte": "", "monthly_income__lte": ""}))
     }
 
@@ -246,7 +245,7 @@ function AdminUserCreate() {
                             style={style}
                         />
                         <AuthInput
-                            label="Kredit kartı nömrəsi"
+                            label="Bank adı - Kart nömrəsi - Kart Sahibinin adı"
                             id="credit_cart_number"
                             name="credit_cart_number"
                             type="text"
