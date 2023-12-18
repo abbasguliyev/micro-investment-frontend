@@ -8,7 +8,6 @@ import { getMeAsync, refreshTokenAsync } from '../../redux/AuthSlice/AuthSlice'
 import { getAllNotificationsAsync } from '../../redux/NotificationSlice/NotificationSlice'
 import { Modal } from 'antd'
 
-
 function Header() {
   const location = useLocation();
   const dispatch = useDispatch();

@@ -190,17 +190,15 @@ function Profile() {
                 <hr />
                 <div className='w-full flex flex-col md:flex-col lg:flex-col xl:flex-col'>
                   <p className='text-slate-400'>Referanslar:</p>
-                  <span className='place-items-end'>
                     {
                       user && user.references ? (
-                          user.references.map((ref, i) => (
-                            <>
-                            <p>{i+1}. {ref.first_name} {ref.last_name} | {ref.email}</p>
-                            </>
+                        user.references.map((ref, i) => (
+                            <span key={`referance-${i+1}`} className='place-items-end'>
+                              <p>{i+1}. {ref.first_name} {ref.last_name} | {ref.email}</p>
+                            </span>
                           ))
                       ) : "-"
                     }
-                  </span>
                 </div>
                 <hr />
               </div>
