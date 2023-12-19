@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from "axios";
 
 const access = localStorage.getItem('access')
 
@@ -9,5 +9,5 @@ export default axios.create({
     headers: {
         "Content-Type" : "application/json",
         "Authorization" : `Bearer ${access}`
-     }
+    }
 })

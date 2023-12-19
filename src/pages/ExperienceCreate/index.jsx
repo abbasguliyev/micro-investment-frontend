@@ -12,6 +12,7 @@ import {
 import TextAreaInput from "../../components/InputComponents/TextAreaInput";
 import Checkbox from "../../components/InputComponents/Checkbox";
 import { getMeAsync } from "../../redux/AuthSlice/AuthSlice";
+import { useEffect } from "react";
 
 function ExperienceCreate() {
     const dispatch = useDispatch();

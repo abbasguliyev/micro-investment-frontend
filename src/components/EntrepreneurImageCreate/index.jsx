@@ -1,15 +1,17 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { getAllEntrepreneurImageAsync, postEntrepreneurImageCreateAsync, resetEntrepreneurSlice } from "../../redux/EntrepreneurSlice/EntrepreneurSlice";
 import { useFormik } from "formik";
 import ResponseMessage from "../ResponseMessage";
 
 function EntrepreneurImageCreate() {
     const { state } = useLocation();
-    const { id, project_name } = state;
+    
+    // const { id, project_name } = state;
 
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     let images = useSelector((state) => state.entrepreneur.entrepreneur_images);
     let errorMsg = useSelector((state)=>state.entrepreneur.error)
@@ -17,20 +19,26 @@ function EntrepreneurImageCreate() {
 
     const formik = useFormik({
         initialValues: {
-            entrepreneur: id,
+            entrepreneur: state && state.id,
             image: ""
         },
         onSubmit: (values, { resetForm }) => {
             dispatch(postEntrepreneurImageCreateAsync(values))
             .then(() => {
                 resetForm();
-                dispatch(getAllEntrepreneurImageAsync({"entrepreneur": id}))
+                dispatch(getAllEntrepreneurImageAsync({"entrepreneur": state && state.id}))
             })
         }
     })
 
     useEffect(() => {
-        dispatch(getAllEntrepreneurImageAsync({"entrepreneur": id}))
+        if (state == null) {
+            navigate("/")
+        }
+    }, [])
+
+    useEffect(() => {
+        dispatch(getAllEntrepreneurImageAsync({"entrepreneur": state && state.id}))
     }, [dispatch])
 
     return (
@@ -38,7 +46,7 @@ function EntrepreneurImageCreate() {
             <header className="bg-white shadow place-items-start">
                 <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
                     <h1 className="text-3xl font-bold tracking-tight text-gray-900">
-                        {project_name} Media
+                        {state && state.project_name} Media
                     </h1>
                 </div>
             </header>

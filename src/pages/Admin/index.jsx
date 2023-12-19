@@ -5,15 +5,21 @@ import AdminEntrepreneurs from './AdminEntrepreneurs';
 import AdminInvestorPayments from './AdminInvestorPayments';
 import { useDispatch, useSelector } from 'react-redux';
 import { getCompanyBalanceAsync } from '../../redux/CompanyBalanceSlice/CompanyBalanceSlice';
+import { getMeAsync } from '../../redux/AuthSlice/AuthSlice';
+import { useNavigate } from 'react-router-dom';
 
 function Admin() {
   const [showTab, setShowTab] =useState(<AdminUsers />);
   const [title, setTitle] =useState("İstifadəçilər");
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   let companyBalance = useSelector((state) => state.companyBalance.companyBalances)
+  let me = useSelector((state) => state.auth.me)
+
 
   useEffect(() => {
+    dispatch(getMeAsync())
     dispatch(getCompanyBalanceAsync())
   }, [dispatch])
 
