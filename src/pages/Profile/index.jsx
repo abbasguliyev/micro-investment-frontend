@@ -56,7 +56,7 @@ function Profile() {
           {
             user && user.profile_picture ?
             <img src={user.profile_picture} alt="default1" className='w-full h-full object-cover rounded' />
-            : <img src="/src/assets/images/default_avatar.png" alt="default" className='w-full h-full object-cover rounded' />
+            : <img src="/public/images/default_avatar.png" alt="default" className='w-full h-full object-cover rounded' />
           }
         </div>
         <div className='w-full sm:w-full md:w-3/5 lg:w-3/5 xl:md:w-3/5 h-96 mb-2 border rounded drop-shadow-md'>
