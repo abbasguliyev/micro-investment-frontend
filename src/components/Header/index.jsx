@@ -105,7 +105,7 @@ function Header() {
                           </> : 
                             <img
                               className="h-8 w-8 rounded-full"
-                              src="/public/images/default_avatar.png"
+                              src="/images/default_avatar.png"
                               alt=""
                             />
                       }

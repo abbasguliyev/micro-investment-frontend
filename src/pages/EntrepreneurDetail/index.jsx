@@ -114,7 +114,7 @@ function EntrepreneurDetail() {
                             ) : (
                                 <img
                                     className="w-full h-96 object-contain rounded cursor-pointer"
-                                    src="/public/images/default.jpg"
+                                    src="/images/default.jpg"
                                     alt=""
                                 />
                         )}
