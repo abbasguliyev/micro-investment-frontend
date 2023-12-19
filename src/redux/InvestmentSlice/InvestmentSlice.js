@@ -28,6 +28,16 @@ export const putInvestmentAsync = createAsyncThunk('putInvestmentAsync', async (
     }
 })
 
+export const deleteInvestmentAsync = createAsyncThunk('deleteInvestmentAsync', async (values) => {
+    try {
+        const res = await axios.delete(`investments/${values.id}/`)
+        return res.data;
+    } catch (error) {
+        // If the API call fails, the error will be thrown and caught here.
+        throw {'message': error.response.data.detail};
+    }
+})
+
 export const getAllInvestmentReportsAsync = createAsyncThunk('getAllInvestmentReportsAsync', async (values) => {
     try {
         const res = await axios.get(`investments/report/?limit=10&offset=${values.offset}&investor=${values.investor}&investment=${values.investment}`)
@@ -124,6 +134,18 @@ export const InvestmentSlice = createSlice({
             state.error = action.error.message;
             state.isLoading = false;
             state.successMsg = null;
+        })
+        // Investment Delete Reducers
+        builder.addCase(deleteInvestmentAsync.pending, (state, action) => {
+            state.isLoading = true;
+        })
+        builder.addCase(deleteInvestmentAsync.fulfilled, (state, action) => {
+            state.isLoading = false;
+            state.successMsg = "Əməliyyat yerinə yetirildi";
+        })
+        builder.addCase(deleteInvestmentAsync.rejected, (state, action) => {
+            state.error = action.error.message;
+            state.isLoading = false;
         })
         // InvestmentReports Reducers
         builder.addCase(getAllInvestmentReportsAsync.pending, (state, action) => {

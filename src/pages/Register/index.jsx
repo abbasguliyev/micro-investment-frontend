@@ -22,7 +22,7 @@ function Register() {
     let errorMsg = useSelector((state) => state.auth.error)
 
     const searchInvestor = (e) => {
-        dispatch(getAllUsersAsync({"offset": 0, "fullname": e.target.value, "birthdate":"", "marital_status":"", "employment_status":"", "housing_status":"", "phone_number":"", "monthly_income":"", "monthly_income__gte": "", "monthly_income__lte": ""}))
+        dispatch(getAllUsersAsync({"offset": 0, "fullname": e.target.value, "birthdate":"", "marital_status":"", "employment_status":"", "housing_status":"", "phone_number":"", "monthly_income":"", "monthly_income__gte": "", "monthly_income__lte": "", "is_active": ""}))
     }
 
     const formik = useFormik({

@@ -128,7 +128,7 @@ export const getAllUsersAsync = createAsyncThunk('getAllUsersAsync', async (valu
     }
     
     try {
-        const res = await axios.get(`users/?limit=10&offset=${values.offset}&fullname=${values.fullname}&birthdate=${values.birthdate}&marital_status=${values.marital_status}&employment_status=${values.employment_status}&housing_status=${values.housing_status}&phone_number=${values.phone_number}&monthly_income=${values.monthly_income}&monthly_income__gte=${values.monthly_income__gte}&monthly_income__lte=${values.monthly_income__lte}`, { headers: { 'Authorization': '' }})
+        const res = await axios.get(`users/?limit=10&offset=${values.offset}&fullname=${values.fullname}&birthdate=${values.birthdate}&marital_status=${values.marital_status}&employment_status=${values.employment_status}&housing_status=${values.housing_status}&phone_number=${values.phone_number}&monthly_income=${values.monthly_income}&monthly_income__gte=${values.monthly_income__gte}&monthly_income__lte=${values.monthly_income__lte}&is_active=${values.is_active}`, { headers: { 'Authorization': '' }})
         return res.data;
     } catch (error) {
         // If the API call fails, the error will be thrown and caught here.

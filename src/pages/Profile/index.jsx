@@ -19,8 +19,6 @@ function Profile() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
-  console.log(location.state);
-  
   let me = useSelector((state) => state.auth.me)
   let user = useSelector((state) => state.auth.user)
   let successMsg = useSelector((state) => state.auth.successMsg)
@@ -36,9 +34,9 @@ function Profile() {
     if (location.state == null) {
       navigate("/")
     } else{
+      setID(location.state && location.state.id)
       dispatch(getMeAsync())
       dispatch(getUserDetailAsync({"id": location.state && location.state.id}))
-      setID(location.state && location.state.id)
     }
   }, [dispatch])
 
@@ -56,8 +54,8 @@ function Profile() {
       <div className='flex flex-col md:flex-row lg:flex-row xl:flex-row'>
         <div className='w-full sm:w-full md:w-2/5 lg:w-2/5 xl:md:w-2/5 h-96 border mr-2 mb-2 rounded drop-shadow'>
           {
-            user ?
-            <img src={user.profile_picture} alt="default" className='w-full h-full object-cover rounded' />
+            user && user.profile_picture ?
+            <img src={user.profile_picture} alt="default1" className='w-full h-full object-cover rounded' />
             : <img src="/src/assets/images/default_avatar.png" alt="default" className='w-full h-full object-cover rounded' />
           }
         </div>
@@ -215,19 +213,19 @@ function Profile() {
       <div className='w-full h-96 border pt-4 mt-5 mr-2 pb-7 rounded drop-shadow-md overflow-auto'>
         <div>
             <button onClick={()=>{
-              setShowTab(<Investments userId={location.state && location.state.id}/>)
+              setShowTab(<Investments userId={id && id}/>)
               setTitle("Yatırımlarım")
             }} className={`p-2 ml-2 rounded btn-main-bg`}>Yatırımlar</button>
             <button onClick={()=>{
-              setShowTab(<EntreprenuerTable userId={location.state && location.state.id}/>)
+              setShowTab(<EntreprenuerTable userId={id && id}/>)
               setTitle("Lahiyələrim")
             }} className={`p-2 ml-2 rounded btn-main-bg`}>Lahiyələr</button>
             <button onClick={()=>{
-              setShowTab(<Education userId={location.state && location.state.id}/>)
+              setShowTab(<Education userId={id && id}/>)
               setTitle("Təhsilim")
             }} className={`p-2 ml-2 rounded btn-main-bg`}>Təhsil</button>
             <button onClick={()=>{
-              setShowTab(<Experience userId={location.state && location.state.id}/>)
+              setShowTab(<Experience userId={id && id}/>)
               setTitle("Təcrübələrim")
             }} className={`p-2 ml-2 rounded btn-main-bg`}>Təcrübə</button>
         </div>
