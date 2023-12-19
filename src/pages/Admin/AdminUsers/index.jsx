@@ -10,6 +10,7 @@ import { FaXmark } from "react-icons/fa6";
 import AuthInput from "../../../components/InputComponents/AuthInput";
 import style from "./style.module.css"
 import { useFormik } from "formik";
+import RadioInput from "../../../components/InputComponents/RadioInput";
 
 
 function AdminUsers() {
@@ -46,6 +47,7 @@ function AdminUsers() {
         initialValues: {
             offset: "",
             fullname: "",
+            is_active: "",
             birthdate: "",
             marital_status: "",
             employment_status: "",
@@ -63,21 +65,21 @@ function AdminUsers() {
 
 
     useEffect(() => {
-        dispatch(getAllUsersAsync({"offset": 0, "birthdate":"", "marital_status":"", "employment_status":"", "housing_status":"", "phone_number":"", "monthly_income":"", "monthly_income__gte": "", "monthly_income__lte": ""}))
+        dispatch(getAllUsersAsync({"offset": 0, "birthdate":"", "marital_status":"", "employment_status":"", "housing_status":"", "phone_number":"", "monthly_income":"", "monthly_income__gte": "", "monthly_income__lte": "", "is_active": ""}))
     }, [dispatch])
 
 
     const changePage = (e) => {
         setCurrentPage(e);
         let offset = (e - 1) * pageLimit;
-        dispatch(getAllUsersAsync({"offset": offset, "birthdate":"", "marital_status":"", "employment_status":"", "housing_status":"", "phone_number":"", "monthly_income":"", "monthly_income__gte": "", "monthly_income__lte": ""}));
+        dispatch(getAllUsersAsync({"offset": offset, "birthdate":"", "marital_status":"", "employment_status":"", "housing_status":"", "phone_number":"", "monthly_income":"", "monthly_income__gte": "", "monthly_income__lte": "", "is_active": ""}));
     };
 
     const changeUserActivity = (user) => {
         dispatch(putUserProfileAsync({"id": user.id, "is_active": !user.user.is_active}))
         .then(() => {
             let offset = (currentPage - 1) * pageLimit;
-            dispatch(getAllUsersAsync({"offset": offset, "birthdate":"", "marital_status":"", "employment_status":"", "housing_status":"", "phone_number":"", "monthly_income":"", "monthly_income__gte": "", "monthly_income__lte": ""}))
+            dispatch(getAllUsersAsync({"offset": offset, "birthdate":"", "marital_status":"", "employment_status":"", "housing_status":"", "phone_number":"", "monthly_income":"", "monthly_income__gte": "", "monthly_income__lte": "", "is_active": ""}))
         })
     }
 
@@ -85,7 +87,7 @@ function AdminUsers() {
         dispatch(putUserProfileAsync({"id": user.id, "is_superuser": !user.user.is_superuser}))
         .then(() => {
             let offset = (currentPage - 1) * pageLimit;
-            dispatch(getAllUsersAsync({"offset": offset, "birthdate":"", "marital_status":"", "employment_status":"", "housing_status":"", "phone_number":"", "monthly_income":"", "monthly_income__gte": "", "monthly_income__lte": ""}))
+            dispatch(getAllUsersAsync({"offset": offset, "birthdate":"", "marital_status":"", "employment_status":"", "housing_status":"", "phone_number":"", "monthly_income":"", "monthly_income__gte": "", "monthly_income__lte": "", "is_active": ""}))
         })
     }
 
@@ -129,6 +131,46 @@ function AdminUsers() {
                                 error={filterFormik.errors.fullname}
                                 style={"mb-2"}
                             />
+                            <div>
+                            <label className="block text-sm font-medium leading-6 text-gray-900">
+                                Aktiv/Deaktiv
+                            </label>
+                            <div className="mt-2">
+                                <RadioInput
+                                    label="Aktiv"
+                                    id="active"
+                                    name="is_active"
+                                    type="radio"
+                                    value={true}
+                                    onChange={filterFormik.handleChange}
+                                    onBlur={filterFormik.handleBlur}
+                                    style={style}
+                                />
+                                <RadioInput
+                                    label="Deaktiv"
+                                    id="deactive"
+                                    name="is_active"
+                                    type="radio"
+                                    value={false}
+                                    onChange={filterFormik.handleChange}
+                                    onBlur={filterFormik.handleBlur}
+                                    style={style}
+                                />
+                                <RadioInput
+                                    label="Hər İkisi"
+                                    id="both_active"
+                                    name="is_active"
+                                    type="radio"
+                                    value={""}
+                                    onChange={filterFormik.handleChange}
+                                    onBlur={filterFormik.handleBlur}
+                                    style={style}
+                                />
+                                {
+                                    filterFormik.touched.is_active && filterFormik.errors.is_active && (<div className='error'>{filterFormik.errors.is_active}</div>)
+                                }
+                            </div>
+                        </div>
                             <button type='submit' className={`${style.search_btn} btn-main-bg rounded mt-4`}>Axtar</button>
                         </form>
                     </div>
@@ -145,10 +187,10 @@ function AdminUsers() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {users.map((user) => (
+                                {users.map((user, i) => (
                                     <tr key={user.id}>
                                         <td className="border border-slate-700">
-                                            {user.user.id}
+                                            {i+1}
                                         </td>
                                         <td className="border border-slate-700">
                                             <NavLink

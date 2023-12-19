@@ -14,28 +14,22 @@ function Header() {
   const navigate = useNavigate();
   
   const [notificationModal, setNotificationModal] = useState(false);
+  const access = localStorage.getItem("access");
 
   let me = useSelector((state) => state.auth.me)
   let notifications = useSelector((state) => state.notification.notifications)
 
   useEffect(() => {
-    dispatch(getMeAsync())
+    if(access) {
+      dispatch(getMeAsync())
+    }
   }, [dispatch])
 
   useEffect(() => {
-    dispatch(getAllNotificationsAsync({"offset": "", "user": me && me.user.id}))
+    if(access) {
+      dispatch(getAllNotificationsAsync({"offset": "", "user": me && me.user.id}))
+    }
   }, [dispatch, me])
-
-  useEffect(()=>{
-    const REFRESH_INTERVAL = 1000 * 60 * 3 // 4 minutes
-    let interval = setInterval(()=>{
-        const refresh = localStorage.getItem("refresh");
-        if (refresh) {
-          dispatch(refreshTokenAsync({"refresh": refresh}))
-        }
-    }, REFRESH_INTERVAL)
-    return () => clearInterval(interval)
-  }, [])
 
   function logout() {
     localStorage.removeItem('access')
@@ -111,7 +105,7 @@ function Header() {
                           </> : 
                             <img
                               className="h-8 w-8 rounded-full"
-                              src="src/assets/images/default_avatar.png"
+                              src="/src/assets/images/default_avatar.png"
                               alt=""
                             />
                       }

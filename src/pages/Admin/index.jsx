@@ -20,6 +20,11 @@ function Admin() {
 
   useEffect(() => {
     dispatch(getMeAsync())
+    .then((res) => {
+      if(!res.payload.user.is_superuser) {
+        navigate("/");
+      }
+    })
     dispatch(getCompanyBalanceAsync())
   }, [dispatch])
 
@@ -55,6 +60,7 @@ function Admin() {
         }
         <div>
           <h4 className='mx-auto max-w-7xl py-6 sm:px-6 lg:px-8 flex flex-col text-lg text-xl font-bold'>{title}</h4>
+          <hr className='mb-10'/>
           {
             showTab
           }

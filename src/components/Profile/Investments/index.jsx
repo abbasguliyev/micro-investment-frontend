@@ -6,7 +6,7 @@ import { Modal, Pagination } from 'antd'
 import style from "./style.module.css"
 
 import { getMeAsync, getUserDetailAsync } from '../../../redux/AuthSlice/AuthSlice'
-import { getAllInvestmentsAsync, postInvestmentReportAsync } from '../../../redux/InvestmentSlice/InvestmentSlice'
+import { getAllInvestmentsAsync, postInvestmentReportAsync, putInvestmentAsync } from '../../../redux/InvestmentSlice/InvestmentSlice'
 import { FaCheck } from "react-icons/fa";
 import { FaXmark } from "react-icons/fa6";
 import { useFormik } from 'formik'
@@ -17,6 +17,8 @@ import { getCompanyBalanceAsync } from '../../../redux/CompanyBalanceSlice/Compa
 const Investments = ({userId}) => {
   let [currentPage, setCurrentPage] = useState(1);
   const [isInvestorInvestmentFinishModalOpen, setIsInvestorInvestmentFinishModalOpen] =useState(false);
+  const [isInvestorInvestmentEditModalOpen, setIsInvestorInvestmentEditModalOpen] =useState(false);
+  const [amount, setAmount] =useState(0);
   const [investment, setInvestment] = useState(null);
 
   const dispatch = useDispatch()
@@ -25,9 +27,11 @@ const Investments = ({userId}) => {
   let pageLimit = useSelector((state) => state.investment.pageLimit)
   let companyBalance = useSelector((state) => state.companyBalance.companyBalances)
 
+  // Investment Finish Modal
   const showInvestorInvestmentFinishModal = (investment) => {
     setIsInvestorInvestmentFinishModalOpen(true);
     setInvestment(investment)
+    setAmount(investment.amount)
   };
 
   const handleIsInvestorInvestmentFinishModalOk = () => {
@@ -46,6 +50,29 @@ const Investments = ({userId}) => {
 
   const handleIsInvestorInvestmentFinishModalCancel = () => {
       setIsInvestorInvestmentFinishModalOpen(false);
+  };
+
+  // Investment Edit Modal
+  const showInvestorInvestmentEditModal = (investment) => {
+    setIsInvestorInvestmentEditModalOpen(true);
+    setInvestment(investment)
+  };
+
+  const handleIsInvestorInvestmentEditModalOk = () => {
+    setIsInvestorInvestmentEditModalOpen(false);
+    let data = {"id": investment.id, "amount": amount}
+    dispatch(putInvestmentAsync(data))
+      .then(() => {
+          let offset = (currentPage - 1) * pageLimit;
+          dispatch(
+            getAllInvestmentsAsync({"investor": userId, "entrepreneur": "", "offset": offset})
+          );
+          dispatch(getCompanyBalanceAsync())
+      })
+  };
+
+  const handleIsInvestorInvestmentEditModalCancel = () => {
+      setIsInvestorInvestmentEditModalOpen(false);
   };
 
   const formik = useFormik({
@@ -139,10 +166,14 @@ const Investments = ({userId}) => {
                       {
                         investment.entrepreneur && investment.entrepreneur.is_finished ? (
                           investment.investment_report && investment.investment_report.length > 0  ? 
-                          <NavLink onClick={() => showInvestorInvestmentFinishModal(investment)} className={`rounded btn-main-bg text-center p-1`}>Yenilə</NavLink> 
+                          <NavLink onClick={() => showInvestorInvestmentFinishModal(investment)} className={`rounded btn-main-bg text-center p-1 text-xs`}>Yenilə</NavLink> 
                           : 
-                          <NavLink onClick={() => showInvestorInvestmentFinishModal(investment)} className={`rounded btn-main-bg text-center p-1`}>Daxil ol</NavLink>
-                        ) : <p>-</p> 
+                          <NavLink onClick={() => showInvestorInvestmentFinishModal(investment)} className={`rounded btn-main-bg text-center p-1 text-xs`}>Daxil ol</NavLink>
+                        ) : (
+                            !investment.is_submitted ? (
+                              <NavLink onClick={() => showInvestorInvestmentEditModal(investment)} className={`rounded btn-main-bg text-center p-1 text-xs`}>Redaktə</NavLink> 
+                            ) : (<p className='error'>-</p>)
+                        )
                       }
                   </td>
                 </tr>
@@ -216,7 +247,26 @@ const Investments = ({userId}) => {
                   error={formik.errors.note}
                   style={style}
               />
-          </Modal>
+        </Modal>
+        <Modal
+              title={`Redaktə et:`}
+              okType="default"
+              open={isInvestorInvestmentEditModalOpen}
+              onOk={handleIsInvestorInvestmentEditModalOk}
+              onCancel={handleIsInvestorInvestmentEditModalCancel}
+          >
+              <AuthInput
+                  label="Məbləği daxil edin:"
+                  id="amount_want_to_send_to_cart"
+                  name="amount_want_to_send_to_cart"
+                  type="number"
+                  value={amount}
+                  onChange={(e) => {
+                    e.preventDefault()
+                    setAmount(e.target.value)
+                  }}
+              />
+        </Modal>
       </div>
     </>
   )

@@ -24,19 +24,23 @@ import { getMeAsync, refreshTokenAsync } from './redux/AuthSlice/AuthSlice'
 import { jwtDecode } from "jwt-decode";
 
 function App() {
-  const [token, setToken] = useState(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
   
   const access = localStorage.getItem("access");
-  useEffect(() => {
-      setToken(access)
-  }, [])
 
   useEffect(() => {
-    getMeAsync()
-  }, [])
+    if(access) {
+      dispatch(getMeAsync())
+      .then((res) => {
+        if (res.payload == undefined) {
+          localStorage.clear()
+          navigate("/");
+          window.location.reload();
+        }
+      })
+    }
+  }, [dispatch])
   
   useEffect(() => {
     let timerRef = null;
@@ -51,7 +55,10 @@ function App() {
             const refresh = localStorage.getItem("refresh");
             if (refresh) {
                 console.log("Burdayam1");
-                dispatch(refreshTokenAsync({"refresh": refresh}))
+                localStorage.clear()
+                navigate("/");
+                window.location.reload();
+                // dispatch(refreshTokenAsync({"refresh": refresh}))
             } else {
                 console.log("Burdayam2");
                 navigate("/login");
@@ -67,8 +74,7 @@ function App() {
             onExpire();
         }
     } catch (error) {
-        console.log(error);
-        console.log("Burdayam4");
+        localStorage.clear()
         navigate("/login");
     }
     
