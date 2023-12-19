@@ -211,6 +211,7 @@ export const AuthSlice = createSlice({
             state.isLoading = false;
             localStorage.setItem("access", action.payload.access)
             localStorage.setItem("refresh", action.payload.refresh)
+
             state.access = action.payload.access;
             state.refresh = action.payload.refresh;
             state.isLoggedIn = true;

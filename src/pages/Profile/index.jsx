@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { NavLink, useLocation } from 'react-router-dom'
+import { NavLink, useLocation, useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import EntreprenuerTable from '../../components/Profile/EntreprenuerTable'
 import Education from '../../components/Profile/Education'
@@ -17,6 +17,9 @@ function Profile() {
   const [title, setTitle] =useState("Yatırımlarım");
 
   const dispatch = useDispatch()
+  const navigate = useNavigate()
+
+  console.log(location.state);
   
   let me = useSelector((state) => state.auth.me)
   let user = useSelector((state) => state.auth.user)
@@ -30,9 +33,13 @@ function Profile() {
   let investmentErrorMsg = useSelector((state) => state.investment.error)
 
   useEffect(() => {
-    dispatch(getMeAsync())
-    dispatch(getUserDetailAsync({"id": location.state && location.state.id}))
-    setID(location.state && location.state.id)
+    if (location.state == null) {
+      navigate("/")
+    } else{
+      dispatch(getMeAsync())
+      dispatch(getUserDetailAsync({"id": location.state && location.state.id}))
+      setID(location.state && location.state.id)
+    }
   }, [dispatch])
 
   return (

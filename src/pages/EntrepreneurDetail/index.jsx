@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from "react";
 import style from "./style.module.css";
-import { NavLink, useParams } from "react-router-dom";
+import { NavLink, useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getEntrepreneurDetailAsync } from "../../redux/EntrepreneurSlice/EntrepreneurSlice";
 import { useFormik } from "formik";
 import { postInvestmentAsync, resetInvestmentSlice } from "../../redux/InvestmentSlice/InvestmentSlice";
 import validations from "./validation";
 import ResponseMessage from "../../components/ResponseMessage";
+import { getMeAsync } from "../../redux/AuthSlice/AuthSlice";
 
 function EntrepreneurDetail() {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const { id } = useParams();
 
@@ -35,9 +37,16 @@ function EntrepreneurDetail() {
         },
         validationSchema: validations,
     });
-
+    
     useEffect(() => {
-        dispatch(getEntrepreneurDetailAsync(id));
+        dispatch(getMeAsync())
+        dispatch(getEntrepreneurDetailAsync(id))
+        .then((res) => {
+            console.log(res);
+            if(res.error) {
+                navigate("/")
+            }
+        })
     }, [dispatch]);
 
     useEffect(() => {
@@ -115,7 +124,7 @@ function EntrepreneurDetail() {
                     <div className="w-full sm:w-full md:w-2/3 lg:w-2/3">
                         <div className="flex justify-between align-center">
                             <h4 className="text-3xl mt-10">Açıqlama: </h4>
-                            {me.user ? (
+                            {me && me.user ? (
                                     <>
                                         {me.user.is_staff ||
                                         me == entrepreneur.owner ? (

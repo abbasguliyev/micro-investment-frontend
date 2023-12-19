@@ -40,7 +40,6 @@ function Home() {
     let filteredValues = { ...formik.values };
     dispatch(getAllEntrepreneurAsync(filteredValues));
     dispatch(getMeAsync());
-
   }, [dispatch])
 
 
@@ -89,7 +88,7 @@ function Home() {
                       {
                        entrepreneur.images.length > 0 ? entrepreneur.images.slice(0, 1).map((image) => (
                         <img key={image.id} src={image.image} alt="" className='w-1/3 rounded' />
-                       )) : <img src="src/assets/images/default.jpg" alt="test" className='w-1/3 rounded' />
+                       )) : <img src="/src/assets/images/default.jpg" alt="test" className='w-1/3 rounded' />
                       }
                       <div className='w-full m-2 flex flex-col justify-between'>
                         <div>

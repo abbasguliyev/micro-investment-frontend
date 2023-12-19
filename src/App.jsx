@@ -9,7 +9,7 @@ import About from './pages/About'
 import EntrepreneurDetail from './pages/EntrepreneurDetail'
 import Footer from './components/Footer'
 import ProfileUpdate from './pages/ProfileUpdate'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import EntrepreneurCreate from './pages/EntrepreneurCreate'
 import EntrepreneurImageCreate from './components/EntrepreneurImageCreate'
 import ExperienceCreate from './pages/ExperienceCreate'
@@ -20,7 +20,7 @@ import AdminUserCreate from './pages/Admin/AdminUsers/AdminUserCreate'
 import Admin from './pages/Admin'
 import { useEffect, useState } from 'react'
 import EntrepreneurUpdate from './pages/EntrepreneurUpdate'
-import { refreshTokenAsync } from './redux/AuthSlice/AuthSlice'
+import { getMeAsync, refreshTokenAsync } from './redux/AuthSlice/AuthSlice'
 import { jwtDecode } from "jwt-decode";
 
 function App() {
@@ -28,57 +28,59 @@ function App() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  
+  const access = localStorage.getItem("access");
   useEffect(() => {
-      const access = localStorage.getItem("access");
       setToken(access)
+  }, [])
 
-      let timerRef = null;
-      try {
+  useEffect(() => {
+    getMeAsync()
+  }, [])
+  
+  useEffect(() => {
+    let timerRef = null;
+    try {
         const decoded = jwtDecode(access);
         const expiryTime = (new Date(decoded.exp * 1000)).getTime();
         const currentTime = (new Date()).getTime();
 
         const timeout = expiryTime - currentTime;
+
         const onExpire = () => {
             const refresh = localStorage.getItem("refresh");
             if (refresh) {
-              dispatch(refreshTokenAsync({"refresh": refresh}))
+                console.log("Burdayam1");
+                dispatch(refreshTokenAsync({"refresh": refresh}))
             } else {
-              navigate("/login");
+                console.log("Burdayam2");
+                navigate("/login");
             }
         };
 
         if (timeout > 0) {
-          // token not expired, set future timeout to log out and redirect
-          timerRef = setTimeout(onExpire, timeout);
+            // token not expired, set future timeout to log out and redirect
+            timerRef = setTimeout(onExpire, timeout);
         } else {
-          // token expired, log out and redirect
-          onExpire();
+            console.log("Burdayam3");
+            // token expired, log out and redirect
+            onExpire();
         }
-      } catch (error) {
+    } catch (error) {
+        console.log(error);
+        console.log("Burdayam4");
         navigate("/login");
-      }
-      
-      return () => {
+    }
+    
+    return () => {
         clearTimeout(timerRef);
-      };
-  }, [token]);
-
-  // useEffect(()=>{
-  //   const REFRESH_INTERVAL = 1000 * 60 * 3 // 4 minutes
-  //   let interval = setInterval(()=>{
-  //       const refresh = localStorage.getItem("refresh");
-  //       if (refresh) {
-  //         dispatch(refreshTokenAsync({"refresh": refresh}))
-  //       }
-  //   }, REFRESH_INTERVAL)
-  //   return () => clearInterval(interval)
-  // }, [])
+    };
+  }, []);
 
   return (
     <>
         {
-          !token ? (
+          !access ? (
             <>
               <Routes>
                 <Route path='/' element={<Login/>} />
@@ -111,10 +113,12 @@ function App() {
                       <Route path='/login' element={<Login/>} />
                       <Route path='/register' element={<Register/>} />
                       <Route path='*' element={<NotFoundPage/>} />
-                      <Route path='/admin' element={<Outlet/>}>
-                        <Route path='' element={<Admin/>} />
-                        <Route path='user-create' element={<AdminUserCreate/>} />
-                      </Route>
+                      {
+                        <Route path='/admin' element={<Outlet/>}>
+                          <Route path='' element={<Admin/>} />
+                          <Route path='user-create' element={<AdminUserCreate/>} />
+                        </Route>
+                      }                    
                     </Routes>
                   </div>
                 </div>
