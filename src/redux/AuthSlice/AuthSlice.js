@@ -156,6 +156,46 @@ export const deleteUserAsync = createAsyncThunk('deleteUserAsync', async (values
     }
 })
 
+export const resetPasswordAsync = createAsyncThunk('resetPasswordAsync', async (values) => {
+    try {
+        const res = await axios.post(`users/password_reset/`, values, { headers: { 'Authorization': '' }})
+        return res.data;
+    } catch (error) {
+        // If the API call fails, the error will be thrown and caught here.
+        throw {'message': error.response.data.detail};
+    }
+})
+
+export const resetPasswordValidateAsync = createAsyncThunk('resetPasswordValidateAsync', async (values) => {
+    try {
+        const res = await axios.post(`users/password_reset/validate_token/`, values, { headers: { 'Authorization': '' }})
+        return res.data;
+    } catch (error) {
+        // If the API call fails, the error will be thrown and caught here.
+        throw {'message': error.response.data.detail};
+    }
+})
+
+export const resetPasswordConfirmAsync = createAsyncThunk('resetPasswordConfirmAsync', async (values) => {
+    try {
+        const res = await axios.post(`users/password_reset/confirm/`, values, { headers: { 'Authorization': '' }})
+        return res.data;
+    } catch (error) {
+        // If the API call fails, the error will be thrown and caught here.
+        throw {'message': error.response.data.detail};
+    }
+})
+
+export const changePasswordAsync = createAsyncThunk('changePasswordAsync', async (values) => {
+    try {
+        const res = await axios.post(`users/change-password/`, values, { headers: { 'Authorization': '' }})
+        return res.data;
+    } catch (error) {
+        // If the API call fails, the error will be thrown and caught here.
+        throw {'message': error.response.data.detail};
+    }
+})
+
 export const AuthSlice = createSlice({
     name: 'auth',
     initialState: {
@@ -302,6 +342,60 @@ export const AuthSlice = createSlice({
         })
         builder.addCase(deleteUserAsync.rejected, (state, action) => {
             state.error = action.error.message;
+            state.isLoading = false;
+        })
+
+        // Reset Password Reducers
+        builder.addCase(resetPasswordAsync.pending, (state, action) => {
+            state.isLoading = true;
+        })
+        builder.addCase(resetPasswordAsync.fulfilled, (state, action) => {
+            state.isLoading = false;
+            state.successMsg = "Əməliyyat yerinə yetirildi, zəhmət olmasa emailinizi yoxlayın";
+        })
+        builder.addCase(resetPasswordAsync.rejected, (state, action) => {
+            state.error = "Xəta!!! Emaili doğru yazdığınızdan əmin olun";
+            state.isLoading = false;
+        })
+
+        // Validate Token Reducers
+        builder.addCase(resetPasswordValidateAsync.pending, (state, action) => {
+            state.isLoading = true;
+        })
+        builder.addCase(resetPasswordValidateAsync.fulfilled, (state, action) => {
+            state.isLoading = false;
+            state.successMsg = "Ok";
+        })
+        builder.addCase(resetPasswordValidateAsync.rejected, (state, action) => {
+            state.error = "Xəta!!! Emaili doğru yazdığınızdan əmin olun";
+            state.isLoading = false;
+        })
+
+        // Reset Password Confirm Reducers
+        builder.addCase(resetPasswordConfirmAsync.pending, (state, action) => {
+            state.isLoading = true;
+        })
+        builder.addCase(resetPasswordConfirmAsync.fulfilled, (state, action) => {
+            state.isLoading = false;
+            state.successMsg = "Şifrəniz yeniləndi";
+        })
+        builder.addCase(resetPasswordConfirmAsync.rejected, (state, action) => {
+            console.log(action);
+            state.error = "Xəta baş verdi";
+            state.isLoading = false;
+        })
+
+        // Change Password Confirm Reducers
+        builder.addCase(changePasswordAsync.pending, (state, action) => {
+            state.isLoading = true;
+        })
+        builder.addCase(changePasswordAsync.fulfilled, (state, action) => {
+            state.isLoading = false;
+            state.successMsg = "Şifrə yeniləndi";
+        })
+        builder.addCase(changePasswordAsync.rejected, (state, action) => {
+            console.log(action);
+            state.error = "Xəta baş verdi";
             state.isLoading = false;
         })
     }
