@@ -4,16 +4,21 @@ import { useSelector, useDispatch } from 'react-redux'
 import EntreprenuerTable from '../../components/Profile/EntreprenuerTable'
 import Education from '../../components/Profile/Education'
 import Experience from '../../components/Profile/Experience'
-import { getMeAsync, getUserDetailAsync, resetAuthSlice } from '../../redux/AuthSlice/AuthSlice'
+import { changePasswordAsync, getMeAsync, getUserDetailAsync, resetAuthSlice } from '../../redux/AuthSlice/AuthSlice'
 import Investments from '../../components/Profile/Investments'
 import ResponseMessage from '../../components/ResponseMessage'
 import { resetEducationSlice } from '../../redux/EducationSlice/EducationSlice'
 import { resetExperienceSlice } from '../../redux/ExperienceSlice/ExperienceSlice'
+import { useFormik } from 'formik'
+import { Modal } from 'antd'
+import AuthInput from '../../components/InputComponents/AuthInput'
+import style from "./style.module.css"
 
 function Profile() {
   const [id, setID] = useState();
   let location = useLocation();
   const [showTab, setShowTab] =useState(<Investments userId={location.state ? location.state.id : ""}/>);
+  const [isPasswordChangeModalOpen, setIsPasswordChangeModalOpen] =useState(false);
   const [title, setTitle] =useState("Yatırımlarım");
 
   const dispatch = useDispatch()
@@ -39,6 +44,30 @@ function Profile() {
       dispatch(getUserDetailAsync({"id": location.state && location.state.id}))
     }
   }, [dispatch])
+
+   // ENTREPRENEUR DELETE SHOW MODAL
+  const showPasswordChangeModal = () => {
+      setIsPasswordChangeModalOpen(true);
+  };
+
+  const handlePasswordChangeModalOk = () => {
+      setIsPasswordChangeModalOpen(false);
+      dispatch(changePasswordAsync({"investor": user && user.id, "new_password": formik.values.new_password}))
+  };
+
+  const handlePasswordChangeModalCancel = () => {
+      setIsPasswordChangeModalOpen(false);
+  };
+
+  const formik = useFormik({
+    initialValues: {
+        new_password: "",
+    },
+    onSubmit: (values) => {
+        values.investor = user && user.id
+        dispatch(changePasswordAsync(values))
+    }
+  })
 
   return (
     <div className="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8 w-full">
@@ -73,7 +102,10 @@ function Profile() {
                   </>:""
                 }
               </p>
-              <p className='md:text-1xl lg:text-1xl xl:text-2xl m-4'>Balans: {user && user.user ? user.user.balance : 0} AZN</p>
+              <div className='flex m-4'>
+                <NavLink onClick={() => showPasswordChangeModal(true)} className={`rounded btn-main-bg text-xs w-30 h-8 p-2 mr-2`}>Şifrə Yenilə</NavLink>
+                <p className='text-2xl'>Balans: {user && user.user ? user.user.balance : 0} AZN</p>
+              </div>
             </div>
             {
               me && me.id == id && <NavLink to="profile-update" className={`rounded btn-main-bg w-50 h-10 p-2 m-4`}>Məlumatları Dəyiş</NavLink>
@@ -237,6 +269,28 @@ function Profile() {
           }
         </div>
       </div>
+      <Modal
+          title={`Şifrəni daxil edin:`}
+          okType="default"
+          open={isPasswordChangeModalOpen}
+          onOk={handlePasswordChangeModalOk}
+          onCancel={handlePasswordChangeModalCancel}
+      >
+          {
+              <AuthInput
+                  label="Yeni şifrə"
+                  id="new_password"
+                  name="new_password"
+                  type="password"
+                  value={formik.values.new_password}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  touched={formik.touched.new_password}
+                  error={formik.errors.new_password}
+                  style={style}
+              />
+          }
+      </Modal>
     </div>
   )
 }

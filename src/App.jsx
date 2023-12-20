@@ -22,6 +22,8 @@ import { useEffect, useState } from 'react'
 import EntrepreneurUpdate from './pages/EntrepreneurUpdate'
 import { getMeAsync, refreshTokenAsync } from './redux/AuthSlice/AuthSlice'
 import { jwtDecode } from "jwt-decode";
+import ForgotPassword from './pages/ForgotPassword'
+import ForgotChangePassword from './pages/ForgotChangePassword'
 
 function App() {
   const dispatch = useDispatch();
@@ -31,6 +33,7 @@ function App() {
 
   useEffect(() => {
     if(access) {
+      console.log("Burdayam1");
       dispatch(getMeAsync())
       .then((res) => {
         if (res.payload == undefined) {
@@ -44,39 +47,44 @@ function App() {
   
   useEffect(() => {
     let timerRef = null;
-    try {
-        const decoded = jwtDecode(access);
-        const expiryTime = (new Date(decoded.exp * 1000)).getTime();
-        const currentTime = (new Date()).getTime();
+    if(access) {
+        try {
+          const decoded = jwtDecode(access);
+          const expiryTime = (new Date(decoded.exp * 1000)).getTime();
+          const currentTime = (new Date()).getTime();
 
-        const timeout = expiryTime - currentTime;
+          const timeout = expiryTime - currentTime;
 
-        const onExpire = () => {
-            const refresh = localStorage.getItem("refresh");
-            if (refresh) {
-                console.log("Burdayam1");
-                localStorage.clear()
-                navigate("/");
-                window.location.reload();
-                // dispatch(refreshTokenAsync({"refresh": refresh}))
-            } else {
-                console.log("Burdayam2");
-                navigate("/login");
-            }
-        };
+          const onExpire = () => {
+              const refresh = localStorage.getItem("refresh");
+              if (refresh) {
+                  console.log("Burdayam2");
+                  localStorage.clear()
+                  navigate("/");
+                  window.location.reload();
+              } else {
+                  console.log("Burdayam3");
+                  navigate("/login");
+              }
+          };
 
-        if (timeout > 0) {
-            // token not expired, set future timeout to log out and redirect
-            timerRef = setTimeout(onExpire, timeout);
-        } else {
-            console.log("Burdayam3");
-            // token expired, log out and redirect
-            onExpire();
+          if (timeout > 0) {
+              // token not expired, set future timeout to log out and redirect
+              timerRef = setTimeout(onExpire, timeout);
+          } else {
+              console.log("Burdayam4");
+              // token expired, log out and redirect
+              onExpire();
+          }
+        } catch (error) {
+          console.log(error);
+          console.log("Burdayam5");
+
+            localStorage.clear()
+            navigate("/login");
         }
-    } catch (error) {
-        localStorage.clear()
-        navigate("/login");
     }
+   
     
     return () => {
         clearTimeout(timerRef);
@@ -92,6 +100,8 @@ function App() {
                 <Route path='/' element={<Login/>} />
                 <Route path='/login' element={<Login/>} />
                 <Route path='/register' element={<Register/>} />
+                <Route path='/reset-password' element={<ForgotPassword/>} />
+                <Route path='/reset-password-confirm/:token' element={<ForgotChangePassword/>} />
                 <Route path='*' element={<NotFoundPage/>} />
               </Routes>
             </>
@@ -118,6 +128,8 @@ function App() {
                       <Route path='/experience-update/:id' element={<ExperienceUpdate/>} />
                       <Route path='/login' element={<Login/>} />
                       <Route path='/register' element={<Register/>} />
+                      <Route path='/reset-password' element={<ForgotPassword/>} />
+                      <Route path='/reset-password-confirm/:token' element={<ForgotChangePassword/>} />
                       <Route path='*' element={<NotFoundPage/>} />
                       {
                         <Route path='/admin' element={<Outlet/>}>

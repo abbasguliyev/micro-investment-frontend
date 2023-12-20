@@ -57,11 +57,11 @@ function Login() {
           <form className="space-y-6" onSubmit={formik.handleSubmit}>
             <AuthInput label="Email address" id="email" name="email" value={formik.values.email} type="email" onChange={formik.handleChange} onBlur={formik.handleBlur} touched={formik.touched.email} error={formik.errors.email} style={style} />
             <AuthInput label="Parol" id="password" name="password" value={formik.values.password}  type="password" onChange={formik.handleChange} onBlur={formik.handleBlur} touched={formik.touched.password} error={formik.errors.password} style={style} />
-            {/* <div className="text-sm">
-              <a href="#" className="font-semibold text-indigo-600 hover:text-indigo-500">
+            <div className="text-sm">
+              <NavLink to="/reset-password" className="font-semibold text-indigo-600 hover:text-indigo-500">
                 Şifrəni unutdun?
-              </a>
-            </div> */}
+              </NavLink>
+            </div>
             <div>
               <button
                 type="submit"
