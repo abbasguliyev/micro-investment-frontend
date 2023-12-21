@@ -13,8 +13,6 @@ function ForgotChangePassword() {
 
     const { token } = useParams();
 
-    console.log(token);
-
     const formik = useFormik({
         initialValues: {
             new_password: "",
@@ -23,7 +21,6 @@ function ForgotChangePassword() {
         onSubmit: (values) => {
             dispatch(resetPasswordValidateAsync({"token": token}))
             .then((res) => {
-                console.log(res);
                 dispatch(resetPasswordConfirmAsync({"password": values.new_password, "token": token}))
                 .then(() => {
                     navigate("/")

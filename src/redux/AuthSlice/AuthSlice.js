@@ -380,7 +380,6 @@ export const AuthSlice = createSlice({
             state.successMsg = "Şifrəniz yeniləndi";
         })
         builder.addCase(resetPasswordConfirmAsync.rejected, (state, action) => {
-            console.log(action);
             state.error = "Xəta baş verdi";
             state.isLoading = false;
         })
@@ -394,7 +393,6 @@ export const AuthSlice = createSlice({
             state.successMsg = "Şifrə yeniləndi";
         })
         builder.addCase(changePasswordAsync.rejected, (state, action) => {
-            console.log(action);
             state.error = "Xəta baş verdi";
             state.isLoading = false;
         })

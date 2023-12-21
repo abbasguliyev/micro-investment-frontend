@@ -40,7 +40,7 @@ export const deleteInvestmentAsync = createAsyncThunk('deleteInvestmentAsync', a
 
 export const getAllInvestmentReportsAsync = createAsyncThunk('getAllInvestmentReportsAsync', async (values) => {
     try {
-        const res = await axios.get(`investments/report/?limit=10&offset=${values.offset}&investor=${values.investor}&investment=${values.investment}`)
+        const res = await axios.get(`investments/report/?limit=10&offset=${values.offset}&investor=${values.investor}&investment=${values.investment}&entrepreneur=${values.entrepreneur}`)
         return res.data;
     } catch (error) {
         throw {'message': error.response.data.detail};

@@ -51,6 +51,7 @@ function AdminEntrepreneurs() {
     const investmentSuccessMsg = useSelector((state) => state.investment.successMsg);
     let totalPage = useSelector((state) => state.entrepreneur.totalPage);
     let pageLimit = useSelector((state) => state.entrepreneur.pageLimit);
+    let investmentstotalPage = useSelector((state) => state.investment.totalPage);
 
     const searchInvestor = (e) => {
         dispatch(getAllUsersAsync({"offset": 0, "fullname": e.target.value, "birthdate":"", "marital_status":"", "employment_status":"", "housing_status":"", "phone_number":"", "monthly_income":"", "monthly_income__gte": "", "monthly_income__lte": ""}))
@@ -129,7 +130,7 @@ function AdminEntrepreneurs() {
     // ENTREPRENEUR INVESTMENTS REPORT SHOW MODAL
     const showEntrepreneurInvestmentsReportModal = (investment, investor) => {
         setIsEntrepreneurInvestmentsReportModalOpen(true);
-        dispatch(getAllInvestmentReportsAsync({offset: 0, investor: investor.id, investment: investment.id}))
+        dispatch(getAllInvestmentReportsAsync({offset: 0, investor: investor.id, investment: investment.id, entrepreneur: ""}))
     };
 
     const handleEntrepreneurInvestmentsReportModalOk = () => {
@@ -295,11 +296,22 @@ function AdminEntrepreneurs() {
         dispatch(putEntrepreneurAsync({"id": entrepreneur.id, "is_active": !entrepreneur.is_active}))
         .then(() => {
             let offset = (currentPage - 1) * pageLimit;
-            filterFormik.values.offset = offset;
-            let filteredValues = { ...filterFormik.values };
-            dispatch(getAllEntrepreneurAsync(filteredValues));
+            dispatch(
+                getAllInvestmentsAsync({
+                    offset: offset,
+                    investor: investment.investor.id,
+                    entrepreneur: entrepreneur.id
+                })
+            );
         })
     }
+    
+    const changeInvestmentsPage = (e) => {
+        setCurrentPage(e);
+        let offset = (e - 1) * pageLimit;
+        dispatch(getAllInvestmentReportsAsync({offset: offset, investor: "", investment: "", entrepreneur: entrepreneur.id}));
+    };
+
     return (
         <div className="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8 flex flex-col">
             <div className="w-full flex flex-row flex-wrap">
@@ -331,7 +343,7 @@ function AdminEntrepreneurs() {
                         slice={resetInvestmentSlice()}
                     />
                 )}
-                <div className="w-full sm:w-full md:w-full lg:w-1/5 pr-3">
+                <div className="w-full sm:w-full md:w-full lg:w-1/6 pr-3">
                     <b>Filter</b>
                     <form className='rounded h-2/4 mb-5 mt-2 flex flex-col' onSubmit={filterFormik.handleSubmit}>
                         <AuthInput
@@ -441,47 +453,51 @@ function AdminEntrepreneurs() {
                         <button type='submit' className={`${style.search_btn} btn-main-bg rounded mt-4`}>Axtar</button>
                     </form>
                 </div>
-                <div className="w-full sm:w-full md:w-full lg:w-4/5 grid gap-4 lg:grid-cols-2 md:grid-cols-1 sm:grid-cols-1 text-sm overflow-y-hidden overflow-x-auto">
+                <div className="w-full sm:w-full md:w-full lg:w-5/6 text-sm overflow-y-hidden overflow-x-auto">
                     <table className="table-auto w-full h-fit">
                         <thead>
                             <tr>
-                                <th className="border border-slate-600">Adı</th>
-                                <th className="border border-slate-600">
+                                <th className="border border-slate-600 text-xs">№</th>
+                                <th className="border border-slate-600 text-xs">Adı</th>
+                                <th className="border border-slate-600 text-xs">
                                     Ümumi investisiya
                                 </th>
-                                <th className="border border-slate-600">Ümumi gəlir</th>
-                                <th className="border border-slate-600">
+                                <th className="border border-slate-600 text-xs">Ümumi gəlir</th>
+                                <th className="border border-slate-600 text-xs">
                                     Yekun mənfəət
                                 </th>
-                                <th className="border border-slate-600">
+                                <th className="border border-slate-600 text-xs">
                                     Toplanan məbləğ
                                 </th>
-                                <th className="border border-slate-600">
+                                {/* <th className="border border-slate-600 text-xs">
                                     Yekunlaşma tarixi
-                                </th>
-                                <th className="border border-slate-600">
+                                </th> */}
+                                <th className="border border-slate-600 text-xs">
                                     Başlama tarixi
                                 </th>
-                                <th className="border border-slate-600">
+                                <th className="border border-slate-600 text-xs">
                                     Bitmə tarixi
                                 </th>
-                                <th className="border border-slate-600">
+                                <th className="border border-slate-600 text-xs">
                                     İnvestisiyalar
                                 </th>
-                                <th className="border border-slate-600">
+                                <th className="border border-slate-600 text-xs">
                                     Aktiv/Deaktiv
                                 </th>
-                                <th className="border border-slate-600">
+                                <th className="border border-slate-600 text-xs">
                                     Sifarişi bitir
                                 </th>
-                                <th className="border border-slate-600"></th>
+                                <th className="border border-slate-600 text-xs"></th>
 
                             </tr>
                         </thead>
                         <tbody className="text-center">
-                            {entrepreneurs.map((entrepreneur) => (
+                            {entrepreneurs.map((entrepreneur, i) => (
                                 <tr key={entrepreneur.id}>
-                                    <td className="border border-slate-700 py-1">
+                                    <td className="border border-slate-700 py-1 text-xs">
+                                        {i+1}
+                                    </td>
+                                    <td className="border border-slate-700 py-1 text-xs">
                                         <NavLink
                                             to={`/entrepreneur-detail/${entrepreneur.id}`}
                                             className="text-blue-700"
@@ -489,31 +505,31 @@ function AdminEntrepreneurs() {
                                             {entrepreneur.project_name}
                                         </NavLink>
                                     </td>
-                                    <td className="border border-slate-700 py-1">
+                                    <td className="border border-slate-700 py-1 text-xs">
                                         {entrepreneur.total_investment}
                                     </td>
-                                    <td className="border border-slate-700 py-1">
+                                    <td className="border border-slate-700 py-1 text-xs">
                                         {entrepreneur.gross_income}
                                     </td>
-                                    <td className="border border-slate-700 py-1">
+                                    <td className="border border-slate-700 py-1 text-xs">
                                         {entrepreneur.final_profit}
                                     </td>
-                                    <td className="border border-slate-700 py-1">
+                                    <td className="border border-slate-700 py-1 text-xs">
                                         {entrepreneur.amount_collected}
                                     </td>
-                                    <td className="border border-slate-700 py-1">
+                                    {/* <td className="border border-slate-700 py-1 text-xs">
                                         {entrepreneur.finished_date}
-                                    </td>
-                                    <td className="border border-slate-700 py-1">
+                                    </td> */}
+                                    <td className="border border-slate-700 py-1 text-xs">
                                         {entrepreneur.start_date}
                                     </td>
-                                    <td className="border border-slate-700 py-1">
+                                    <td className="border border-slate-700 py-1 text-xs">
                                         {entrepreneur.end_date}
                                     </td>
-                                    <td onClick={() => showEntrepreneurInvestmentsModal(entrepreneur)} className="border border-slate-700 cursor-pointer text-sky-700 py-1">
+                                    <td onClick={() => showEntrepreneurInvestmentsModal(entrepreneur)} className="border border-slate-700 cursor-pointer text-sky-700 py-1 text-xs">
                                         <p>Bax</p>
                                     </td>
-                                    <td className="border border-slate-700 cursor-pointer text-sky-700 px-14 py-1">
+                                    <td className="border border-slate-700 cursor-pointer text-sky-700 px-6 py-1 text-xs">
                                         {
                                             entrepreneur.is_finished ? (
                                                 entrepreneur.is_active ? (
@@ -538,7 +554,7 @@ function AdminEntrepreneurs() {
                                             )
                                         }
                                     </td>
-                                    <td className="border border-slate-700 text-sky-700 py-1">
+                                    <td className="border border-slate-700 text-sky-700 py-1 text-xs">
                                         {
                                             entrepreneur.is_finished ? <p className="error">Artıq bitib</p> : <p onClick={() => showEntrepreneurFinishedModal(entrepreneur)} className="success cursor-pointer">Bitir</p>
                                         }
@@ -581,75 +597,96 @@ function AdminEntrepreneurs() {
                 >
                     {
                         entrepreneur && entrepreneur.investments ? (
-                            <div className=" overflow-y-hidden overflow-x-auto">  
-                                {
-                                    !entrepreneur.is_finished && <a onClick={() => showInvestmentAddNewInvestorModal(entrepreneur)} className="cursor-pointer inline-block px-3 mb-2 border rounded">Yeni İnvestor</a>
-                                }
-                                
-                                <table className="table-auto w-full">
-                                    <thead>
-                                        <tr>
-                                            <th className="border border-slate-600">Adı Soyadı</th>
-                                            <th className="border border-slate-600">Sifariş</th>
-                                            <th className="border border-slate-600">Balansından gələn</th>
-                                            <th className="border border-slate-600">Göndərməli olduğu</th>
-                                            <th className="border border-slate-600">Yatırılan məbləğ</th>
-                                            <th className="border border-slate-600">Əmsal</th>
-                                            <th className="border border-slate-600">Yekun qazanc</th>
-                                            <th className="border border-slate-600">İnvestisiya tarixi</th>
-                                            <th className="border border-slate-600">Status</th>
-                                            <th className="border border-slate-600"></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {entrepreneur.investments.map((investment) => (
-                                            <tr key={investment.id}>
-                                                <td className="border border-slate-700">
-                                                    {investment.investor.user.first_name} {investment.investor.user.last_name}
-                                                </td>
-                                                <td className="border border-slate-700">
-                                                    {entrepreneur.project_name}
-                                                </td>
-                                                <td className="border border-slate-700">
-                                                    {investment.amount_deducated_from_balance} AZN
-                                                </td>
-                                                <td className="border border-slate-700">
-                                                    {investment.amount_must_send} AZN
-                                                </td>
-                                                <td className="border border-slate-700">
-                                                    {investment.amount}
-                                                </td>
-                                                <td className="border border-slate-700">
-                                                    {investment.profit}
-                                                </td>
-                                                <td className="border border-slate-700">
-                                                    {investment.final_profit}
-                                                </td>
-                                                <td className="border border-slate-700">
-                                                    {investment.investment_date}
-                                                </td>
-                                                <td className="border border-slate-700">
-                                                    {investment.is_submitted ? <FaCheck className='success mx-14' /> : <FaXmark className='error mx-14' />}
-                                                </td>
-                                                {
-                                                    entrepreneur.is_finished ? 
-                                                    (
-                                                        <td onClick={() => showEntrepreneurInvestmentsReportModal(investment, investment.investor)} className="border border-slate-700 text-center text-sky-700 cursor-pointer">
-                                                            Hesabat
-                                                        </td>
-                                                    ) 
-                                                    :
-                                                    (
-                                                        <td onClick={() => showEntrepreneurInvestmentUpdateModal(investment)} className="border border-slate-700 text-center text-sky-700 cursor-pointer">
-                                                            Təsdiqlə
-                                                        </td>
-                                                    ) 
-                                                }
+                            <>
+                                <div className=" overflow-y-hidden overflow-x-auto">  
+                                    {
+                                        !entrepreneur.is_finished && <a onClick={() => showInvestmentAddNewInvestorModal(entrepreneur)} className="cursor-pointer inline-block px-3 mb-2 border rounded">Yeni İnvestor</a>
+                                    }
+                                    
+                                    <table className="table-auto w-full">
+                                        <thead>
+                                            <tr>
+                                                <th className="border border-slate-600 text-xs">№</th>
+                                                <th className="border border-slate-600 text-xs">Adı Soyadı</th>
+                                                <th className="border border-slate-600 text-xs">Sifariş</th>
+                                                <th className="border border-slate-600 text-xs">Balansından gələn</th>
+                                                <th className="border border-slate-600 text-xs">Göndərməli olduğu</th>
+                                                <th className="border border-slate-600 text-xs">Yatırılan məbləğ</th>
+                                                <th className="border border-slate-600 text-xs">Əmsal</th>
+                                                <th className="border border-slate-600 text-xs">Yekun qazanc</th>
+                                                <th className="border border-slate-600 text-xs">İnvestisiya tarixi</th>
+                                                <th className="border border-slate-600 text-xs">Status</th>
+                                                <th className="border border-slate-600 text-xs"></th>
                                             </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
+                                        </thead>
+                                        <tbody>
+                                            {entrepreneur.investments.map((investment, i) => (
+                                                <tr key={investment.id}>
+                                                    <td className="border border-slate-700">
+                                                        {i+1}
+                                                    </td>
+                                                    <td className="border border-slate-700">
+                                                        {investment.investor.user.first_name} {investment.investor.user.last_name}
+                                                    </td>
+                                                    <td className="border border-slate-700">
+                                                        {entrepreneur.project_name}
+                                                    </td>
+                                                    <td className="border border-slate-700">
+                                                        {investment.amount_deducated_from_balance} AZN
+                                                    </td>
+                                                    <td className="border border-slate-700">
+                                                        {investment.amount_must_send} AZN
+                                                    </td>
+                                                    <td className="border border-slate-700">
+                                                        {investment.amount}
+                                                    </td>
+                                                    <td className="border border-slate-700">
+                                                        {investment.profit}
+                                                    </td>
+                                                    <td className="border border-slate-700">
+                                                        {investment.final_profit}
+                                                    </td>
+                                                    <td className="border border-slate-700">
+                                                        {investment.investment_date}
+                                                    </td>
+                                                    <td className="border border-slate-700">
+                                                        {investment.is_submitted ? <FaCheck className='success mx-14' /> : <FaXmark className='error mx-14' />}
+                                                    </td>
+                                                    {
+                                                        entrepreneur.is_finished ? 
+                                                        (
+                                                            <td onClick={() => showEntrepreneurInvestmentsReportModal(investment, investment.investor)} className="border border-slate-700 text-center text-sky-700 cursor-pointer">
+                                                                Hesabat
+                                                            </td>
+                                                        ) 
+                                                        :
+                                                        (
+                                                            <td onClick={() => showEntrepreneurInvestmentUpdateModal(investment)} className="border border-slate-700 text-center text-sky-700 cursor-pointer">
+                                                                Təsdiqlə
+                                                            </td>
+                                                        ) 
+                                                    }
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                {/* ***************** Pagination ********************* */}
+                                <div>
+                                    <div className="flex justify-center mt-10">
+                                        <Pagination
+                                            onChange={(e) => {
+                                                changeInvestmentsPage(e);
+                                            }}
+                                            className="pagination"
+                                            current={currentPage}
+                                            total={investmentstotalPage}
+                                            defaultPageSize={pageLimit}
+                                            showSizeChanger={false}
+                                        />
+                                    </div>
+                                </div>
+                            </>
                         ) : ""
                     }
                 </Modal>
