@@ -108,7 +108,8 @@ function AdminInvestorPayments() {
                 owner: "",
                 start_date: "",
                 end_date: "",
-                is_active: ""
+                is_active: false,
+                is_finished: true
             })
         );
     }, [dispatch]);
