@@ -33,7 +33,6 @@ function App() {
 
   useEffect(() => {
     if(access) {
-      console.log("Burdayam1");
       dispatch(getMeAsync())
       .then((res) => {
         if (res.payload == undefined) {
@@ -58,12 +57,10 @@ function App() {
           const onExpire = () => {
               const refresh = localStorage.getItem("refresh");
               if (refresh) {
-                  console.log("Burdayam2");
                   localStorage.clear()
                   navigate("/");
                   window.location.reload();
               } else {
-                  console.log("Burdayam3");
                   navigate("/login");
               }
           };
@@ -72,14 +69,10 @@ function App() {
               // token not expired, set future timeout to log out and redirect
               timerRef = setTimeout(onExpire, timeout);
           } else {
-              console.log("Burdayam4");
               // token expired, log out and redirect
               onExpire();
           }
         } catch (error) {
-          console.log(error);
-          console.log("Burdayam5");
-
             localStorage.clear()
             navigate("/login");
         }

@@ -42,7 +42,6 @@ function EntrepreneurDetail() {
         dispatch(getMeAsync())
         dispatch(getEntrepreneurDetailAsync(id))
         .then((res) => {
-            console.log(res);
             if(res.error) {
                 navigate("/")
             }
