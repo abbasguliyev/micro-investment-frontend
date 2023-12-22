@@ -2,6 +2,7 @@ import { DatePicker, Form, Modal, Pagination, Select, Switch } from "antd";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
+    deleteInvestmentAsync,
     getAllInvestmentReportsAsync,
     getAllInvestmentsAsync,
     postInvestmentAsync,
@@ -41,6 +42,7 @@ function AdminEntrepreneurs() {
     const [entrepreneur, setEntrepreneur] = useState(null);
     const [investment, setInvestment] = useState(null);
     const [isEntrepreneurDeleteModalOpen, setIsEntrepreneurDeleteModalOpen] = useState(false);
+    const [isInvestmentDeleteModalOpen, setIsInvestmentDeleteModalOpen] = useState(false);
     const dispatch = useDispatch();
 
     let entrepreneurs = useSelector((state) => state.entrepreneur.entrepreneurs);
@@ -59,6 +61,40 @@ function AdminEntrepreneurs() {
             setUsers(res.payload.results)
         ))
     }
+
+    // Investment DELETE SHOW MODAL
+    const showInvestmentDeleteModal = (investment) => {
+        setIsInvestmentDeleteModalOpen(true);
+        setInvestment(investment)
+    };
+
+    const handleInvestmentDeleteModalOk = () => {
+        setIsInvestmentDeleteModalOpen(false);
+        dispatch(deleteInvestmentAsync({"id": investment.id}))
+        .then(() => {
+            let offset = (currentPage - 1) * pageLimit;
+            dispatch(
+                getAllEntrepreneurAsync({
+                    offset: offset,
+                    owner: "",
+                    start_date: "",
+                    end_date: "",
+                    is_active: ""
+                })
+            );
+            dispatch(
+                getAllInvestmentsAsync({
+                    offset: offset,
+                    investor: investment.investor.id,
+                    entrepreneur: investment.entrepreneur.id
+                })
+            )
+        })
+    };
+
+    const handleInvestmentDeleteModalCancel = () => {
+        setIsInvestmentDeleteModalOpen(false);
+    };
 
     // ENTREPRENEUR DELETE SHOW MODAL
     const showEntrepreneurModal = (entrepreneur) => {
@@ -617,6 +653,7 @@ function AdminEntrepreneurs() {
                                                 <th className="border border-slate-600 text-xs">İnvestisiya tarixi</th>
                                                 <th className="border border-slate-600 text-xs">Status</th>
                                                 <th className="border border-slate-600 text-xs"></th>
+                                                <th className="border border-slate-600 text-xs"></th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -666,6 +703,20 @@ function AdminEntrepreneurs() {
                                                             </td>
                                                         ) 
                                                     }
+                                                    <td className="border border-slate-700 text-center">
+                                                        <NavLink
+                                                            className={`p-2`}
+                                                            onClick={() => showInvestmentDeleteModal(investment)}
+                                                        >
+                                                            <MdDelete
+                                                                className="inline"
+                                                                style={{
+                                                                    color: "#CF4B44",
+                                                                    fontSize: "20px",
+                                                                }}
+                                                            />
+                                                        </NavLink>
+                                                    </td>
                                                 </tr>
                                             ))}
                                         </tbody>
@@ -690,6 +741,14 @@ function AdminEntrepreneurs() {
                         ) : ""
                     }
                 </Modal>
+
+                <Modal
+                    title={`Silmək istədiyinizə əminsinizmi?`}
+                    okType="default"
+                    open={isInvestmentDeleteModalOpen}
+                    onOk={handleInvestmentDeleteModalOk}
+                    onCancel={handleInvestmentDeleteModalCancel}
+                ></Modal>
                 
                 <Modal
                     title={`Hesabat`}
@@ -828,6 +887,7 @@ function AdminEntrepreneurs() {
                         checked={formik.values.is_submitted == true ? "checked": ""}
                     />
                 </Modal>
+
                 <Modal
                     title={`Sifarişi bitirmək istədiyinizdən əminzinizmi?`}
                     okType="default"
