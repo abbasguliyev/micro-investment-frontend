@@ -28,8 +28,7 @@ function AdminUsers() {
         setIsUserModalOpen(false);
         dispatch(deleteUserAsync({"id": userId}))
         .then(() => {
-            let offset = (currentPage - 1) * pageLimit;
-            dispatch(getAllUsersAsync({"offset": offset, "birthdate":"", "marital_status":"", "employment_status":"", "housing_status":"", "phone_number":"", "monthly_income":"", "monthly_income__gte": "", "monthly_income__lte": ""}))
+            dispatch(getAllUsersAsync(filterFormik.values))
         })
     };
 
@@ -72,22 +71,27 @@ function AdminUsers() {
     const changePage = (e) => {
         setCurrentPage(e);
         let offset = (e - 1) * pageLimit;
-        dispatch(getAllUsersAsync({"offset": offset, "birthdate":"", "marital_status":"", "employment_status":"", "housing_status":"", "phone_number":"", "monthly_income":"", "monthly_income__gte": "", "monthly_income__lte": "", "is_active": ""}));
+        filterFormik.values.offset = offset;
+        let filteredValues = { ...filterFormik.values };
+        dispatch(getAllUsersAsync(filteredValues));
     };
 
     const changeUserActivity = (user) => {
         dispatch(putUserProfileAsync({"id": user.id, "is_active": !user.user.is_active}))
         .then(() => {
             let offset = (currentPage - 1) * pageLimit;
-            dispatch(getAllUsersAsync({"offset": offset, "birthdate":"", "marital_status":"", "employment_status":"", "housing_status":"", "phone_number":"", "monthly_income":"", "monthly_income__gte": "", "monthly_income__lte": "", "is_active": ""}))
+            filterFormik.values.offset = offset;
+            let filteredValues = { ...filterFormik.values };
+            dispatch(getAllUsersAsync(filteredValues))
         })
     }
 
     const changeUserIsSuperuserStatus = (user) => {
         dispatch(putUserProfileAsync({"id": user.id, "is_superuser": !user.user.is_superuser}))
         .then(() => {
-            let offset = (currentPage - 1) * pageLimit;
-            dispatch(getAllUsersAsync({"offset": offset, "birthdate":"", "marital_status":"", "employment_status":"", "housing_status":"", "phone_number":"", "monthly_income":"", "monthly_income__gte": "", "monthly_income__lte": "", "is_active": ""}))
+            filterFormik.values.offset = offset;
+            let filteredValues = { ...filterFormik.values };
+            dispatch(getAllUsersAsync(filteredValues))
         })
     }
 
