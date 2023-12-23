@@ -12,6 +12,7 @@ import FileInput from "../../../../components/InputComponents/FileInput";
 import MultiSelectDropdown from "../../../../components/InputComponents/MultiSelectDropdown";
 import TextAreaInput from "../../../../components/InputComponents/TextAreaInput";
 import Checkbox from "../../../../components/InputComponents/Checkbox";
+import { CgSpinner } from "react-icons/cg";
 
 
 function AdminUserCreate() {
@@ -21,6 +22,8 @@ function AdminUserCreate() {
 
     let users = useSelector((state) => state.auth.users)
     let errorMsg = useSelector((state) => state.auth.error)
+    const isLoading = useSelector((state) => state.auth.isLoading)
+
 
     const formik = useFormik({
         initialValues: {
@@ -306,7 +309,7 @@ function AdminUserCreate() {
                                     <li key={user ? user.id : i}>
                                         <Checkbox
                                             label={
-                                                user && user.user ? (`${user.first_name} ${user.user.last_name} | ${user.user.email}`) : ""
+                                                user && user.user ? (`${user.user.first_name} ${user.user.last_name} | ${user.user.email}`) : ""
                                             }
                                             id={user.id}
                                             name="references"
@@ -359,12 +362,27 @@ function AdminUserCreate() {
                             style={style}
                         />
                         <div>
-                            <button
-                                type="submit"
-                                className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                            >
-                                Əlavə et
-                            </button>
+
+                            {
+                                isLoading ? (
+                                    <button
+                                        type="submit"
+                                        className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                                        disabled
+                                    >
+                                        <CgSpinner className='animate-spin self-center text-lg'/>
+                                        Əlavə et
+                                    </button>
+                                ) : (
+                                    <button
+                                        type="submit"
+                                        className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                                    >
+                                        Əlavə et
+                                    </button>
+                                )
+                            }
+                            
                         </div>
                     </form>
                 </div>
