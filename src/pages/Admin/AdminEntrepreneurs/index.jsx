@@ -74,13 +74,7 @@ function AdminEntrepreneurs() {
         .then(() => {
             let offset = (currentPage - 1) * pageLimit;
             dispatch(
-                getAllEntrepreneurAsync({
-                    offset: offset,
-                    owner: "",
-                    start_date: "",
-                    end_date: "",
-                    is_active: ""
-                })
+                getAllEntrepreneurAsync(filterFormik.values)
             );
             dispatch(
                 getAllInvestmentsAsync({
@@ -106,15 +100,8 @@ function AdminEntrepreneurs() {
         setIsEntrepreneurDeleteModalOpen(false);
         dispatch(deleteEntrepreneurAsync({"id": entrepreneur}))
         .then(() => {
-            let offset = (currentPage - 1) * pageLimit;
             dispatch(
-                getAllEntrepreneurAsync({
-                    offset: offset,
-                    owner: "",
-                    start_date: "",
-                    end_date: "",
-                    is_active: ""
-                })
+                getAllEntrepreneurAsync(filterFormik.values)
             )
         })
     };
@@ -148,13 +135,7 @@ function AdminEntrepreneurs() {
         addNewInvestorFormik.values.entrepreneur = entrepreneur.id
         dispatch(postInvestmentAsync(addNewInvestorFormik.values)).then(() => {
             dispatch(
-                getAllEntrepreneurAsync({
-                    offset: 0,
-                    owner: "",
-                    start_date: "",
-                    end_date: "",
-                    is_active: ""
-                })
+                getAllEntrepreneurAsync(filterFormik.values)
             );
         })
     };
@@ -189,13 +170,7 @@ function AdminEntrepreneurs() {
         .then(() => {
             let offset = (currentPage - 1) * pageLimit;
             dispatch(
-                getAllEntrepreneurAsync({
-                    offset: offset,
-                    owner: "",
-                    start_date: "",
-                    end_date: "",
-                    is_active: ""
-                })
+                getAllEntrepreneurAsync(filterFormik.values)
             );
         })
     };
@@ -217,13 +192,7 @@ function AdminEntrepreneurs() {
         .then(() => {
             let offset = (currentPage - 1) * pageLimit;
             dispatch(
-                getAllEntrepreneurAsync({
-                    offset: offset,
-                    owner: "",
-                    start_date: "",
-                    end_date: "",
-                    is_active: ""
-                })
+                getAllEntrepreneurAsync(filterFormik.values)
             );
             dispatch(
                 getAllInvestmentsAsync({
@@ -280,13 +249,7 @@ function AdminEntrepreneurs() {
             dispatch(postInvestmentAsync(values))
             .then(() => {
                 dispatch(
-                    getAllEntrepreneurAsync({
-                        offset: offset,
-                        owner: "",
-                        start_date: "",
-                        end_date: "",
-                        is_active: ""
-                    })
+                    getAllEntrepreneurAsync(filterFormik.values)
                 );
                 dispatch(
                     getAllInvestmentsAsync({

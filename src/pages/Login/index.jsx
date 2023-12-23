@@ -7,6 +7,7 @@ import validations from './validation';
 import style from "./style.module.css"
 import AuthInput from '../../components/InputComponents/AuthInput';
 import ResponseMessage from '../../components/ResponseMessage';
+import { CgSpinner } from "react-icons/cg";
 
 
 function Login() {
@@ -33,6 +34,7 @@ function Login() {
 
   const errorMsg = useSelector((state) => state.auth.error);
   const successMsg = useSelector((state) => state.auth.successMsg)
+  const isLoading = useSelector((state) => state.auth.isLoading)
 
   useEffect(() => {
     if (access != null) {
@@ -63,12 +65,25 @@ function Login() {
               </NavLink>
             </div>
             <div>
-              <button
-                type="submit"
-                className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-              >
-                Daxil ol
-              </button>
+            {
+                isLoading ? (
+                    <button
+                      type="submit"
+                      className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                      disabled
+                    >
+                      <CgSpinner className='animate-spin self-center text-lg'/>
+                      Daxil ol
+                    </button>
+                ) : (
+                  <button
+                    type="submit"
+                    className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                  >
+                    Daxil ol
+                  </button>
+                )
+            }
             </div>
           </form>
               
