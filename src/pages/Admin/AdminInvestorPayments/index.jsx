@@ -6,6 +6,7 @@ import {
     getAllInvestmentsAsync,
     postInvestmentAsync,
     putInvestmentAsync,
+    putInvestmentReportAsync,
     resetInvestmentSlice,
 } from "../../../redux/InvestmentSlice/InvestmentSlice";
 import ResponseMessage from "../../../components/ResponseMessage";
@@ -39,6 +40,7 @@ function AdminInvestorPayments() {
 
     let entrepreneurs = useSelector((state) => state.entrepreneur.entrepreneurs);
     let investmentReports = useSelector((state) => state.investment.investmentReports);
+    let investments = useSelector((state) => state.investment.investments);
     const errorMsg = useSelector((state) => state.entrepreneur.error);
     const successMsg = useSelector((state) => state.entrepreneur.successMsg);
     const investmentErrorMsg = useSelector((state) => state.investment.error);
@@ -52,6 +54,7 @@ function AdminInvestorPayments() {
         setIsEntrepreneurInvestmentReportModalOpen(true);
         setEntrepreneur(entrepreneur)
         dispatch(getAllInvestmentReportsAsync({offset: 0, investor: "", investment: "", entrepreneur: entrepreneur.id}))
+        dispatch(getAllInvestmentsAsync({"investor": "", "entrepreneur": entrepreneur.id, "offset": ""}))
     };
 
     const handleEntrepreneurInvestmentReportModalOk = () => {
@@ -127,6 +130,17 @@ function AdminInvestorPayments() {
         let offset = (e - 1) * pageLimit;
         dispatch(getAllInvestmentReportsAsync({offset: offset, investor: "", investment: "", entrepreneur: entrepreneur.id}));
     };
+
+    const changeReportSendedStatus = (report) => {
+        dispatch(putInvestmentReportAsync({"id": report.id, "is_amount_sended_to_investor": !report.is_amount_sended_to_investor}))
+        .then(() => {
+            let offset = (currentPage - 1) * pageLimit;
+            filterFormik.values.offset = offset;
+            let filteredValues = { ...filterFormik.values };
+            dispatch(getAllEntrepreneurAsync(filteredValues));
+            dispatch(getAllInvestmentReportsAsync({offset: offset, investor: "", investment: "", entrepreneur: entrepreneur.id}));
+        })
+    }
 
     return (
         <div className="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8 flex flex-col">
@@ -291,11 +305,14 @@ function AdminInvestorPayments() {
                                                 <th className="border border-slate-600 text-xs">
                                                     Kart hesabı
                                                 </th>
+                                                <th className="border border-slate-600 text-xs"></th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             {investmentReports.map((investmentReport, i) => (
-                                                <tr key={investmentReport.id}>
+                                                <tr key={investmentReport.id} 
+                                                    className={investmentReport.is_amount_sended_to_investor ? "text-green-800" : "text-red-800"}
+                                                >
                                                     <td className="border border-slate-700">
                                                         {i+1}
                                                     </td>
@@ -307,7 +324,6 @@ function AdminInvestorPayments() {
                                                                 </>
                                                             )
                                                     }
-                                                        
                                                     </td>
                                                     <td className="border border-slate-700">
                                                         {investmentReport.amount_want_to_keep_in_the_balance}
@@ -324,10 +340,37 @@ function AdminInvestorPayments() {
                                                     <td className="border border-slate-700">
                                                         {investmentReport.investor.credit_cart_number}
                                                     </td>
+                                                    <td className="border border-slate-700">
+                                                    {
+                                                        investmentReport.is_amount_sended_to_investor ? (
+                                                            <div onClick={() => changeReportSendedStatus(investmentReport)} className="ml-auto pointer-events-auto h-6 w-10 rounded-full p-1 ring-1 ring-inset transition duration-200 ease-in-out bg-indigo-600 ring-black/20 cursor-pointer">
+                                                                <div className="h-4 w-4 rounded-full bg-white shadow-sm ring-1 ring-slate-700/10 transition duration-200 ease-in-out translate-x-4"></div>
+                                                            </div>
+                                                        ) : (
+                                                            <div onClick={() => changeReportSendedStatus(investmentReport)} className="pointer-events-auto h-6 w-10 rounded-full p-1 ring-1 ring-inset transition duration-200 ease-in-out bg-slate-900/10 ring-slate-900/5 cursor-pointer">
+                                                                <div className="h-4 w-4 rounded-full bg-white shadow-sm ring-1 ring-slate-700/10 transition duration-200 ease-in-out"></div>
+                                                            </div>
+                                                        )
+                                                    }
+                                                    </td>
                                                 </tr>
                                             ))}
                                         </tbody>
                                     </table>
+
+                                    <hr className="mt-8 mb-5"/>
+                                    <p className="font-bold">Hesabatı göndərməyənlər:</p>
+                                    <ul>
+                                        {
+                                            investments.map((inv) => (
+                                                inv.investment_report.length == 0 && (
+                                                    <li>
+                                                        {inv.investor && `- ${inv.investor.user.first_name} ${inv.investor.user.last_name} | Qazanc - ${inv.final_profit} AZN`}
+                                                    </li>
+                                                )
+                                            ))
+                                        }
+                                    </ul>
                                 </div>
                                 {/* ***************** Pagination ********************* */}
                                 <div>
