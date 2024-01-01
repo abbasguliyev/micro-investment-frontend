@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { getMeAsync, refreshTokenAsync } from '../../redux/AuthSlice/AuthSlice'
 import { getAllNotificationsAsync } from '../../redux/NotificationSlice/NotificationSlice'
 import { Modal } from 'antd'
+import moment from 'moment';
 
 function Header() {
   const location = useLocation();
@@ -169,31 +170,37 @@ function Header() {
                       <path strokeLinecap="round" strokeLinejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
                     </svg>
                   </button>
-                  {/* <div 
-                    className={notificationModal ? `block shadow-lg` : `hidden`} 
+                  <div 
+                    className={notificationModal ? `block shadow-xl` : `hidden`} 
                     style={{
                       position: "absolute",
                       top: 50,
                       right: 5,
                       backgroundColor: "#fff",
-                      padding: 20,
+                      paddingTop: 20,
+                      paddingRight: 5,
+                      paddingLeft: 15,
+                      paddingBottom: 10,
                       color: "black",
-                      width: 500
+                      width: 400,
+                      zIndex: 100
                     }}
                   >
-                      <ul>
-                        {
-                          notifications.map((notification) => (
-                            <li key={notification.id}>
-                              {notification.message}
-                              <br />
-                              {notification.created_at}
-                              <hr />
-                            </li>
-                          ))
-                        }
-                      </ul>
-                    </div> */}
+                    <ul className='w-full h-96 overflow-auto'>
+                      {
+                        notifications.map((notification) => (
+                          <li key={notification.id} className='flex flex-col'>
+                            {notification.message}
+                            <br />
+                            <small className='self-end'>
+                              {moment(notification.created_at).format('DD.MM.YYYY, HH:mm')}
+                            </small>
+                            <hr />
+                          </li>
+                        ))
+                      }
+                    </ul>
+                  </div>
 
                   </div>
               </div>
