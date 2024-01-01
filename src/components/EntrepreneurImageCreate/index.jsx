@@ -54,29 +54,24 @@ function EntrepreneurImageCreate() {
                 {errorMsg && (<ResponseMessage message={errorMsg} type="error" slice={resetEntrepreneurSlice()} />)}
                 {successMsg && (<ResponseMessage message={successMsg} type="success" slice={resetEntrepreneurSlice()} />)}
                 <form className="flex items-center justify-center flex-col" onSubmit={formik.handleSubmit}>
-                    <label
-                        htmlFor="image"
-                        className="cursor-pointer font-bold py-2 px-4 rounded-full"
-                    >
-                        Şəkil seçmək üçün bu yazıya toxunun
-                    </label>
                     <input
                         type="file"
                         id="image"
                         name="image" 
-                        className="hidden ml-24 mb-5 file-input"
+                        className="ml-24 mb-5"
                         onChange={e=>{formik.setFieldValue("image",e.target.files[0])}}
                         onBlur={formik.handleBlur}
                     />
-                    <small>{ formik.values.image ? formik.values.image.name : "" }</small>
-                    <button type="submit"
-                            className="flex w-90 justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-                                Şəkli təsdiqləmək üçün basın
-                    </button>
-                    <NavLink to="/"
-                            className="flex w-90 justify-center rounded-md bg-indigo-600 mt-3 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-                                Ana səhifəyə qayıt
-                    </NavLink>
+                    <div className="flex ">
+                        <button type="submit"
+                                className="w-90 self-center rounded-md bg-indigo-600 mr-2 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                                    Əlavə et
+                        </button>
+                        <NavLink to="/"
+                                className="w-90 self-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                                    Ana səhifəyə qayıt
+                        </NavLink>
+                    </div>
                 </form>
                     
                 <div className="flex flex-row flex-wrap m-4">
