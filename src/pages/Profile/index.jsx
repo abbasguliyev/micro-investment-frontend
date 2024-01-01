@@ -13,6 +13,8 @@ import { useFormik } from 'formik'
 import { Modal } from 'antd'
 import AuthInput from '../../components/InputComponents/AuthInput'
 import style from "./style.module.css"
+import PaymentTable from '../../components/Profile/PaymentTable'
+import { CgSpinner } from 'react-icons/cg'
 
 function Profile() {
   const [id, setID] = useState();
@@ -26,6 +28,7 @@ function Profile() {
 
   let me = useSelector((state) => state.auth.me)
   let user = useSelector((state) => state.auth.user)
+  let isLoading = useSelector((state) => state.auth.isLoading)
   let successMsg = useSelector((state) => state.auth.successMsg)
   let errorMsg = useSelector((state) => state.auth.error)
   let educationSuccessMsg = useSelector((state) => state.education.successMsg)
@@ -81,166 +84,176 @@ function Profile() {
       {investmentSuccessMsg && (<ResponseMessage message={investmentSuccessMsg} type="success" slice={resetEducationSlice()} />)}
       
       <div className='flex flex-col md:flex-row lg:flex-row xl:flex-row'>
-        <div className='w-full sm:w-full md:w-2/5 lg:w-2/5 xl:md:w-2/5 h-96 border mr-2 mb-2 rounded drop-shadow'>
-          {
-            user && user.profile_picture ?
-            <img src={user.profile_picture} alt="default1" className='w-full h-full object-cover rounded' />
-            : <img src="/images/default_avatar.png" alt="default" className='w-full h-full object-cover rounded' />
-          }
-        </div>
-        <div className='w-full sm:w-full md:w-3/5 lg:w-3/5 xl:md:w-3/5 h-96 mb-2 border rounded drop-shadow-md'>
-          <div className='w-full h-20 mb-20 md:mb-20 lg:mb-20 xl:mb-4 flex flex-col md:flex-col lg:flex-col xl:flex-row justify-between'>
-            <div>
-              <p className='md:text-4xl lg:text-4xl xl:text-5xl m-4'>
+        {
+          isLoading ? (
+            <div className='w-full flex justify-center h-96'>
+              <CgSpinner className='animate-spin text-lg self-center'/>
+          </div>
+          ) : (
+            <>
+              <div className='w-full sm:w-full md:w-2/5 lg:w-2/5 xl:md:w-2/5 h-96 border mr-2 mb-2 rounded drop-shadow'>
                 {
-                  user ? <>
-                    {
-                      user.user ? <>
-                        {user.user.first_name} {user.user.last_name}
-                      </> : ""
-                    }
-                  </>:""
+                  user && user.profile_picture ?
+                  <img src={user.profile_picture} alt="default1" className='w-full h-full object-cover rounded' />
+                  : <img src="/images/default_avatar.png" alt="default" className='w-full h-full object-cover rounded' />
                 }
-              </p>
-              <div className='flex m-4'>
-                <NavLink onClick={() => showPasswordChangeModal(true)} className={`rounded btn-main-bg text-xs w-30 h-8 p-2 mr-2`}>Şifrə Yenilə</NavLink>
-                <p className='text-2xl'>Balans: {user && user.user ? user.user.balance : 0} AZN</p>
               </div>
-            </div>
-            {
-              me && me.id == id && <NavLink to="profile-update" className={`rounded btn-main-bg w-50 h-10 p-2 m-4`}>Məlumatları Dəyiş</NavLink>
-            }
-          </div>
-          <div className={`w-full h-72 flex flex-col justify-between p-4 rounded overflow-auto`}>
-              <div className='mb-20 md:mb-20 lg:mb-20 xl:mb-4 overflow-auto'>
-                <div className='w-full flex flex-col md:flex-col lg:flex-col xl:flex-row justify-between'>
-                  <p className='text-slate-400'>Email:</p>
-                  <span>
-                    {
-                      user ? <>
-                        {
-                          user.user ? <>
-                            {user.user.email}
-                          </> : ""
-                        }
-                      </>:"-"
-                    }
-                  </span>
+              <div className='w-full sm:w-full md:w-3/5 lg:w-3/5 xl:md:w-3/5 h-96 mb-2 border rounded drop-shadow-md'>
+                <div className='w-full h-20 mb-20 md:mb-20 lg:mb-20 xl:mb-4 flex flex-col md:flex-col lg:flex-col xl:flex-row justify-between'>
+                  <div>
+                    <p className='md:text-4xl lg:text-4xl xl:text-5xl m-4'>
+                      {
+                        user ? <>
+                          {
+                            user.user ? <>
+                              {user.user.first_name} {user.user.last_name}
+                            </> : ""
+                          }
+                        </>:""
+                      }
+                    </p>
+                    <div className='flex m-4'>
+                      <NavLink onClick={() => showPasswordChangeModal(true)} className={`rounded btn-main-bg text-xs w-30 h-8 p-2 mr-2`}>Şifrə Yenilə</NavLink>
+                      <p className='text-2xl'>Balans: {user && user.user ? user.user.balance : 0} AZN</p>
+                    </div>
+                  </div>
+                  {
+                    me && me.id == id && <NavLink to="profile-update" className={`rounded btn-main-bg w-50 h-10 p-2 m-4`}>Məlumatları Dəyiş</NavLink>
+                  }
                 </div>
-                <hr />
-                <div className='w-full flex flex-col md:flex-col lg:flex-col xl:flex-row justify-between'>
-                  <p className='text-slate-400'>Telefon nömrəsi:</p>
-                  <span>
-                    {
-                      user ? <>{user.phone_number}</> : "-"
-                    }
-                  </span>
+                <div className={`w-full h-72 flex flex-col justify-between p-4 rounded overflow-auto`}>
+                    <div className='mb-20 md:mb-20 lg:mb-20 xl:mb-4 overflow-auto'>
+                      <div className='w-full flex flex-col md:flex-col lg:flex-col xl:flex-row justify-between'>
+                        <p className='text-slate-400'>Email:</p>
+                        <span>
+                          {
+                            user ? <>
+                              {
+                                user.user ? <>
+                                  {user.user.email}
+                                </> : ""
+                              }
+                            </>:"-"
+                          }
+                        </span>
+                      </div>
+                      <hr />
+                      <div className='w-full flex flex-col md:flex-col lg:flex-col xl:flex-row justify-between'>
+                        <p className='text-slate-400'>Telefon nömrəsi:</p>
+                        <span>
+                          {
+                            user ? <>{user.phone_number}</> : "-"
+                          }
+                        </span>
+                      </div>
+                      <hr />
+                      <div className='w-full flex flex-col md:flex-col lg:flex-col xl:flex-row justify-between'>
+                        <p className='text-slate-400'>Doğum tarixi:</p>
+                        <span>
+                          {
+                            user ? <>{user.birthdate}</> : "-"
+                          } 
+                        </span>
+                      </div>
+                      <hr />
+                      <div className='w-full flex flex-col md:flex-col lg:flex-col xl:flex-row justify-between'>
+                        <p className='text-slate-400'>Ünvan:</p>
+                        <span>
+                          {
+                            user ? <>{user.address}</> : "-"
+                          }
+                        </span>
+                      </div>
+                      <hr />
+                      <div className='w-full flex flex-col md:flex-col lg:flex-col xl:flex-row justify-between'>
+                        <p className='text-slate-400'>Evlilik statusu:</p>
+                        <span>
+                          {
+                            user ? <>
+                              {
+                                user.marital_status === "single" ? "Subay" : "Evli"
+                              }
+                            </> : "-"
+                          }
+                        </span>
+                      </div>
+                      <hr />
+                      <div className='w-full flex flex-col md:flex-col lg:flex-col xl:flex-row justify-between'>
+                        <p className='text-slate-400'>İşləmə statusu:</p>
+                        <span>
+                          {
+                            user ? <>
+                              {
+                                user.employment_status === "working" ? "İşləyir" : "İşləmir"
+                              }
+                            </> : "-"
+                          }
+                        </span>
+                      </div>
+                      <hr />
+                      <div className='w-full flex flex-col md:flex-col lg:flex-col xl:flex-row justify-between'>
+                        <p className='text-slate-400'>Ev statusu:</p>
+                        <span>
+                          {
+                            user ? <>
+                              {
+                                user.housing_status === "own home" ? "Şəxsi ev" : "Kirayə"
+                              }
+                            </> : "-"
+                          }
+                        </span>
+                      </div>
+                      <hr />
+                      <div className='w-full flex flex-col md:flex-col lg:flex-col xl:flex-row justify-between'>
+                        <p className='text-slate-400'>Kredit kartı nömrəsi:</p>
+                        <span>
+                          {
+                            user ? <>{user.credit_cart_number}</> : "-"
+                          }
+                        </span>
+                      </div>
+                      <hr />
+                      <div className='w-full flex flex-col md:flex-col lg:flex-col xl:flex-col'>
+                        <p className='text-slate-400'>Haqqında:</p>
+                        <span className='place-items-end'>
+                          {
+                            user ? <>{
+                              user.about ? <>{user.about}</> : "-"
+                            }</> : "-"
+                          }
+                        </span>
+                      </div>
+                      <hr />
+                      <div className='w-full flex flex-col md:flex-col lg:flex-col xl:flex-col'>
+                        <p className='text-slate-400'>Biznes fəaliyytələri:</p>
+                        <span className='place-items-end'>
+                          {
+                            user ? <>{
+                              user.business_activities ? <>{user.business_activities}</> : "-"
+                            }</> : "-"
+                          }
+                        </span>
+                      </div>
+                      <hr />
+                      <div className='w-full flex flex-col md:flex-col lg:flex-col xl:flex-col'>
+                        <p className='text-slate-400'>Referanslar:</p>
+                          {
+                            user && user.references ? (
+                              user.references.map((ref, i) => (
+                                  <span key={`referance-${i+1}`} className='place-items-end'>
+                                    <p>{i+1}. {ref.first_name} {ref.last_name} | {ref.email}</p>
+                                  </span>
+                                ))
+                            ) : "-"
+                          }
+                      </div>
+                      <hr />
+                    </div>
                 </div>
-                <hr />
-                <div className='w-full flex flex-col md:flex-col lg:flex-col xl:flex-row justify-between'>
-                  <p className='text-slate-400'>Doğum tarixi:</p>
-                  <span>
-                    {
-                      user ? <>{user.birthdate}</> : "-"
-                    } 
-                  </span>
-                </div>
-                <hr />
-                <div className='w-full flex flex-col md:flex-col lg:flex-col xl:flex-row justify-between'>
-                  <p className='text-slate-400'>Ünvan:</p>
-                  <span>
-                    {
-                      user ? <>{user.address}</> : "-"
-                    }
-                  </span>
-                </div>
-                <hr />
-                <div className='w-full flex flex-col md:flex-col lg:flex-col xl:flex-row justify-between'>
-                  <p className='text-slate-400'>Evlilik statusu:</p>
-                  <span>
-                    {
-                      user ? <>
-                        {
-                          user.marital_status === "single" ? "Subay" : "Evli"
-                        }
-                      </> : "-"
-                    }
-                  </span>
-                </div>
-                <hr />
-                <div className='w-full flex flex-col md:flex-col lg:flex-col xl:flex-row justify-between'>
-                  <p className='text-slate-400'>İşləmə statusu:</p>
-                  <span>
-                    {
-                      user ? <>
-                        {
-                          user.employment_status === "working" ? "İşləyir" : "İşləmir"
-                        }
-                      </> : "-"
-                    }
-                  </span>
-                </div>
-                <hr />
-                <div className='w-full flex flex-col md:flex-col lg:flex-col xl:flex-row justify-between'>
-                  <p className='text-slate-400'>Ev statusu:</p>
-                  <span>
-                    {
-                      user ? <>
-                        {
-                          user.housing_status === "own home" ? "Şəxsi ev" : "Kirayə"
-                        }
-                      </> : "-"
-                    }
-                  </span>
-                </div>
-                <hr />
-                <div className='w-full flex flex-col md:flex-col lg:flex-col xl:flex-row justify-between'>
-                  <p className='text-slate-400'>Kredit kartı nömrəsi:</p>
-                  <span>
-                    {
-                      user ? <>{user.credit_cart_number}</> : "-"
-                    }
-                  </span>
-                </div>
-                <hr />
-                <div className='w-full flex flex-col md:flex-col lg:flex-col xl:flex-col'>
-                  <p className='text-slate-400'>Haqqında:</p>
-                  <span className='place-items-end'>
-                    {
-                      user ? <>{
-                        user.about ? <>{user.about}</> : "-"
-                      }</> : "-"
-                    }
-                  </span>
-                </div>
-                <hr />
-                <div className='w-full flex flex-col md:flex-col lg:flex-col xl:flex-col'>
-                  <p className='text-slate-400'>Biznes fəaliyytələri:</p>
-                  <span className='place-items-end'>
-                    {
-                      user ? <>{
-                        user.business_activities ? <>{user.business_activities}</> : "-"
-                      }</> : "-"
-                    }
-                  </span>
-                </div>
-                <hr />
-                <div className='w-full flex flex-col md:flex-col lg:flex-col xl:flex-col'>
-                  <p className='text-slate-400'>Referanslar:</p>
-                    {
-                      user && user.references ? (
-                        user.references.map((ref, i) => (
-                            <span key={`referance-${i+1}`} className='place-items-end'>
-                              <p>{i+1}. {ref.first_name} {ref.last_name} | {ref.email}</p>
-                            </span>
-                          ))
-                      ) : "-"
-                    }
-                </div>
-                <hr />
               </div>
-          </div>
-        </div>
+            </>
+          )
+        }
       </div>
       <div className='w-full h-96 border pt-4 mt-5 mr-2 pb-7 rounded drop-shadow-md overflow-auto'>
         <div>
@@ -252,6 +265,10 @@ function Profile() {
               setShowTab(<EntreprenuerTable userId={id && id}/>)
               setTitle("Lahiyələrim")
             }} className={`p-2 ml-2 rounded btn-main-bg`}>Lahiyələr</button>
+            <button onClick={()=>{
+              setShowTab(<PaymentTable userId={id && id}/>)
+              setTitle("Ödənişlərim")
+            }} className={`p-2 ml-2 rounded btn-main-bg`}>Ödənişlər</button>
             <button onClick={()=>{
               setShowTab(<Education userId={id && id}/>)
               setTitle("Təhsilim")

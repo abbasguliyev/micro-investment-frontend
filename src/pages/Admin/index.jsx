@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getCompanyBalanceAsync } from '../../redux/CompanyBalanceSlice/CompanyBalanceSlice';
 import { getMeAsync } from '../../redux/AuthSlice/AuthSlice';
 import { useNavigate } from 'react-router-dom';
+import AdminDebtFund from './AdminDebtFund';
 
 function Admin() {
   const [showTab, setShowTab] =useState(<AdminUsers />);
@@ -38,23 +39,28 @@ function Admin() {
               setTitle("İstifadəçilər")
             }} className={'btn-main-bg p-2 ml-2 rounded'}>İstifadəçilər</button>
             <button onClick={()=>{
-              setShowTab(<AdminInvestments/>) 
-              setTitle("Yatırımlar")
-            }} className={'btn-main-bg p-2 ml-2 rounded'}>Yatırımlar</button>
-            <button onClick={()=>{
               setShowTab(<AdminEntrepreneurs/>) 
               setTitle("Lahiyələr")
             }} className={'btn-main-bg p-2 ml-2 rounded'}>Lahiyələr</button>
             <button onClick={()=>{
+              setShowTab(<AdminInvestments/>) 
+              setTitle("Pul göndərəcəklər")
+            }} className={'btn-main-bg p-2 ml-2 rounded'}>Pul göndərəcəklər</button>
+            <button onClick={()=>{
               setShowTab(<AdminInvestorPayments/>) 
               setTitle("Ödəniş Hesabatı")
             }} className={'btn-main-bg p-2 ml-2 rounded'}>Ödəniş Hesabatı</button>
+            <button onClick={()=>{
+              setShowTab(<AdminDebtFund/>) 
+              setTitle("Fond Hesabatı")
+            }} className={'btn-main-bg p-2 ml-2 rounded'}>Fond Hesabatı</button>
         </div>
         {
           companyBalance ? companyBalance.map((balance) => (
             <div key={balance.id} className='mx-auto max-w-7xl py-6 sm:px-6 lg:px-8 flex flex-col text-lg text-xl font-bold'>
               <p>Sədəqə fondu: {balance.charity_fund} AZN</p>
               <p>Borc Fondu: {balance.debt_fund} AZN</p> 
+              <p>Fondun ümumi balansı: {parseFloat(balance.debt_fund) + parseFloat(balance.charity_fund)} AZN</p> 
             </div>
           )) : ""
         }

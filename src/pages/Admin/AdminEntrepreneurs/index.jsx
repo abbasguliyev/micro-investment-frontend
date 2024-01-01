@@ -26,6 +26,8 @@ import { getAllUsersAsync } from "../../../redux/AuthSlice/AuthSlice";
 import { FaCheck } from "react-icons/fa";
 import { FaXmark } from "react-icons/fa6";
 import { MdDelete } from "react-icons/md";
+import { CgSpinner } from "react-icons/cg";
+import { getCompanyBalanceAsync } from "../../../redux/CompanyBalanceSlice/CompanyBalanceSlice";
 
 
 function AdminEntrepreneurs() {
@@ -46,6 +48,9 @@ function AdminEntrepreneurs() {
     const dispatch = useDispatch();
 
     let entrepreneurs = useSelector((state) => state.entrepreneur.entrepreneurs);
+    let investments = useSelector((state) => state.investment.investments);
+    let investmentIsLoading = useSelector((state) => state.investment.isLoading);
+    let entrepreneurIsLoading = useSelector((state) => state.entrepreneur.isLoading);
     let investmentReports = useSelector((state) => state.investment.investmentReports);
     const errorMsg = useSelector((state) => state.entrepreneur.error);
     const successMsg = useSelector((state) => state.entrepreneur.successMsg);
@@ -79,9 +84,12 @@ function AdminEntrepreneurs() {
             dispatch(
                 getAllInvestmentsAsync({
                     offset: offset,
-                    investor: investment.investor.id,
+                    investor: "",
                     entrepreneur: investment.entrepreneur.id
                 })
+            );
+            dispatch(
+                getCompanyBalanceAsync()
             )
         })
     };
@@ -114,6 +122,7 @@ function AdminEntrepreneurs() {
     const showEntrepreneurInvestmentsModal = (entrepreneur) => {
         setEntrepreneur(entrepreneur);
         setIsEntrepreneurInvestmentsModalOpen(true);
+        dispatch(getAllInvestmentsAsync({offset: 0, investor: "", entrepreneur: entrepreneur.id}))
     };
 
     const handleEntrepreneurInvestmentsModalOk = () => {
@@ -137,6 +146,10 @@ function AdminEntrepreneurs() {
             dispatch(
                 getAllEntrepreneurAsync(filterFormik.values)
             );
+            dispatch(getAllInvestmentsAsync({offset: 0, investor: "", entrepreneur: entrepreneur.id}))
+            dispatch(
+                getCompanyBalanceAsync()
+            )
         })
     };
 
@@ -196,11 +209,14 @@ function AdminEntrepreneurs() {
             );
             dispatch(
                 getAllInvestmentsAsync({
-                    offset: 0,
-                    investor: investment.investor.id,
+                    offset: "",
+                    investor: "",
                     entrepreneur: entrepreneur.id
                 })
             );
+            dispatch(
+                getCompanyBalanceAsync()
+            )
         })
     };
 
@@ -211,7 +227,9 @@ function AdminEntrepreneurs() {
     const formik = useFormik({
         initialValues: {
             amount: "",
-            is_submitted: false
+            is_submitted: false,
+            is_from_debt_fund: false,
+            amount_from_debt_fund: 0
         },
         onSubmit: (values) => {
             values.id = investment && investment.id
@@ -242,10 +260,13 @@ function AdminEntrepreneurs() {
         initialValues: {
             entrepreneur: "",
             investor: "",
-            amount: ""
+            amount: "",
+            is_from_debt_fund: false,
+            amount_from_debt_fund: 0
         },
         onSubmit: (values) => {
             values.entrepreneur = entrepreneur.id
+            console.log(values);
             dispatch(postInvestmentAsync(values))
             .then(() => {
                 dispatch(
@@ -254,7 +275,7 @@ function AdminEntrepreneurs() {
                 dispatch(
                     getAllInvestmentsAsync({
                         offset: 0,
-                        investor: investment.investor.id,
+                        investor: "",
                         entrepreneur: entrepreneur.id
                     })
                 );
@@ -267,6 +288,8 @@ function AdminEntrepreneurs() {
             formik.setValues({
                 amount: investment ? investment.amount || 0 : 0,
                 is_submitted: investment ? investment.is_submitted || false : false,
+                is_from_debt_fund: investment ? investment.is_from_debt_fund || false : false,
+                amount_from_debt_fund: investment ? investment.amount_from_debt_fund || 0 : 0,
             });
         }
     }, [investment]);
@@ -301,7 +324,7 @@ function AdminEntrepreneurs() {
             dispatch(
                 getAllInvestmentsAsync({
                     offset: offset,
-                    investor: investment.investor.id,
+                    investor: "",
                     entrepreneur: entrepreneur.id
                 })
             );
@@ -318,7 +341,7 @@ function AdminEntrepreneurs() {
             dispatch(
                 getAllInvestmentsAsync({
                     offset: offset,
-                    investor: investment.investor.id,
+                    investor: "",
                     entrepreneur: entrepreneur.id
                 })
             );
@@ -472,140 +495,147 @@ function AdminEntrepreneurs() {
                         <button type='submit' className={`${style.search_btn} btn-main-bg rounded mt-4`}>Axtar</button>
                     </form>
                 </div>
-                <div className="w-full sm:w-full md:w-full lg:w-5/6 text-sm overflow-y-hidden overflow-x-auto">
-                    <table className="table-auto w-full h-fit">
-                        <thead>
-                            <tr>
-                                <th className="border border-slate-600 text-xs">№</th>
-                                <th className="border border-slate-600 text-xs">Adı</th>
-                                <th className="border border-slate-600 text-xs">
-                                    Ümumi investisiya
-                                </th>
-                                <th className="border border-slate-600 text-xs">Ümumi gəlir</th>
-                                <th className="border border-slate-600 text-xs">
-                                    Yekun mənfəət
-                                </th>
-                                <th className="border border-slate-600 text-xs">
-                                    Toplanan məbləğ
-                                </th>
-                                {/* <th className="border border-slate-600 text-xs">
-                                    Yekunlaşma tarixi
-                                </th> */}
-                                <th className="border border-slate-600 text-xs">
-                                    Başlama tarixi
-                                </th>
-                                <th className="border border-slate-600 text-xs">
-                                    Bitmə tarixi
-                                </th>
-                                <th className="border border-slate-600 text-xs">
-                                    İnvestisiyalar
-                                </th>
-                                <th className="border border-slate-600 text-xs">
-                                    Aktiv/Deaktiv
-                                </th>
-                                <th className="border border-slate-600 text-xs">
-                                    Sifarişi bitir
-                                </th>
-                                <th className="border border-slate-600 text-xs"></th>
+                {
+                    entrepreneurIsLoading ? (
+                        <div className='w-full sm:w-full md:w-3/4 lg:w-3/4 flex justify-center'>
+                            <CgSpinner className='animate-spin text-lg self-center'/>
+                        </div>
+                    ) : (
+                        <div className="w-full sm:w-full md:w-full lg:w-5/6 text-sm overflow-y-hidden overflow-x-auto">
+                            <table className="table-auto w-full h-fit">
+                                <thead>
+                                    <tr>
+                                        <th className="border border-slate-600 text-xs">№</th>
+                                        <th className="border border-slate-600 text-xs">Adı</th>
+                                        <th className="border border-slate-600 text-xs">
+                                            Ümumi investisiya
+                                        </th>
+                                        <th className="border border-slate-600 text-xs">Ümumi gəlir</th>
+                                        <th className="border border-slate-600 text-xs">
+                                            Yekun mənfəət
+                                        </th>
+                                        <th className="border border-slate-600 text-xs">
+                                            Toplanan məbləğ
+                                        </th>
+                                        {/* <th className="border border-slate-600 text-xs">
+                                            Yekunlaşma tarixi
+                                        </th> */}
+                                        <th className="border border-slate-600 text-xs">
+                                            Başlama tarixi
+                                        </th>
+                                        <th className="border border-slate-600 text-xs">
+                                            Bitmə tarixi
+                                        </th>
+                                        <th className="border border-slate-600 text-xs">
+                                            İnvestisiyalar
+                                        </th>
+                                        <th className="border border-slate-600 text-xs">
+                                            Aktiv/Deaktiv
+                                        </th>
+                                        <th className="border border-slate-600 text-xs">
+                                            Sifarişi bitir
+                                        </th>
+                                        <th className="border border-slate-600 text-xs"></th>
 
-                            </tr>
-                        </thead>
-                        <tbody className="text-center">
-                            {entrepreneurs.map((entrepreneur, i) => (
-                                <tr key={entrepreneur.id}>
-                                    <td className="border border-slate-700 py-1 text-xs">
-                                        {i+1}
-                                    </td>
-                                    <td className="border border-slate-700 py-1 text-xs">
-                                        <NavLink
-                                            to={`/entrepreneur-detail/${entrepreneur.id}`}
-                                            className="text-blue-700"
-                                        >
-                                            {entrepreneur.project_name}
-                                        </NavLink>
-                                    </td>
-                                    <td className="border border-slate-700 py-1 text-xs">
-                                        {entrepreneur.total_investment}
-                                    </td>
-                                    <td className="border border-slate-700 py-1 text-xs">
-                                        {entrepreneur.gross_income}
-                                    </td>
-                                    <td className="border border-slate-700 py-1 text-xs">
-                                        {entrepreneur.final_profit}
-                                    </td>
-                                    <td className="border border-slate-700 py-1 text-xs">
-                                        {entrepreneur.amount_collected}
-                                    </td>
-                                    {/* <td className="border border-slate-700 py-1 text-xs">
-                                        {entrepreneur.finished_date}
-                                    </td> */}
-                                    <td className="border border-slate-700 py-1 text-xs">
-                                        {entrepreneur.start_date}
-                                    </td>
-                                    <td className="border border-slate-700 py-1 text-xs">
-                                        {entrepreneur.end_date}
-                                    </td>
-                                    <td onClick={() => showEntrepreneurInvestmentsModal(entrepreneur)} className="border border-slate-700 cursor-pointer text-sky-700 py-1 text-xs">
-                                        <p>Bax</p>
-                                    </td>
-                                    <td className="border border-slate-700 cursor-pointer text-sky-700 px-6 py-1 text-xs">
-                                        {
-                                            entrepreneur.is_finished ? (
-                                                entrepreneur.is_active ? (
-                                                    <div className="ml-auto pointer-events-none h-6 w-10 rounded-full p-1 ring-1 ring-inset transition duration-200 ease-in-out bg-indigo-600 ring-black/20">
-                                                        <div className="h-4 w-4 rounded-full bg-white shadow-sm ring-1 ring-slate-700/10 transition duration-200 ease-in-out translate-x-4"></div>
-                                                    </div>
-                                                ) : (
-                                                    <div className="pointer-events-none h-6 w-10 rounded-full p-1 ring-1 ring-inset transition duration-200 ease-in-out bg-slate-900/10 ring-slate-900/5">
-                                                        <div className="h-4 w-4 rounded-full bg-white shadow-sm ring-1 ring-slate-700/10 transition duration-200 ease-in-out"></div>
-                                                    </div>
-                                                )
-                                            ) : (
-                                                entrepreneur.is_active ? (
-                                                    <div onClick={() => changeEntrepreneurActivity(entrepreneur)} className="ml-auto pointer-events-auto h-6 w-10 rounded-full p-1 ring-1 ring-inset transition duration-200 ease-in-out bg-indigo-600 ring-black/20">
-                                                        <div className="h-4 w-4 rounded-full bg-white shadow-sm ring-1 ring-slate-700/10 transition duration-200 ease-in-out translate-x-4"></div>
-                                                    </div>
-                                                ) : (
-                                                    <div onClick={() => changeEntrepreneurActivity(entrepreneur)} className="pointer-events-auto h-6 w-10 rounded-full p-1 ring-1 ring-inset transition duration-200 ease-in-out bg-slate-900/10 ring-slate-900/5">
-                                                        <div className="h-4 w-4 rounded-full bg-white shadow-sm ring-1 ring-slate-700/10 transition duration-200 ease-in-out"></div>
-                                                    </div>
-                                                )
-                                            )
-                                        }
-                                    </td>
-                                    <td className="border border-slate-700 cursor-pointer text-sky-700 px-6 py-1 text-xs">
-                                        {
-                                            entrepreneur.is_finished ? (
-                                                <div onClick={() => changeEntrepreneurFinishStatus(entrepreneur)} className="ml-auto pointer-events-auto h-6 w-10 rounded-full p-1 ring-1 ring-inset transition duration-200 ease-in-out bg-indigo-600 ring-black/20">
-                                                    <div className="h-4 w-4 rounded-full bg-white shadow-sm ring-1 ring-slate-700/10 transition duration-200 ease-in-out translate-x-4"></div>
-                                                </div>
-                                            ) : (
-                                                <div onClick={() => changeEntrepreneurFinishStatus(entrepreneur)} className="pointer-events-auto h-6 w-10 rounded-full p-1 ring-1 ring-inset transition duration-200 ease-in-out bg-slate-900/10 ring-slate-900/5">
-                                                    <div className="h-4 w-4 rounded-full bg-white shadow-sm ring-1 ring-slate-700/10 transition duration-200 ease-in-out"></div>
-                                                </div>
-                                            )
-                                        }
-                                    </td>
-                                    <td className="border border-slate-700 text-center">
-                                        <NavLink
-                                            className={`p-2`}
-                                            onClick={() => showEntrepreneurModal(entrepreneur.id)}
-                                        >
-                                            <MdDelete
-                                                className="inline"
-                                                style={{
-                                                    color: "#CF4B44",
-                                                    fontSize: "20px",
-                                                }}
-                                            />
-                                        </NavLink>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
-
+                                    </tr>
+                                </thead>
+                                <tbody className="text-center">
+                                    {entrepreneurs.map((entrepreneur, i) => (
+                                        <tr key={entrepreneur.id}>
+                                            <td className="border border-slate-700 py-1 text-xs">
+                                                {i+1}
+                                            </td>
+                                            <td className="border border-slate-700 py-1 text-xs">
+                                                <NavLink
+                                                    to={`/entrepreneur-detail/${entrepreneur.id}`}
+                                                    className="text-blue-700"
+                                                >
+                                                    {entrepreneur.project_name}
+                                                </NavLink>
+                                            </td>
+                                            <td className="border border-slate-700 py-1 text-xs">
+                                                {entrepreneur.total_investment}
+                                            </td>
+                                            <td className="border border-slate-700 py-1 text-xs">
+                                                {entrepreneur.gross_income}
+                                            </td>
+                                            <td className="border border-slate-700 py-1 text-xs">
+                                                {entrepreneur.final_profit}
+                                            </td>
+                                            <td className="border border-slate-700 py-1 text-xs">
+                                                {entrepreneur.amount_collected}
+                                            </td>
+                                            {/* <td className="border border-slate-700 py-1 text-xs">
+                                                {entrepreneur.finished_date}
+                                            </td> */}
+                                            <td className="border border-slate-700 py-1 text-xs">
+                                                {entrepreneur.start_date}
+                                            </td>
+                                            <td className="border border-slate-700 py-1 text-xs">
+                                                {entrepreneur.end_date}
+                                            </td>
+                                            <td onClick={() => showEntrepreneurInvestmentsModal(entrepreneur)} className="border border-slate-700 cursor-pointer text-sky-700 py-1 text-xs">
+                                                <p>Bax</p>
+                                            </td>
+                                            <td className="border border-slate-700 cursor-pointer text-sky-700 px-6 py-1 text-xs">
+                                                {
+                                                    entrepreneur.is_finished ? (
+                                                        entrepreneur.is_active ? (
+                                                            <div className="ml-auto pointer-events-none h-6 w-10 rounded-full p-1 ring-1 ring-inset transition duration-200 ease-in-out bg-indigo-600 ring-black/20">
+                                                                <div className="h-4 w-4 rounded-full bg-white shadow-sm ring-1 ring-slate-700/10 transition duration-200 ease-in-out translate-x-4"></div>
+                                                            </div>
+                                                        ) : (
+                                                            <div className="pointer-events-none h-6 w-10 rounded-full p-1 ring-1 ring-inset transition duration-200 ease-in-out bg-slate-900/10 ring-slate-900/5">
+                                                                <div className="h-4 w-4 rounded-full bg-white shadow-sm ring-1 ring-slate-700/10 transition duration-200 ease-in-out"></div>
+                                                            </div>
+                                                        )
+                                                    ) : (
+                                                        entrepreneur.is_active ? (
+                                                            <div onClick={() => changeEntrepreneurActivity(entrepreneur)} className="ml-auto pointer-events-auto h-6 w-10 rounded-full p-1 ring-1 ring-inset transition duration-200 ease-in-out bg-indigo-600 ring-black/20">
+                                                                <div className="h-4 w-4 rounded-full bg-white shadow-sm ring-1 ring-slate-700/10 transition duration-200 ease-in-out translate-x-4"></div>
+                                                            </div>
+                                                        ) : (
+                                                            <div onClick={() => changeEntrepreneurActivity(entrepreneur)} className="pointer-events-auto h-6 w-10 rounded-full p-1 ring-1 ring-inset transition duration-200 ease-in-out bg-slate-900/10 ring-slate-900/5">
+                                                                <div className="h-4 w-4 rounded-full bg-white shadow-sm ring-1 ring-slate-700/10 transition duration-200 ease-in-out"></div>
+                                                            </div>
+                                                        )
+                                                    )
+                                                }
+                                            </td>
+                                            <td className="border border-slate-700 cursor-pointer text-sky-700 px-6 py-1 text-xs">
+                                                {
+                                                    entrepreneur.is_finished ? (
+                                                        <div onClick={() => changeEntrepreneurFinishStatus(entrepreneur)} className="ml-auto pointer-events-auto h-6 w-10 rounded-full p-1 ring-1 ring-inset transition duration-200 ease-in-out bg-indigo-600 ring-black/20">
+                                                            <div className="h-4 w-4 rounded-full bg-white shadow-sm ring-1 ring-slate-700/10 transition duration-200 ease-in-out translate-x-4"></div>
+                                                        </div>
+                                                    ) : (
+                                                        <div onClick={() => changeEntrepreneurFinishStatus(entrepreneur)} className="pointer-events-auto h-6 w-10 rounded-full p-1 ring-1 ring-inset transition duration-200 ease-in-out bg-slate-900/10 ring-slate-900/5">
+                                                            <div className="h-4 w-4 rounded-full bg-white shadow-sm ring-1 ring-slate-700/10 transition duration-200 ease-in-out"></div>
+                                                        </div>
+                                                    )
+                                                }
+                                            </td>
+                                            <td className="border border-slate-700 text-center">
+                                                <NavLink
+                                                    className={`p-2`}
+                                                    onClick={() => showEntrepreneurModal(entrepreneur.id)}
+                                                >
+                                                    <MdDelete
+                                                        className="inline"
+                                                        style={{
+                                                            color: "#CF4B44",
+                                                            fontSize: "20px",
+                                                        }}
+                                                    />
+                                                </NavLink>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    )
+                }
                 <Modal
                     title={`Silmək istədiyinizə əminsinizmi?`}
                     okType="default"
@@ -617,17 +647,21 @@ function AdminEntrepreneurs() {
                 <Modal
                     title={`İnvestisiyalar`}
                     okType="default"
-                    width={1000}
+                    width={1400}
                     open={isEntrepreneurInvestmentsModalOpen}
                     onOk={handleEntrepreneurInvestmentsModalOk}
                     onCancel={handleEntrepreneurInvestmentsModalCancel}
                 >
                     {
-                        entrepreneur && entrepreneur.investments ? (
+                        investmentIsLoading ? (
+                            <div className='w-full sm:w-full md:w-3/4 lg:w-3/4 flex justify-center'>
+                                <CgSpinner className='animate-spin text-lg self-center'/>
+                            </div>
+                        ) : (
                             <>
                                 <div className=" overflow-y-hidden overflow-x-auto">  
                                     {
-                                        !entrepreneur.is_finished && <a onClick={() => showInvestmentAddNewInvestorModal(entrepreneur)} className="cursor-pointer inline-block px-3 mb-2 border rounded">Yeni İnvestor</a>
+                                        entrepreneur && !entrepreneur.is_finished && <a onClick={() => showInvestmentAddNewInvestorModal(entrepreneur)} className="cursor-pointer inline-block px-3 mb-2 border rounded">Yeni İnvestor</a>
                                     }
                                     
                                     <table className="table-auto w-full">
@@ -638,6 +672,7 @@ function AdminEntrepreneurs() {
                                                 <th className="border border-slate-600 text-xs">Sifariş</th>
                                                 <th className="border border-slate-600 text-xs">Balansından gələn</th>
                                                 <th className="border border-slate-600 text-xs">Göndərməli olduğu</th>
+                                                <th className="border border-slate-600 text-xs">Borc fondundan qarşılanan</th>
                                                 <th className="border border-slate-600 text-xs">Yatırılan məbləğ</th>
                                                 <th className="border border-slate-600 text-xs">Əmsal</th>
                                                 <th className="border border-slate-600 text-xs">Yekun qazanc</th>
@@ -648,7 +683,7 @@ function AdminEntrepreneurs() {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {entrepreneur.investments.map((investment, i) => (
+                                            {investments.map((investment, i) => (
                                                 <tr key={investment.id}>
                                                     <td className="border border-slate-700">
                                                         {i+1}
@@ -657,13 +692,16 @@ function AdminEntrepreneurs() {
                                                         {investment.investor.user.first_name} {investment.investor.user.last_name}
                                                     </td>
                                                     <td className="border border-slate-700">
-                                                        {entrepreneur.project_name}
+                                                        {investment.entrepreneur.project_name}
                                                     </td>
                                                     <td className="border border-slate-700">
                                                         {investment.amount_deducated_from_balance} AZN
                                                     </td>
                                                     <td className="border border-slate-700">
                                                         {investment.amount_must_send} AZN
+                                                    </td>
+                                                    <td className="border border-slate-700">
+                                                        {investment.amount_from_debt_fund} AZN
                                                     </td>
                                                     <td className="border border-slate-700">
                                                         {investment.amount}
@@ -681,7 +719,7 @@ function AdminEntrepreneurs() {
                                                         {investment.is_submitted ? <FaCheck className='success mx-14' /> : <FaXmark className='error mx-14' />}
                                                     </td>
                                                     {
-                                                        entrepreneur.is_finished ? 
+                                                        investment.entrepreneur.is_finished ? 
                                                         (
                                                             <td onClick={() => showEntrepreneurInvestmentsReportModal(investment, investment.investor)} className="border border-slate-700 text-center text-sky-700 cursor-pointer">
                                                                 Hesabat
@@ -729,7 +767,7 @@ function AdminEntrepreneurs() {
                                     </div>
                                 </div>
                             </>
-                        ) : ""
+                        )
                     }
                 </Modal>
 
@@ -826,6 +864,34 @@ function AdminEntrepreneurs() {
                             error={addNewInvestorFormik.errors.amount}
                             style={style}
                         />
+                        <hr className="mt-2" />
+                        <Checkbox
+                            label="Borc fondundan qarşıla"
+                            id="is_from_debt_fund"
+                            name="is_from_debt_fund"
+                            value={addNewInvestorFormik.values.is_from_debt_fund}
+                            type="checkbox"
+                            onChange={addNewInvestorFormik.handleChange}
+                            onBlur={addNewInvestorFormik.handleBlur}
+                            style={style}
+                            checked={addNewInvestorFormik.values.is_from_debt_fund == true ? "checked": ""}
+                        />
+                        {
+                            addNewInvestorFormik.values.is_from_debt_fund && (
+                                <AuthInput
+                                    label="Qarşılanmağını istədiyiniz məbləği yazın"
+                                    id="amount_from_debt_fund"
+                                    name="amount_from_debt_fund"
+                                    type="number"
+                                    value={addNewInvestorFormik.values.amount_from_debt_fund}
+                                    onChange={addNewInvestorFormik.handleChange}
+                                    onBlur={addNewInvestorFormik.handleBlur}
+                                    touched={addNewInvestorFormik.touched.amount_from_debt_fund}
+                                    error={addNewInvestorFormik.errors.amount_from_debt_fund}
+                                    style={style}
+                                />
+                            )
+                        }
                     </form>
                 </Modal>
                 
@@ -877,6 +943,34 @@ function AdminEntrepreneurs() {
                         style={style}
                         checked={formik.values.is_submitted == true ? "checked": ""}
                     />
+                    <hr className="mt-2" />
+                    <Checkbox
+                        label="Borc fondundan qarşıla"
+                        id="is_from_debt_fund"
+                        name="is_from_debt_fund"
+                        value={formik.values.is_from_debt_fund}
+                        type="checkbox"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        style={style}
+                        checked={formik.values.is_from_debt_fund == true ? "checked": ""}
+                    />
+                    {
+                        formik.values.is_from_debt_fund && (
+                            <AuthInput
+                                label="Qarşılanmağını istədiyiniz məbləği yazın"
+                                id="amount_from_debt_fund"
+                                name="amount_from_debt_fund"
+                                type="number"
+                                value={formik.values.amount_from_debt_fund}
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                                touched={formik.touched.amount_from_debt_fund}
+                                error={formik.errors.amount_from_debt_fund}
+                                style={style}
+                            />
+                        )
+                    }
                 </Modal>
 
                 <Modal

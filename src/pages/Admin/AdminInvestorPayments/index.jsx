@@ -26,6 +26,7 @@ import { getAllUsersAsync } from "../../../redux/AuthSlice/AuthSlice";
 import { FaCheck } from "react-icons/fa";
 import { FaXmark } from "react-icons/fa6";
 import { MdDelete } from "react-icons/md";
+import { CgSpinner } from "react-icons/cg";
 
 function AdminInvestorPayments() {
     let [currentPage, setCurrentPage] = useState(1);
@@ -39,6 +40,8 @@ function AdminInvestorPayments() {
     const dispatch = useDispatch();
 
     let entrepreneurs = useSelector((state) => state.entrepreneur.entrepreneurs);
+    let entrepreneurIsLoading = useSelector((state) => state.entrepreneur.isLoading);
+    let reportIsLoading = useSelector((state) => state.investment.isLoading);
     let investmentReports = useSelector((state) => state.investment.investmentReports);
     let investments = useSelector((state) => state.investment.investments);
     const errorMsg = useSelector((state) => state.entrepreneur.error);
@@ -203,75 +206,84 @@ function AdminInvestorPayments() {
                         <button type='submit' className={`${style.search_btn} btn-main-bg rounded mt-4`}>Axtar</button>
                     </form>
                 </div>
-                <div className="w-full sm:w-full md:w-full lg:w-4/5 text-sm overflow-y-hidden overflow-x-auto">
-                    <table className="table-auto w-full h-fit">
-                        <thead>
-                            <tr>
-                                <th className="border border-slate-600 text-xs">Adı</th>
-                                <th className="border border-slate-600 text-xs">
-                                    Ümumi investisiya
-                                </th>
-                                <th className="border border-slate-600 text-xs">Ümumi gəlir</th>
-                                <th className="border border-slate-600 text-xs">
-                                    Yekun mənfəət
-                                </th>
-                                <th className="border border-slate-600 text-xs">
-                                    Toplanan məbləğ
-                                </th>
-                                <th className="border border-slate-600 text-xs">
-                                    Yekunlaşma tarixi
-                                </th>
-                                <th className="border border-slate-600 text-xs">
-                                    Başlama tarixi
-                                </th>
-                                <th className="border border-slate-600 text-xs">
-                                    Bitmə tarixi
-                                </th>
-                                <th className="border border-slate-600 text-xs">
-                                    Hesabat
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody className="text-center">
-                            {entrepreneurs.map((entrepreneur) => (
-                                <tr key={entrepreneur.id}>
-                                    <td className="border border-slate-700 py-1 text-xs">
-                                        <NavLink
-                                            to={`/entrepreneur-detail/${entrepreneur.id}`}
-                                            className="text-blue-700"
-                                        >
-                                            {entrepreneur.project_name}
-                                        </NavLink>
-                                    </td>
-                                    <td className="border border-slate-700 py-1 text-xs">
-                                        {entrepreneur.total_investment}
-                                    </td>
-                                    <td className="border border-slate-700 py-1 text-xs">
-                                        {entrepreneur.gross_income}
-                                    </td>
-                                    <td className="border border-slate-700 py-1 text-xs">
-                                        {entrepreneur.final_profit}
-                                    </td>
-                                    <td className="border border-slate-700 py-1 text-xs">
-                                        {entrepreneur.amount_collected}
-                                    </td>
-                                    <td className="border border-slate-700 py-1 text-xs">
-                                        {entrepreneur.finished_date}
-                                    </td>
-                                    <td className="border border-slate-700 py-1 text-xs">
-                                        {entrepreneur.start_date}
-                                    </td>
-                                    <td className="border border-slate-700 py-1 text-xs">
-                                        {entrepreneur.end_date}
-                                    </td>
-                                    <td onClick={() => showEntrepreneurInvestmentReportModal(entrepreneur)} className="border border-slate-700 cursor-pointer text-sky-700 py-1">
-                                        <p>Bax</p>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
+                {
+                    entrepreneurIsLoading ? (
+                        <div className='w-full sm:w-full md:w-3/4 lg:w-3/4 flex justify-center'>
+                            <CgSpinner className='animate-spin text-lg self-center'/>
+                        </div>
+                    ) : (
+                        <div className="w-full sm:w-full md:w-full lg:w-4/5 text-sm overflow-y-hidden overflow-x-auto">
+                            <table className="table-auto w-full h-fit">
+                                <thead>
+                                    <tr>
+                                        <th className="border border-slate-600 text-xs">Adı</th>
+                                        <th className="border border-slate-600 text-xs">
+                                            Ümumi investisiya
+                                        </th>
+                                        <th className="border border-slate-600 text-xs">Ümumi gəlir</th>
+                                        <th className="border border-slate-600 text-xs">
+                                            Yekun mənfəət
+                                        </th>
+                                        <th className="border border-slate-600 text-xs">
+                                            Toplanan məbləğ
+                                        </th>
+                                        <th className="border border-slate-600 text-xs">
+                                            Yekunlaşma tarixi
+                                        </th>
+                                        <th className="border border-slate-600 text-xs">
+                                            Başlama tarixi
+                                        </th>
+                                        <th className="border border-slate-600 text-xs">
+                                            Bitmə tarixi
+                                        </th>
+                                        <th className="border border-slate-600 text-xs">
+                                            Hesabat
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody className="text-center">
+                                    {entrepreneurs.map((entrepreneur) => (
+                                        <tr key={entrepreneur.id}>
+                                            <td className="border border-slate-700 py-1 text-xs">
+                                                <NavLink
+                                                    to={`/entrepreneur-detail/${entrepreneur.id}`}
+                                                    className="text-blue-700"
+                                                >
+                                                    {entrepreneur.project_name}
+                                                </NavLink>
+                                            </td>
+                                            <td className="border border-slate-700 py-1 text-xs">
+                                                {entrepreneur.total_investment}
+                                            </td>
+                                            <td className="border border-slate-700 py-1 text-xs">
+                                                {entrepreneur.gross_income}
+                                            </td>
+                                            <td className="border border-slate-700 py-1 text-xs">
+                                                {entrepreneur.final_profit}
+                                            </td>
+                                            <td className="border border-slate-700 py-1 text-xs">
+                                                {entrepreneur.amount_collected}
+                                            </td>
+                                            <td className="border border-slate-700 py-1 text-xs">
+                                                {entrepreneur.finished_date}
+                                            </td>
+                                            <td className="border border-slate-700 py-1 text-xs">
+                                                {entrepreneur.start_date}
+                                            </td>
+                                            <td className="border border-slate-700 py-1 text-xs">
+                                                {entrepreneur.end_date}
+                                            </td>
+                                            <td onClick={() => showEntrepreneurInvestmentReportModal(entrepreneur)} className="border border-slate-700 cursor-pointer text-sky-700 py-1">
+                                                <p>Bax</p>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    )
+                }
+                
 
                 <Modal
                     title={`Hesabat`}
@@ -282,114 +294,120 @@ function AdminInvestorPayments() {
                     onCancel={handleEntrepreneurInvestmentReportModalCancel}
                 >
                     {
-                        investmentReports ? (
-                            <>
-                                <div className="overflow-y-hidden overflow-x-auto">                                  
-                                    <table className="table-auto w-full">
-                                        <thead>
-                                            <tr>
-                                                <th className="border border-slate-600 text-xs">№</th>
-                                                <th className="border border-slate-600 text-xs">İnvestor</th>
-                                                <th className="border border-slate-600 text-xs">
-                                                    Balansında saxlamaq istədiyi
-                                                </th>
-                                                <th className="border border-slate-600 text-xs">
-                                                    Kartına göndərilməyini istədiyi
-                                                </th>
-                                                <th className="border border-slate-600 text-xs">
-                                                    Sədəqə fonduna göndərilməyini istədiyi
-                                                </th>
-                                                <th className="border border-slate-600 text-xs">
-                                                    Borc fonduna göndərilməyini istədiyi
-                                                </th>
-                                                <th className="border border-slate-600 text-xs">
-                                                    Kart hesabı
-                                                </th>
-                                                <th className="border border-slate-600 text-xs"></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {investmentReports.map((investmentReport, i) => (
-                                                <tr key={investmentReport.id} 
-                                                    className={investmentReport.is_amount_sended_to_investor ? "text-green-800" : "text-red-800"}
-                                                >
-                                                    <td className="border border-slate-700">
-                                                        {i+1}
-                                                    </td>
-                                                    <td className="border border-slate-700">
-                                                        {
-                                                            investmentReport.investor && investmentReport.investor.user && (
-                                                                <>
-                                                                    {investmentReport.investor.user.first_name} {investmentReport.investor.user.last_name}
-                                                                </>
-                                                            )
-                                                    }
-                                                    </td>
-                                                    <td className="border border-slate-700">
-                                                        {investmentReport.amount_want_to_keep_in_the_balance}
-                                                    </td>
-                                                    <td className="border border-slate-700">
-                                                        {investmentReport.amount_want_to_send_to_cart}
-                                                    </td>
-                                                    <td className="border border-slate-700">
-                                                        {investmentReport.amount_want_to_send_to_charity_fund}
-                                                    </td>
-                                                    <td className="border border-slate-700">
-                                                        {investmentReport.amount_want_to_send_to_debt_fund}
-                                                    </td>
-                                                    <td className="border border-slate-700">
-                                                        {investmentReport.investor.credit_cart_number}
-                                                    </td>
-                                                    <td className="border border-slate-700">
-                                                    {
-                                                        investmentReport.is_amount_sended_to_investor ? (
-                                                            <div onClick={() => changeReportSendedStatus(investmentReport)} className="ml-auto pointer-events-auto h-6 w-10 rounded-full p-1 ring-1 ring-inset transition duration-200 ease-in-out bg-indigo-600 ring-black/20 cursor-pointer">
-                                                                <div className="h-4 w-4 rounded-full bg-white shadow-sm ring-1 ring-slate-700/10 transition duration-200 ease-in-out translate-x-4"></div>
-                                                            </div>
-                                                        ) : (
-                                                            <div onClick={() => changeReportSendedStatus(investmentReport)} className="pointer-events-auto h-6 w-10 rounded-full p-1 ring-1 ring-inset transition duration-200 ease-in-out bg-slate-900/10 ring-slate-900/5 cursor-pointer">
-                                                                <div className="h-4 w-4 rounded-full bg-white shadow-sm ring-1 ring-slate-700/10 transition duration-200 ease-in-out"></div>
-                                                            </div>
-                                                        )
-                                                    }
-                                                    </td>
+                        reportIsLoading ? (
+                            <div className='w-full sm:w-full md:w-3/4 lg:w-3/4 flex justify-center'>
+                                <CgSpinner className='animate-spin text-lg self-center'/>
+                            </div>
+                        ) : (
+                            investmentReports ? (
+                                <>
+                                    <div className="overflow-y-hidden overflow-x-auto">                                  
+                                        <table className="table-auto w-full">
+                                            <thead>
+                                                <tr>
+                                                    <th className="border border-slate-600 text-xs">№</th>
+                                                    <th className="border border-slate-600 text-xs">İnvestor</th>
+                                                    <th className="border border-slate-600 text-xs">
+                                                        Balansında saxlamaq istədiyi
+                                                    </th>
+                                                    <th className="border border-slate-600 text-xs">
+                                                        Kartına göndərilməyini istədiyi
+                                                    </th>
+                                                    <th className="border border-slate-600 text-xs">
+                                                        Sədəqə fonduna göndərilməyini istədiyi
+                                                    </th>
+                                                    <th className="border border-slate-600 text-xs">
+                                                        Borc fonduna göndərilməyini istədiyi
+                                                    </th>
+                                                    <th className="border border-slate-600 text-xs">
+                                                        Kart hesabı
+                                                    </th>
+                                                    <th className="border border-slate-600 text-xs"></th>
                                                 </tr>
-                                            ))}
-                                        </tbody>
-                                    </table>
-
-                                    <hr className="mt-8 mb-5"/>
-                                    <p className="font-bold">Hesabatı göndərməyənlər:</p>
-                                    <ul>
-                                        {
-                                            investments.map((inv) => (
-                                                inv.investment_report.length == 0 && (
-                                                    <li>
-                                                        {inv.investor && `- ${inv.investor.user.first_name} ${inv.investor.user.last_name} | Qazanc - ${inv.final_profit} AZN`}
-                                                    </li>
-                                                )
-                                            ))
-                                        }
-                                    </ul>
-                                </div>
-                                {/* ***************** Pagination ********************* */}
-                                <div>
-                                    <div className="flex justify-center mt-10">
-                                        <Pagination
-                                            onChange={(e) => {
-                                                changeInvestmentReportPage(e);
-                                            }}
-                                            className="pagination"
-                                            current={currentPage}
-                                            total={investmentReporttotalPage}
-                                            defaultPageSize={pageLimit}
-                                            showSizeChanger={false}
-                                        />
+                                            </thead>
+                                            <tbody>
+                                                {investmentReports.map((investmentReport, i) => (
+                                                    <tr key={investmentReport.id} 
+                                                        className={investmentReport.is_amount_sended_to_investor ? "text-green-800" : "text-red-800"}
+                                                    >
+                                                        <td className="border border-slate-700">
+                                                            {i+1}
+                                                        </td>
+                                                        <td className="border border-slate-700">
+                                                            {
+                                                                investmentReport.investor && investmentReport.investor.user && (
+                                                                    <>
+                                                                        {investmentReport.investor.user.first_name} {investmentReport.investor.user.last_name}
+                                                                    </>
+                                                                )
+                                                        }
+                                                        </td>
+                                                        <td className="border border-slate-700">
+                                                            {investmentReport.amount_want_to_keep_in_the_balance}
+                                                        </td>
+                                                        <td className="border border-slate-700">
+                                                            {investmentReport.amount_want_to_send_to_cart}
+                                                        </td>
+                                                        <td className="border border-slate-700">
+                                                            {investmentReport.amount_want_to_send_to_charity_fund}
+                                                        </td>
+                                                        <td className="border border-slate-700">
+                                                            {investmentReport.amount_want_to_send_to_debt_fund}
+                                                        </td>
+                                                        <td className="border border-slate-700">
+                                                            {investmentReport.investor.credit_cart_number}
+                                                        </td>
+                                                        <td className="border border-slate-700">
+                                                        {
+                                                            investmentReport.is_amount_sended_to_investor ? (
+                                                                <div onClick={() => changeReportSendedStatus(investmentReport)} className="ml-auto pointer-events-auto h-6 w-10 rounded-full p-1 ring-1 ring-inset transition duration-200 ease-in-out bg-indigo-600 ring-black/20 cursor-pointer">
+                                                                    <div className="h-4 w-4 rounded-full bg-white shadow-sm ring-1 ring-slate-700/10 transition duration-200 ease-in-out translate-x-4"></div>
+                                                                </div>
+                                                            ) : (
+                                                                <div onClick={() => changeReportSendedStatus(investmentReport)} className="pointer-events-auto h-6 w-10 rounded-full p-1 ring-1 ring-inset transition duration-200 ease-in-out bg-slate-900/10 ring-slate-900/5 cursor-pointer">
+                                                                    <div className="h-4 w-4 rounded-full bg-white shadow-sm ring-1 ring-slate-700/10 transition duration-200 ease-in-out"></div>
+                                                                </div>
+                                                            )
+                                                        }
+                                                        </td>
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                        </table>
+    
+                                        <hr className="mt-8 mb-5"/>
+                                        <p className="font-bold">Hesabatı göndərməyənlər:</p>
+                                        <ul>
+                                            {
+                                                investments.map((inv) => (
+                                                    inv.investment_report.length == 0 && (
+                                                        <li key={inv.id}>
+                                                            {inv.investor && `- ${inv.investor.user.first_name} ${inv.investor.user.last_name} | Qazanc - ${inv.final_profit} AZN`}
+                                                        </li>
+                                                    )
+                                                ))
+                                            }
+                                        </ul>
                                     </div>
-                                </div>
-                            </>
-                            
-                        ) : <p className="text-center">Hesabat Yoxdur</p>
+                                    {/* ***************** Pagination ********************* */}
+                                    <div>
+                                        <div className="flex justify-center mt-10">
+                                            <Pagination
+                                                onChange={(e) => {
+                                                    changeInvestmentReportPage(e);
+                                                }}
+                                                className="pagination"
+                                                current={currentPage}
+                                                total={investmentReporttotalPage}
+                                                defaultPageSize={pageLimit}
+                                                showSizeChanger={false}
+                                            />
+                                        </div>
+                                    </div>
+                                </>
+                                
+                            ) : <p className="text-center">Hesabat Yoxdur</p>
+                        )
                     }
                 </Modal>
                

@@ -13,6 +13,7 @@ import { useFormik } from 'formik'
 import AuthInput from '../../InputComponents/AuthInput'
 import TextAreaInput from '../../InputComponents/TextAreaInput'
 import { getCompanyBalanceAsync } from '../../../redux/CompanyBalanceSlice/CompanyBalanceSlice'
+import { CgSpinner } from 'react-icons/cg'
 
 const Investments = ({userId}) => {
   let [currentPage, setCurrentPage] = useState(1);
@@ -24,10 +25,13 @@ const Investments = ({userId}) => {
 
   const dispatch = useDispatch()
   let investments = useSelector((state) => state.investment.investments)
+  let isLoading = useSelector((state) => state.investment.isLoading)
   let investmentReports = useSelector((state) => state.investment.investmentReports)
   let totalPage = useSelector((state) => state.investment.totalPage)
   let pageLimit = useSelector((state) => state.investment.pageLimit)
   let companyBalance = useSelector((state) => state.companyBalance.companyBalances)
+
+  console.log(investments);
 
   // Investment Finish Modal
   const showInvestorInvestmentFinishModal = (investment) => {
@@ -57,6 +61,7 @@ const Investments = ({userId}) => {
   // Investment Report Modal
   const showInvestorInvestmentReportEditModal = (investment) => {
     setIsInvestorInvestmentReportEditModalOpen(true);
+    setInvestment(investment)
     dispatch(getAllInvestmentReportsAsync({offset: 0, investor: investment.investor.id, investment: investment.id, entrepreneur: investment.entrepreneur.id}))
     .then((res) => {
       res.payload.results.map((reports) => {
@@ -178,62 +183,69 @@ const Investments = ({userId}) => {
             />
           </div>
         </div>
-        <table className="table-auto w-full">
-          <thead>
-            <tr>
-              <th className="border border-slate-600">#</th>
-              <th className="border border-slate-600">Sifariş</th>
-              <th className="border border-slate-600">Məbləğ</th>
-              <th className="border border-slate-600">Qazanc</th>
-              <th className="border border-slate-600">Yekun</th>
-              <th className="border border-slate-600">İnvest tarixi</th>
-              <th className="border border-slate-600">Sifarişin başlama tarixi</th>
-              <th className="border border-slate-600">Sifarişin planlanan bitmə tarixi</th>
-              <th className="border border-slate-600">Sifarişin yekunlaşdığı tarixi</th>
-              <th className="border border-slate-600">Təsdiqlənib</th>
-              <th className="border border-slate-600">Sifariş statusu</th>
-              <th className="border border-slate-600">Hesabat</th>
-            </tr>
-          </thead>
-          <tbody>
-            {
-              investments.map((investment, i) => (
-                <tr className='text-center' key={investment.id}>
-                  <td className="border border-slate-700">{i+1}</td>
-
-                  <td className="border border-slate-700">
-                    <NavLink to={`/entrepreneur-detail/${investment.entrepreneur.id}`} className="text-blue-700">
-                      {investment.entrepreneur ? investment.entrepreneur.project_name : "-"}
-                    </NavLink>
-                  </td>
-                  <td className="border border-slate-700">{investment.amount}</td>
-                  <td className="border border-slate-700">{investment.profit}</td>
-                  <td className="border border-slate-700">{investment.final_profit}</td>
-                  <td className="border border-slate-700">{investment.investment_date}</td>
-                  <td className="border border-slate-700">{investment.entrepreneur ? investment.entrepreneur.start_date : "-"}</td>
-                  <td className="border border-slate-700">{investment.entrepreneur ? investment.entrepreneur.end_date : "-"}</td>
-                  <td className="border border-slate-700">{investment.entrepreneur && investment.entrepreneur.finished_date ? investment.entrepreneur.finished_date : "-"}</td>
-                  <td className="border border-slate-700">{investment.is_submitted ? <FaCheck className='success mx-14' /> : <FaXmark className='error mx-14' />}</td>
-                  <td className="border border-slate-700">{investment.entrepreneur && investment.entrepreneur.is_finished ? <p className='error'>Bitib</p> : <p className='success'>Davam edir</p>}</td>
-                  <td className="border border-slate-700 text-sky-700 py-1">
-                      {
-                        investment.entrepreneur && investment.entrepreneur.is_finished ? (
-                          investment.investment_report && investment.investment_report.length > 0  ? 
-                          <NavLink onClick={() => showInvestorInvestmentReportEditModal(investment)} className={`block rounded btn-main-bg text-center p-1 text-xs`}>Hesabatı Redaktə Et</NavLink> 
-                          : 
-                          <NavLink onClick={() => showInvestorInvestmentFinishModal(investment)} className={`rounded btn-main-bg text-center p-1 text-xs`}>Daxil ol</NavLink>
-                        ) : (
-                            !investment.is_submitted ? (
-                              <NavLink onClick={() => showInvestorInvestmentEditModal(investment)} className={`rounded btn-main-bg text-center p-1 text-xs`}>Redaktə</NavLink> 
-                            ) : (<p className='error'>-</p>)
-                        )
-                      }
-                  </td>
+        {
+          isLoading ? (
+            <div className='w-full flex justify-center'>
+                <CgSpinner className='animate-spin text-lg self-center'/>
+            </div>
+          ) : (
+            <table className="table-auto w-full">
+              <thead>
+                <tr>
+                  <th className="border border-slate-600">#</th>
+                  <th className="border border-slate-600">Sifariş</th>
+                  <th className="border border-slate-600">Sərmayə</th>
+                  <th className="border border-slate-600">Qazanc</th>
+                  <th className="border border-slate-600">Yekun</th>
+                  <th className="border border-slate-600">İnvest tarixi</th>
+                  <th className="border border-slate-600">Sifarişin başlama tarixi</th>
+                  <th className="border border-slate-600">Sifarişin yekunlaşdığı tarixi</th>
+                  <th className="border border-slate-600">Təsdiqlənib</th>
+                  <th className="border border-slate-600">Sifariş statusu</th>
+                  <th className="border border-slate-600">Hesabat</th>
                 </tr>
-              ))
-            }
-          </tbody>
-        </table>
+              </thead>
+              <tbody>
+                {
+                  investments.map((investment, i) => (
+                    <tr className='text-center' key={investment.id}>
+                      <td className="border border-slate-700">{i+1}</td>
+
+                      <td className="border border-slate-700">
+                        <NavLink to={`/entrepreneur-detail/${investment.entrepreneur.id}`} className="text-blue-700">
+                          {investment.entrepreneur ? investment.entrepreneur.project_name : "-"}
+                        </NavLink>
+                      </td>
+                      <td className="border border-slate-700">{investment.amount}</td>
+                      <td className="border border-slate-700">{investment.profit}</td>
+                      <td className="border border-slate-700">{investment.final_profit}</td>
+                      <td className="border border-slate-700">{investment.investment_date}</td>
+                      <td className="border border-slate-700">{investment.entrepreneur ? investment.entrepreneur.start_date : "-"}</td>
+                      <td className="border border-slate-700">{investment.entrepreneur && investment.entrepreneur.finished_date ? investment.entrepreneur.finished_date : "-"}</td>
+                      <td className="border border-slate-700">{investment.is_submitted ? <FaCheck className='success mx-14' /> : <FaXmark className='error mx-14' />}</td>
+                      <td className="border border-slate-700">{investment.entrepreneur && investment.entrepreneur.is_finished ? <p className='error'>Bitib</p> : <p className='success'>Davam edir</p>}</td>
+                      <td className="border border-slate-700 text-sky-700 py-1">
+                          {
+                            investment.entrepreneur && investment.entrepreneur.is_finished ? (
+                              investment.investment_report && investment.investment_report.length > 0  ? 
+                              <NavLink onClick={() => showInvestorInvestmentReportEditModal(investment)} className={`block rounded btn-main-bg text-center p-1 text-xs`}>Hesabatı Redaktə Et</NavLink> 
+                              : 
+                              <NavLink onClick={() => showInvestorInvestmentFinishModal(investment)} className={`rounded btn-main-bg text-center p-1 text-xs`}>Daxil ol</NavLink>
+                            ) : (
+                                !investment.is_submitted ? (
+                                  <NavLink onClick={() => showInvestorInvestmentEditModal(investment)} className={`rounded btn-main-bg text-center p-1 text-xs`}>Redaktə</NavLink> 
+                                ) : (<p className='error'>-</p>)
+                            )
+                          }
+                      </td>
+                    </tr>
+                  ))
+                }
+              </tbody>
+            </table>
+          )
+        }
+        
         <Modal
               title={`Hesabat:`}
               okType="default"
@@ -241,6 +253,8 @@ const Investments = ({userId}) => {
               onOk={handleIsInvestorInvestmentFinishModalOk}
               onCancel={handleIsInvestorInvestmentFinishModalCancel}
           >
+              <p className='font-bold'>Yekun məbləğ: {investment && investment.final_profit}</p>
+              <hr />
               <AuthInput
                   label="Kartınıza göndərilməsini istədiyiniz məbləğ:"
                   id="amount_want_to_send_to_cart"
@@ -265,30 +279,69 @@ const Investments = ({userId}) => {
                   error={formik.errors.amount_want_to_keep_in_the_balance}
                   style={style}
               />
-              <AuthInput
-                  label="Sədəqə fonduna göndərmək istədiyiniz məbləğ:"
-                  id="amount_want_to_send_to_charity_fund"
-                  name="amount_want_to_send_to_charity_fund"
-                  type="number"
-                  value={formik.values.amount_want_to_send_to_charity_fund}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  touched={formik.touched.amount_want_to_send_to_charity_fund}
-                  error={formik.errors.amount_want_to_send_to_charity_fund}
-                  style={style}
-              />
-              <AuthInput
-                  label="Borc fonduna göndərmək istədiyiniz məbləğ:"
-                  id="amount_want_to_send_to_debt_fund"
-                  name="amount_want_to_send_to_debt_fund"
-                  type="number"
-                  value={formik.values.amount_want_to_send_to_debt_fund}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  touched={formik.touched.amount_want_to_send_to_debt_fund}
-                  error={formik.errors.amount_want_to_send_to_debt_fund}
-                  style={style}
-              />
+              {
+                investment && investment.is_from_debt_fund ? (
+                  <>
+                    <AuthInput
+                        label="Sədəqə fonduna göndərmək istədiyiniz məbləğ:"
+                        id="amount_want_to_send_to_charity_fund"
+                        name="amount_want_to_send_to_charity_fund"
+                        type="number"
+                        value={formik.values.amount_want_to_send_to_charity_fund}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        touched={formik.touched.amount_want_to_send_to_charity_fund}
+                        error={formik.errors.amount_want_to_send_to_charity_fund}
+                        style={style}
+                        disabled={true}
+                    />
+                    <AuthInput
+                        label="Borc fonduna göndərmək istədiyiniz məbləğ:"
+                        id="amount_want_to_send_to_debt_fund"
+                        name="amount_want_to_send_to_debt_fund"
+                        type="number"
+                        value={investment.amount_from_debt_fund}
+                        onChange={() => formik.setFieldValue("amount_want_to_send_to_debt_fund", investment.amount_from_debt_fund)}
+                        onBlur={formik.handleBlur}
+                        touched={formik.touched.amount_want_to_send_to_debt_fund}
+                        error={formik.errors.amount_want_to_send_to_debt_fund}
+                        style={style}
+                        disabled={true}
+                    />
+                  </>
+                  
+                ) 
+                : 
+                (
+                  <>
+                    <AuthInput
+                        label="Sədəqə fonduna göndərmək istədiyiniz məbləğ:"
+                        id="amount_want_to_send_to_charity_fund"
+                        name="amount_want_to_send_to_charity_fund"
+                        type="number"
+                        value={formik.values.amount_want_to_send_to_charity_fund}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        touched={formik.touched.amount_want_to_send_to_charity_fund}
+                        error={formik.errors.amount_want_to_send_to_charity_fund}
+                        style={style}
+                        disabled={true}
+                    />
+                    <AuthInput
+                        label="Borc fonduna göndərmək istədiyiniz məbləğ:"
+                        id="amount_want_to_send_to_debt_fund"
+                        name="amount_want_to_send_to_debt_fund"
+                        type="number"
+                        value={formik.values.amount_want_to_send_to_debt_fund}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        touched={formik.touched.amount_want_to_send_to_debt_fund}
+                        error={formik.errors.amount_want_to_send_to_debt_fund}
+                        style={style}
+                    />
+                  </>
+                )
+              }
               <TextAreaInput
                   label="Qeyd:"
                   id="note"
@@ -308,6 +361,8 @@ const Investments = ({userId}) => {
               onOk={handleIsInvestorInvestmentReportEditModalOk}
               onCancel={handleIsInvestorInvestmentReportEditModalCancel}
           >
+              <p className='font-bold'>Yekun məbləğ: {investment && investment.final_profit}</p>
+              <hr />
               <AuthInput
                   label="Kartınıza göndərilməsini istədiyiniz məbləğ:"
                   id="amount_want_to_send_to_cart"
@@ -332,30 +387,67 @@ const Investments = ({userId}) => {
                   error={editReportFormik.errors.amount_want_to_keep_in_the_balance}
                   style={style}
               />
-              <AuthInput
-                  label="Sədəqə fonduna göndərmək istədiyiniz məbləğ:"
-                  id="amount_want_to_send_to_charity_fund"
-                  name="amount_want_to_send_to_charity_fund"
-                  type="number"
-                  value={editReportFormik.values.amount_want_to_send_to_charity_fund}
-                  onChange={editReportFormik.handleChange}
-                  onBlur={editReportFormik.handleBlur}
-                  touched={editReportFormik.touched.amount_want_to_send_to_charity_fund}
-                  error={editReportFormik.errors.amount_want_to_send_to_charity_fund}
-                  style={style}
-              />
-              <AuthInput
-                  label="Borc fonduna göndərmək istədiyiniz məbləğ:"
-                  id="amount_want_to_send_to_debt_fund"
-                  name="amount_want_to_send_to_debt_fund"
-                  type="number"
-                  value={editReportFormik.values.amount_want_to_send_to_debt_fund}
-                  onChange={editReportFormik.handleChange}
-                  onBlur={editReportFormik.handleBlur}
-                  touched={editReportFormik.touched.amount_want_to_send_to_debt_fund}
-                  error={editReportFormik.errors.amount_want_to_send_to_debt_fund}
-                  style={style}
-              />
+              {
+                investment && investment.is_from_debt_fund ? (
+                  <>
+                    <AuthInput
+                      label="Sədəqə fonduna göndərmək istədiyiniz məbləğ:"
+                      id="amount_want_to_send_to_charity_fund"
+                      name="amount_want_to_send_to_charity_fund"
+                      type="number"
+                      value={editReportFormik.values.amount_want_to_send_to_charity_fund}
+                      onChange={editReportFormik.handleChange}
+                      onBlur={editReportFormik.handleBlur}
+                      touched={editReportFormik.touched.amount_want_to_send_to_charity_fund}
+                      error={editReportFormik.errors.amount_want_to_send_to_charity_fund}
+                      style={style}
+                      disabled={true}
+                    />
+                    <AuthInput
+                      label="Borc fonduna göndərmək istədiyiniz məbləğ:"
+                      id="amount_want_to_send_to_debt_fund"
+                      name="amount_want_to_send_to_debt_fund"
+                      type="number"
+                      value={investment.amount_from_debt_fund}
+                      onChange={() => formik.setFieldValue("amount_want_to_send_to_debt_fund", investment.amount_from_debt_fund)}
+                      onBlur={formik.handleBlur}
+                      touched={formik.touched.amount_want_to_send_to_debt_fund}
+                      error={formik.errors.amount_want_to_send_to_debt_fund}
+                      style={style}
+                      disabled={true}
+                    />
+                  </>
+                ) 
+                : 
+                (
+                  <>
+                    <AuthInput
+                      label="Sədəqə fonduna göndərmək istədiyiniz məbləğ:"
+                      id="amount_want_to_send_to_charity_fund"
+                      name="amount_want_to_send_to_charity_fund"
+                      type="number"
+                      value={editReportFormik.values.amount_want_to_send_to_charity_fund}
+                      onChange={editReportFormik.handleChange}
+                      onBlur={editReportFormik.handleBlur}
+                      touched={editReportFormik.touched.amount_want_to_send_to_charity_fund}
+                      error={editReportFormik.errors.amount_want_to_send_to_charity_fund}
+                      style={style}
+                    />
+                    <AuthInput
+                        label="Borc fonduna göndərmək istədiyiniz məbləğ:"
+                        id="amount_want_to_send_to_debt_fund"
+                        name="amount_want_to_send_to_debt_fund"
+                        type="number"
+                        value={formik.values.amount_want_to_send_to_debt_fund}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        touched={formik.touched.amount_want_to_send_to_debt_fund}
+                        error={formik.errors.amount_want_to_send_to_debt_fund}
+                        style={style}
+                    />
+                  </>
+                )
+              }
               <TextAreaInput
                   label="Qeyd:"
                   id="note"

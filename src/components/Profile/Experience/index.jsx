@@ -8,6 +8,7 @@ import {
 } from "../../../redux/ExperienceSlice/ExperienceSlice";
 import { Modal, Tooltip } from "antd";
 import { MdDelete, MdModeEditOutline } from "react-icons/md";
+import { CgSpinner } from "react-icons/cg";
 
 const Experience = ({userId}) => {
     const [isExperienceModalOpen, setIsExperienceModalOpen] = useState(false);
@@ -32,6 +33,7 @@ const Experience = ({userId}) => {
 
     let me = useSelector((state) => state.auth.me)
     let experiences = useSelector((state) => state.experience.experiences);
+    let isLoading = useSelector((state) => state.experience.isLoading);
 
     useEffect(() => {
         dispatch(getMeAsync())
@@ -51,86 +53,94 @@ const Experience = ({userId}) => {
                     </NavLink>
                 )
             }
-            <table className="table-auto w-full">
-                <thead>
-                    <tr>
-                        <th className="border border-slate-600">Müəsisə</th>
-                        <th className="border border-slate-600">Vəzifə</th>
-                        <th className="border border-slate-600">Açıqlama</th>
-                        <th className="border border-slate-600">Şəhər</th>
-                        <th className="border border-slate-600">
-                            Başlama tarixi
-                        </th>
-                        <th className="border border-slate-600">
-                            Bitmə tarixi
-                        </th>
-                        <th className="border border-slate-600">
-                            Davam edirmi
-                        </th>
-                        <th className="border border-slate-600"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {experiences.map((experience) => (
-                        <tr key={experience.id}>
-                            <td className="border border-slate-700">
-                                {experience.experience_place}
-                            </td>
-                            <td className="border border-slate-700">
-                                {experience.position}
-                            </td>
-                            <Tooltip title={experience.description}>
-                                <td className="border border-slate-700">
-                                    {experience.description.length > 5
-                                        ? `${experience.description.substring(
-                                              0,
-                                              5
-                                          )}...`
-                                        : experience.description}
-                                </td>
-                            </Tooltip>
-                            <td className="border border-slate-700">
-                                {experience.city}
-                            </td>
-                            <td className="border border-slate-700">
-                                {experience.start_year}
-                            </td>
-                            <td className="border border-slate-700">
-                                {experience.end_year}
-                            </td>
-                            <td className="border border-slate-700">
-                                {experience.is_continue ? "Bəli" : "Xeyr"}
-                            </td>
-                            <td className="border border-slate-700 text-center">
-                                <NavLink
-                                    to={`/experience-update/${experience.id}`}
-                                    className={`p-2`}
-                                >
-                                    <MdModeEditOutline
-                                        className="inline"
-                                        style={{
-                                            color: "#56AF55",
-                                            fontSize: "20px",
-                                        }}
-                                    />
-                                </NavLink>
-                                <NavLink
-                                    className={`p-2`}
-                                    onClick={() => showModal(experience.id)}
-                                >
-                                    <MdDelete
-                                        className="inline"
-                                        style={{
-                                            color: "#CF4B44",
-                                            fontSize: "20px",
-                                        }}
-                                    />
-                                </NavLink>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
+            {
+                isLoading ? (
+                    <div className='w-full flex justify-center'>
+                        <CgSpinner className='animate-spin text-lg self-center'/>
+                    </div>
+                ) : (
+                    <table className="table-auto w-full">
+                        <thead>
+                            <tr>
+                                <th className="border border-slate-600">Müəsisə</th>
+                                <th className="border border-slate-600">Vəzifə</th>
+                                <th className="border border-slate-600">Açıqlama</th>
+                                <th className="border border-slate-600">Şəhər</th>
+                                <th className="border border-slate-600">
+                                    Başlama tarixi
+                                </th>
+                                <th className="border border-slate-600">
+                                    Bitmə tarixi
+                                </th>
+                                <th className="border border-slate-600">
+                                    Davam edirmi
+                                </th>
+                                <th className="border border-slate-600"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {experiences.map((experience) => (
+                                <tr key={experience.id}>
+                                    <td className="border border-slate-700">
+                                        {experience.experience_place}
+                                    </td>
+                                    <td className="border border-slate-700">
+                                        {experience.position}
+                                    </td>
+                                    <Tooltip title={experience.description}>
+                                        <td className="border border-slate-700">
+                                            {experience.description.length > 5
+                                                ? `${experience.description.substring(
+                                                    0,
+                                                    5
+                                                )}...`
+                                                : experience.description}
+                                        </td>
+                                    </Tooltip>
+                                    <td className="border border-slate-700">
+                                        {experience.city}
+                                    </td>
+                                    <td className="border border-slate-700">
+                                        {experience.start_year}
+                                    </td>
+                                    <td className="border border-slate-700">
+                                        {experience.end_year}
+                                    </td>
+                                    <td className="border border-slate-700">
+                                        {experience.is_continue ? "Bəli" : "Xeyr"}
+                                    </td>
+                                    <td className="border border-slate-700 text-center">
+                                        <NavLink
+                                            to={`/experience-update/${experience.id}`}
+                                            className={`p-2`}
+                                        >
+                                            <MdModeEditOutline
+                                                className="inline"
+                                                style={{
+                                                    color: "#56AF55",
+                                                    fontSize: "20px",
+                                                }}
+                                            />
+                                        </NavLink>
+                                        <NavLink
+                                            className={`p-2`}
+                                            onClick={() => showModal(experience.id)}
+                                        >
+                                            <MdDelete
+                                                className="inline"
+                                                style={{
+                                                    color: "#CF4B44",
+                                                    fontSize: "20px",
+                                                }}
+                                            />
+                                        </NavLink>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                )
+            }
             <Modal
                 title={`Silmək istədiyinizə əminsinizmi?`}
                 okType="default"

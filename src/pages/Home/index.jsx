@@ -6,6 +6,7 @@ import style from "./style.module.css"
 import { getAllEntrepreneurAsync } from '../../redux/EntrepreneurSlice/EntrepreneurSlice';
 import { getMeAsync } from '../../redux/AuthSlice/AuthSlice';
 import { Pagination, DatePicker } from 'antd';
+import { CgSpinner } from "react-icons/cg";
 
 
 function Home() {
@@ -16,6 +17,7 @@ function Home() {
   let entrepreneurs = useSelector((state) => state.entrepreneur.entrepreneurs)
   let totalPage = useSelector((state) => state.entrepreneur.totalPage)
   let pageLimit = useSelector((state) => state.entrepreneur.pageLimit)
+  let isLoading = useSelector((state) => state.entrepreneur.isLoading)
 
   const formik = useFormik({
     initialValues: {
@@ -81,48 +83,55 @@ function Home() {
               </form>
             </div>
 
-            <div className="w-full sm:w-full md:w-3/4 lg:w-3/4 grid gap-4 lg:grid-cols-2 md:grid-cols-1 sm:grid-cols-1">
-                {
-                  entrepreneurs.map((entrepreneur) => (
-                    <div key={entrepreneur.id} className="w-100 m-2 shadow rounded flex flex-row">
-                      {
-                       entrepreneur.images.length > 0 ? entrepreneur.images.slice(0, 1).map((image) => (
-                        <img key={image.id} src={image.image} alt="default1" className='w-1/3 rounded' />
-                       )) : <img src="/images/default.jpg" alt="default" className='w-1/3 rounded' />
-                      }
-                      <div className='w-full m-2 flex flex-col justify-between'>
-                        <div>
-                          <p className='font-extrabold'>{entrepreneur.project_name}</p>
-                          <div className='w-full flex flex-col md:flex-col lg:flex-col xl:flex-row justify-between'>
-                            <p className='text-slate-400'>Sahibi:</p>
-                            <span className=''>{entrepreneur.owner.user.first_name} {entrepreneur.owner.user.last_name}</span>
-                          </div>
-                          
-                          <div className='w-full flex flex-col md:flex-col lg:flex-col xl:flex-row justify-between'>
-                            <p className='text-slate-400'>Başlanğıc tarixi:</p>
-                            <span>{entrepreneur.start_date}</span>
-                          </div>
-                          <div className='w-full flex flex-col md:flex-col lg:flex-col xl:flex-row justify-between'>
-                            <p className='text-slate-400'>Bitmə tarixi:</p>
-                            <span>{entrepreneur.end_date}</span>
-                          </div>
-                          <div className='w-full flex flex-col md:flex-col lg:flex-col xl:flex-row justify-between'>
-                            <p className='text-slate-400'>Ümumi investisiya:</p>
-                            <span>{entrepreneur.total_investment} AZN</span>
-                          </div>
-                          <div className='w-full flex flex-col md:flex-col lg:flex-col xl:flex-row justify-between'>
-                            <p className='text-slate-400'>Toplanan məbləğ:</p>
-                            <span>{entrepreneur.amount_collected} AZN</span>
+            {
+              isLoading ? (
+                  <div className='w-full sm:w-full md:w-3/4 lg:w-3/4 flex justify-center'>
+                    <CgSpinner className='animate-spin text-lg self-center'/>
+                  </div>
+                ) : (
+                  <div className="w-full sm:w-full md:w-3/4 lg:w-3/4 grid gap-4 lg:grid-cols-2 md:grid-cols-1 sm:grid-cols-1">
+                    {entrepreneurs.map((entrepreneur) => (
+                        <div key={entrepreneur.id} className="w-100 m-2 shadow rounded flex flex-row">
+                          {
+                            entrepreneur.images.length > 0 ? entrepreneur.images.slice(0, 1).map((image) => (
+                            <img key={image.id} src={image.image} alt="default1" className='w-1/3 rounded' />
+                            )) : <img src="/images/default.jpg" alt="default" className='w-1/3 rounded' />
+                          }
+                          <div className='w-full m-2 flex flex-col justify-between'>
+                            <div>
+                              <p className='font-extrabold'>{entrepreneur.project_name}</p>
+                              <div className='w-full flex flex-col md:flex-col lg:flex-col xl:flex-row justify-between'>
+                                <p className='text-slate-400'>Sahibi:</p>
+                                <span className=''>{entrepreneur.owner.user.first_name} {entrepreneur.owner.user.last_name}</span>
+                              </div>
+                              
+                              <div className='w-full flex flex-col md:flex-col lg:flex-col xl:flex-row justify-between'>
+                                <p className='text-slate-400'>Başlanğıc tarixi:</p>
+                                <span>{entrepreneur.start_date}</span>
+                              </div>
+                              <div className='w-full flex flex-col md:flex-col lg:flex-col xl:flex-row justify-between'>
+                                <p className='text-slate-400'>Bitmə tarixi:</p>
+                                <span>{entrepreneur.end_date}</span>
+                              </div>
+                              <div className='w-full flex flex-col md:flex-col lg:flex-col xl:flex-row justify-between'>
+                                <p className='text-slate-400'>Ümumi investisiya:</p>
+                                <span>{entrepreneur.total_investment} AZN</span>
+                              </div>
+                              <div className='w-full flex flex-col md:flex-col lg:flex-col xl:flex-row justify-between'>
+                                <p className='text-slate-400'>Toplanan məbləğ:</p>
+                                <span>{entrepreneur.amount_collected} AZN</span>
+                              </div>
+                            </div>
+                            <NavLink to={`/entrepreneur-detail/${entrepreneur.id}`} className={`${style.entrepreneur_detail_btn} btn-main-bg self-end rounded mt-4`}>
+                              Ətraflı
+                            </NavLink>
                           </div>
                         </div>
-                        <NavLink to={`/entrepreneur-detail/${entrepreneur.id}`} className={`${style.entrepreneur_detail_btn} btn-main-bg self-end rounded mt-4`}>
-                          Ətraflı
-                        </NavLink>
-                      </div>
-                    </div>
-                  ))
-                }
-            </div>
+                      ))
+                    }
+                  </div>
+                )
+            }
           </div>
           {/* ***************** Pagination ********************* */}
           <div>
