@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { NavLink, useLocation, useNavigate } from 'react-router-dom'
 import { Fragment } from 'react'
 import { Disclosure, Menu, Transition } from '@headlessui/react'
@@ -13,12 +13,30 @@ function Header() {
   const location = useLocation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const notificationRef = useRef(null);
   
   const [notificationModal, setNotificationModal] = useState(false);
   const access = localStorage.getItem("access");
 
   let me = useSelector((state) => state.auth.me)
   let notifications = useSelector((state) => state.notification.notifications)
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (notificationRef.current && !notificationRef.current.contains(event.target)) {
+        setNotificationModal(false);
+      }
+    };
+
+    // Add event listener to the document
+    document.addEventListener('click', handleClickOutside);
+
+    // Clean up the event listener on component unmount
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, []); // Empty dependency array means this effect runs once when the component mounts
+
 
   useEffect(() => {
     if(access) {
@@ -28,9 +46,12 @@ function Header() {
 
   useEffect(() => {
     if(access) {
-      dispatch(getAllNotificationsAsync({"offset": "", "user": me && me.user.id}))
+      console.log(me);
+      if (me) {
+        dispatch(getAllNotificationsAsync({offset: "", user: me && me.user.id}))
+      }
     }
-  }, [dispatch, me])
+  }, [])
 
   function logout() {
     localStorage.removeItem('access')
@@ -38,6 +59,8 @@ function Header() {
     navigate("/");
     window.location.reload();
   }
+
+  console.log(notifications);
 
   const navigation = [
     { name: 'Ana Səhifə', href: '/', current: location.pathname == '/' ? true : false },
@@ -161,7 +184,7 @@ function Header() {
                     </Menu.Items>
                   </Transition>
                 </Menu>
-                <div className='relative'>
+                <div className='relative' ref={notificationRef}>
 
                   <button onClick={() => setNotificationModal(!notificationModal)} type="button" className="relative rounded-full p-1 text-gray-400 hover:text-white focus:outline-none ml-3">
                     <span className="absolute -inset-1.5"></span>
@@ -186,20 +209,29 @@ function Header() {
                       zIndex: 100
                     }}
                   >
-                    <ul className='w-full h-96 overflow-auto'>
-                      {
-                        notifications.map((notification) => (
-                          <li key={notification.id} className='flex flex-col'>
-                            {notification.message}
-                            <br />
-                            <small className='self-end'>
-                              {moment(notification.created_at).format('DD.MM.YYYY, HH:mm')}
-                            </small>
-                            <hr />
-                          </li>
-                        ))
+                    {
+                        notifications && notifications.length ? (
+                          <ul className='w-full h-96 overflow-auto'>
+                            {
+                              notifications.map((notification) => (
+                                <li key={notification.id} className='flex flex-col'>
+                                  {notification.message}
+                                  <br />
+                                  <small className='self-end'>
+                                    {moment(notification.created_at).format('DD.MM.YYYY, HH:mm')}
+                                  </small>
+                                  <hr />
+                                </li>
+                              ))
+                            }
+                          </ul>
+                        ) : (
+                          <ul className='w-full h-auto overflow-auto'>
+                            <li>Bildiriş yoxdur</li>
+                          </ul>
+                        )
                       }
-                    </ul>
+                    
                   </div>
 
                   </div>
