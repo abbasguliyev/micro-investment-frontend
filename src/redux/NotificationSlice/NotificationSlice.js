@@ -3,7 +3,7 @@ import axios from "../../axios";
 
 export const getAllNotificationsAsync = createAsyncThunk('getAllNotificationsAsync', async (values) => {
     try {
-        const res = await axios.get(`notifications/?limit=10&offset=${values.offset}}`)
+        const res = await axios.get(`notifications/?limit=10&offset=${values.offset}&user=${values.user ? values.user : ""}}`)
         return res.data;
     } catch (error) {
         // If the API call fails, the error will be thrown and caught here.
