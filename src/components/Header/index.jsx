@@ -200,14 +200,14 @@ function Header() {
                     style={{
                       position: "absolute",
                       top: 50,
-                      right: 5,
+                      right: 0,
                       backgroundColor: "#fff",
                       paddingTop: 20,
                       paddingRight: 5,
                       paddingLeft: 15,
                       paddingBottom: 10,
                       color: "black",
-                      width: 400,
+                      width: 300,
                       zIndex: 100
                     }}
                   >
