@@ -48,6 +48,7 @@ function AdminDebtFund() {
         setCurrentPage(e);
         let offset = (e - 1) * pageLimit;
         formik.values.offset = offset;
+        formik.values.is_from_debt_fund = true
         let filteredValues = { ...formik.values };
         dispatch(getAllInvestmentsAsync(filteredValues));
     };

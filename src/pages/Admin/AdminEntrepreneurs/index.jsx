@@ -32,6 +32,7 @@ import { getCompanyBalanceAsync } from "../../../redux/CompanyBalanceSlice/Compa
 
 function AdminEntrepreneurs() {
     let [currentPage, setCurrentPage] = useState(1);
+    let [currentInvestmentPage, setCurrentInvestmentPage] = useState(1);
     const [startDate, setStartDate] = useState("");
     const [endDate, setEndDate] = useState("");
     const [users, setUsers] = useState([]);
@@ -60,6 +61,7 @@ function AdminEntrepreneurs() {
     let pageLimit = useSelector((state) => state.entrepreneur.pageLimit);
     let investmentstotalPage = useSelector((state) => state.investment.totalPage);
 
+
     const searchInvestor = (e) => {
         dispatch(getAllUsersAsync({"offset": 0, "fullname": e.target.value, "birthdate":"", "marital_status":"", "employment_status":"", "housing_status":"", "phone_number":"", "monthly_income":"", "monthly_income__gte": "", "monthly_income__lte": ""}))
         .then((res) => (
@@ -78,12 +80,13 @@ function AdminEntrepreneurs() {
         dispatch(deleteInvestmentAsync({"id": investment.id}))
         .then(() => {
             let offset = (currentPage - 1) * pageLimit;
+            let iOffset = (currentInvestmentPage - 1) * pageLimit;
             dispatch(
                 getAllEntrepreneurAsync(filterFormik.values)
             );
             dispatch(
                 getAllInvestmentsAsync({
-                    offset: offset,
+                    offset: iOffset,
                     investor: "",
                     entrepreneur: investment.entrepreneur.id
                 })
@@ -120,9 +123,11 @@ function AdminEntrepreneurs() {
 
     // ENTREPRENEUR INVESTMENTS SHOW MODAL
     const showEntrepreneurInvestmentsModal = (entrepreneur) => {
+        let offset = (1 - 1) * pageLimit;
+        let iOffset = (currentInvestmentPage - 1) * pageLimit;
         setEntrepreneur(entrepreneur);
         setIsEntrepreneurInvestmentsModalOpen(true);
-        dispatch(getAllInvestmentsAsync({offset: 0, investor: "", entrepreneur: entrepreneur.id}))
+        dispatch(getAllInvestmentsAsync({offset: iOffset, investor: "", entrepreneur: entrepreneur.id}))
     };
 
     const handleEntrepreneurInvestmentsModalOk = () => {
@@ -143,10 +148,11 @@ function AdminEntrepreneurs() {
         setInvestmentAddNewInvestorModalOpen(false);
         addNewInvestorFormik.values.entrepreneur = entrepreneur.id
         dispatch(postInvestmentAsync(addNewInvestorFormik.values)).then(() => {
+            let iOffset = (currentInvestmentPage - 1) * pageLimit;
             dispatch(
                 getAllEntrepreneurAsync(filterFormik.values)
             );
-            dispatch(getAllInvestmentsAsync({offset: 0, investor: "", entrepreneur: entrepreneur.id}))
+            dispatch(getAllInvestmentsAsync({offset: iOffset, investor: "", entrepreneur: entrepreneur.id}))
             dispatch(
                 getCompanyBalanceAsync()
             )
@@ -204,12 +210,13 @@ function AdminEntrepreneurs() {
         dispatch(putInvestmentAsync(formik.values))
         .then(() => {
             let offset = (currentPage - 1) * pageLimit;
+            let iOffset = (currentInvestmentPage - 1) * pageLimit;
             dispatch(
                 getAllEntrepreneurAsync(filterFormik.values)
             );
             dispatch(
                 getAllInvestmentsAsync({
-                    offset: "",
+                    offset: iOffset,
                     investor: "",
                     entrepreneur: entrepreneur.id
                 })
@@ -272,6 +279,7 @@ function AdminEntrepreneurs() {
                     getAllEntrepreneurAsync(filterFormik.values)
                 );
                 dispatch(
+                    
                     getAllInvestmentsAsync({
                         offset: 0,
                         investor: "",
@@ -317,12 +325,13 @@ function AdminEntrepreneurs() {
         dispatch(putEntrepreneurAsync({"id": entrepreneur.id, "is_active": !entrepreneur.is_active}))
         .then(() => {
             let offset = (currentPage - 1) * pageLimit;
+            let iOffset = (currentInvestmentPage - 1) * pageLimit;
             filterFormik.values.offset = offset;
             let filteredValues = { ...filterFormik.values };
             dispatch(getAllEntrepreneurAsync(filteredValues));
             dispatch(
                 getAllInvestmentsAsync({
-                    offset: offset,
+                    offset: iOffset,
                     investor: "",
                     entrepreneur: entrepreneur.id
                 })
@@ -334,12 +343,13 @@ function AdminEntrepreneurs() {
         dispatch(putEntrepreneurAsync({"id": entrepreneur.id, "is_finished": !entrepreneur.is_finished}))
         .then(() => {
             let offset = (currentPage - 1) * pageLimit;
+            let iOffset = (currentInvestmentPage - 1) * pageLimit;
             filterFormik.values.offset = offset;
             let filteredValues = { ...filterFormik.values };
             dispatch(getAllEntrepreneurAsync(filteredValues));
             dispatch(
                 getAllInvestmentsAsync({
-                    offset: offset,
+                    offset: iOffset,
                     investor: "",
                     entrepreneur: entrepreneur.id
                 })
@@ -348,9 +358,9 @@ function AdminEntrepreneurs() {
     }
     
     const changeInvestmentsPage = (e) => {
-        setCurrentPage(e);
-        let offset = (e - 1) * pageLimit;
-        dispatch(getAllInvestmentReportsAsync({offset: offset, investor: "", investment: "", entrepreneur: entrepreneur.id}));
+        setCurrentInvestmentPage(e);
+        let iOffset = (e - 1) * pageLimit;
+        dispatch(getAllInvestmentsAsync({offset: iOffset, investor: "", investment: "", entrepreneur: entrepreneur.id}));
     };
 
     return (
@@ -758,7 +768,7 @@ function AdminEntrepreneurs() {
                                                 changeInvestmentsPage(e);
                                             }}
                                             className="pagination"
-                                            current={currentPage}
+                                            current={currentInvestmentPage}
                                             total={investmentstotalPage}
                                             defaultPageSize={pageLimit}
                                             showSizeChanger={false}
