@@ -260,23 +260,23 @@ function Profile() {
             <button onClick={()=>{
               setShowTab(<Investments userId={id && id}/>)
               setTitle("Yatırımlarım")
-            }} className={`p-2 ml-2 rounded btn-main-bg`}>Yatırımlar</button>
+            }} className={`p-2 ml-2 mt-2 rounded btn-main-bg`}>Yatırımlar</button>
             <button onClick={()=>{
               setShowTab(<EntreprenuerTable userId={id && id}/>)
               setTitle("Lahiyələrim")
-            }} className={`p-2 ml-2 rounded btn-main-bg`}>Lahiyələr</button>
+            }} className={`p-2 ml-2 mt-2 rounded btn-main-bg`}>Lahiyələr</button>
             <button onClick={()=>{
               setShowTab(<PaymentTable userId={id && id}/>)
               setTitle("Ödənişlərim")
-            }} className={`p-2 ml-2 rounded btn-main-bg`}>Ödənişlər</button>
+            }} className={`p-2 ml-2 mt-2 rounded btn-main-bg`}>Ödənişlər</button>
             <button onClick={()=>{
               setShowTab(<Education userId={id && id}/>)
               setTitle("Təhsilim")
-            }} className={`p-2 ml-2 rounded btn-main-bg`}>Təhsil</button>
+            }} className={`p-2 ml-2 mt-2 rounded btn-main-bg`}>Təhsil</button>
             <button onClick={()=>{
               setShowTab(<Experience userId={id && id}/>)
               setTitle("Təcrübələrim")
-            }} className={`p-2 ml-2 rounded btn-main-bg`}>Təcrübə</button>
+            }} className={`p-2 ml-2 mt-2 rounded btn-main-bg`}>Təcrübə</button>
         </div>
         <div>
           <h4 className='mx-auto max-w-7xl py-6 sm:px-6 lg:px-8 flex flex-col text-lg text-xl font-bold'>{title}</h4>
