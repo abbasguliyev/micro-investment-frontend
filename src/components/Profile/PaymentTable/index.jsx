@@ -126,7 +126,7 @@ const PaymentTable = ({userId}) => {
                             investment.is_amount_sended || investment.amount_must_send == 0 ? (
                               <FaCheck className='success mx-20' />
                             ) : (
-                              <NavLink onClick={() => showSendAmountModal(investment)} className={`rounded btn-main-bg text-center p-1 text-xs`}>Ödənişi göndər</NavLink>
+                              <NavLink onClick={() => showSendAmountModal(investment)} className={`inline-block rounded btn-main-bg text-center p-1 text-xs`}>Ödənişi göndər</NavLink>
                             )
                           }
                       </td>

@@ -24,12 +24,18 @@ import { getMeAsync, refreshTokenAsync } from './redux/AuthSlice/AuthSlice'
 import { jwtDecode } from "jwt-decode";
 import ForgotPassword from './pages/ForgotPassword'
 import ForgotChangePassword from './pages/ForgotChangePassword'
+import { getAllNotificationsAsync } from './redux/NotificationSlice/NotificationSlice'
 
 function App() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   
   const access = localStorage.getItem("access");
+  let me = useSelector(state => state.auth.me)
+
+  useEffect(() => {
+    dispatch(getAllNotificationsAsync({user: me && me.id, offset: 0}))
+  })
 
   useEffect(() => {
     if(access) {

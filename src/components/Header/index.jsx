@@ -5,7 +5,7 @@ import { Disclosure, Menu, Transition } from '@headlessui/react'
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { useDispatch, useSelector } from 'react-redux'
 import { getMeAsync, refreshTokenAsync } from '../../redux/AuthSlice/AuthSlice'
-import { getAllNotificationsAsync } from '../../redux/NotificationSlice/NotificationSlice'
+import { getAllNotificationsAsync, readAllNotificationsAsync } from '../../redux/NotificationSlice/NotificationSlice'
 import { Modal } from 'antd'
 import moment from 'moment';
 
@@ -20,6 +20,7 @@ function Header() {
 
   let me = useSelector((state) => state.auth.me)
   let notifications = useSelector((state) => state.notification.notifications)
+  let notfCount = useSelector((state) => state.notification.count)
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -41,17 +42,17 @@ function Header() {
   useEffect(() => {
     if(access) {
       dispatch(getMeAsync())
+      .then(() => {
+        dispatch(getAllNotificationsAsync({user: me && me.user.id, offset: 0}))
+      })
     }
   }, [dispatch])
 
-  useEffect(() => {
-    if(access) {
-      console.log(me);
-      if (me) {
-        dispatch(getAllNotificationsAsync({offset: "", user: me && me.user.id}))
-      }
-    }
-  }, [])
+  const openNotf = () => {
+    setNotificationModal(!notificationModal)
+    dispatch(readAllNotificationsAsync({user: me && me.user.id}))
+    dispatch(getAllNotificationsAsync({user: me && me.user.id, offset: 0}))
+  }
 
   function logout() {
     localStorage.removeItem('access')
@@ -59,8 +60,6 @@ function Header() {
     navigate("/");
     window.location.reload();
   }
-
-  console.log(notifications);
 
   const navigation = [
     { name: 'Ana Səhifə', href: '/', current: location.pathname == '/' ? true : false },
@@ -186,12 +185,15 @@ function Header() {
                 </Menu>
                 <div className='relative' ref={notificationRef}>
 
-                  <button onClick={() => setNotificationModal(!notificationModal)} type="button" className="relative rounded-full p-1 text-gray-400 hover:text-white focus:outline-none ml-3">
+                  <button onClick={() => openNotf()} type="button" className="relative rounded-full p-1 text-gray-400 hover:text-white focus:outline-none ml-3 relative">
                     <span className="absolute -inset-1.5"></span>
                     <span className="sr-only">View notifications</span>
                     <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" aria-hidden="true">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
                     </svg>
+                    {
+                      notfCount > 0 && <span className='absolute bottom-5 left-5 rounded-full w-5 bg-white text-slate-900'>{notfCount}</span>
+                    }
                   </button>
                   <div 
                     className={notificationModal ? `block shadow-xl` : `hidden`} 
@@ -231,7 +233,6 @@ function Header() {
                           </ul>
                         )
                       }
-                    
                   </div>
 
                   </div>
