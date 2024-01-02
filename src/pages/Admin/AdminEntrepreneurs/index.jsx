@@ -266,7 +266,6 @@ function AdminEntrepreneurs() {
         },
         onSubmit: (values) => {
             values.entrepreneur = entrepreneur.id
-            console.log(values);
             dispatch(postInvestmentAsync(values))
             .then(() => {
                 dispatch(

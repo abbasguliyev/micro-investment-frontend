@@ -31,8 +31,6 @@ const Investments = ({userId}) => {
   let pageLimit = useSelector((state) => state.investment.pageLimit)
   let companyBalance = useSelector((state) => state.companyBalance.companyBalances)
 
-  console.log(investments);
-
   // Investment Finish Modal
   const showInvestorInvestmentFinishModal = (investment) => {
     setIsInvestorInvestmentFinishModalOpen(true);
