@@ -37,23 +37,23 @@ function Admin() {
             <button onClick={()=>{
               setShowTab(<AdminUsers/>) 
               setTitle("İstifadəçilər")
-            }} className={'btn-main-bg p-2 ml-2 rounded'}>İstifadəçilər</button>
+            }} className={'btn-main-bg p-2 ml-2 mt-2 rounded'}>İstifadəçilər</button>
             <button onClick={()=>{
               setShowTab(<AdminEntrepreneurs/>) 
               setTitle("Lahiyələr")
-            }} className={'btn-main-bg p-2 ml-2 rounded'}>Lahiyələr</button>
+            }} className={'btn-main-bg p-2 ml-2 mt-2 rounded'}>Lahiyələr</button>
             <button onClick={()=>{
               setShowTab(<AdminInvestments/>) 
               setTitle("Pul göndərəcəklər")
-            }} className={'btn-main-bg p-2 ml-2 rounded'}>Pul göndərəcəklər</button>
+            }} className={'btn-main-bg p-2 ml-2 mt-2 rounded'}>Pul göndərəcəklər</button>
             <button onClick={()=>{
               setShowTab(<AdminInvestorPayments/>) 
               setTitle("Ödəniş Hesabatı")
-            }} className={'btn-main-bg p-2 ml-2 rounded'}>Ödəniş Hesabatı</button>
+            }} className={'btn-main-bg p-2 ml-2 mt-2 rounded'}>Ödəniş Hesabatı</button>
             <button onClick={()=>{
               setShowTab(<AdminDebtFund/>) 
               setTitle("Fond Hesabatı")
-            }} className={'btn-main-bg p-2 ml-2 rounded'}>Fond Hesabatı</button>
+            }} className={'btn-main-bg p-2 ml-2 mt-2 rounded'}>Fond Hesabatı</button>
         </div>
         {
           companyBalance ? companyBalance.map((balance) => (
