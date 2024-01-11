@@ -277,22 +277,21 @@ const Investments = ({userId}) => {
                   error={formik.errors.amount_want_to_keep_in_the_balance}
                   style={style}
               />
+              <AuthInput
+                  label="Sədəqə fonduna göndərmək istədiyiniz məbləğ:"
+                  id="amount_want_to_send_to_charity_fund"
+                  name="amount_want_to_send_to_charity_fund"
+                  type="number"
+                  value={formik.values.amount_want_to_send_to_charity_fund}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  touched={formik.touched.amount_want_to_send_to_charity_fund}
+                  error={formik.errors.amount_want_to_send_to_charity_fund}
+                  style={style}
+              />
               {
                 investment && investment.is_from_debt_fund ? (
                   <>
-                    <AuthInput
-                        label="Sədəqə fonduna göndərmək istədiyiniz məbləğ:"
-                        id="amount_want_to_send_to_charity_fund"
-                        name="amount_want_to_send_to_charity_fund"
-                        type="number"
-                        value={formik.values.amount_want_to_send_to_charity_fund}
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        touched={formik.touched.amount_want_to_send_to_charity_fund}
-                        error={formik.errors.amount_want_to_send_to_charity_fund}
-                        style={style}
-                        disabled={true}
-                    />
                     <AuthInput
                         label="Borc fonduna göndərmək istədiyiniz məbləğ:"
                         id="amount_want_to_send_to_debt_fund"
@@ -312,19 +311,6 @@ const Investments = ({userId}) => {
                 : 
                 (
                   <>
-                    <AuthInput
-                        label="Sədəqə fonduna göndərmək istədiyiniz məbləğ:"
-                        id="amount_want_to_send_to_charity_fund"
-                        name="amount_want_to_send_to_charity_fund"
-                        type="number"
-                        value={formik.values.amount_want_to_send_to_charity_fund}
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        touched={formik.touched.amount_want_to_send_to_charity_fund}
-                        error={formik.errors.amount_want_to_send_to_charity_fund}
-                        style={style}
-                        disabled={true}
-                    />
                     <AuthInput
                         label="Borc fonduna göndərmək istədiyiniz məbləğ:"
                         id="amount_want_to_send_to_debt_fund"
@@ -385,32 +371,31 @@ const Investments = ({userId}) => {
                   error={editReportFormik.errors.amount_want_to_keep_in_the_balance}
                   style={style}
               />
+              <AuthInput
+                label="Sədəqə fonduna göndərmək istədiyiniz məbləğ:"
+                id="amount_want_to_send_to_charity_fund"
+                name="amount_want_to_send_to_charity_fund"
+                type="number"
+                value={editReportFormik.values.amount_want_to_send_to_charity_fund}
+                onChange={editReportFormik.handleChange}
+                onBlur={editReportFormik.handleBlur}
+                touched={editReportFormik.touched.amount_want_to_send_to_charity_fund}
+                error={editReportFormik.errors.amount_want_to_send_to_charity_fund}
+                style={style}
+              />
               {
                 investment && investment.is_from_debt_fund ? (
                   <>
-                    <AuthInput
-                      label="Sədəqə fonduna göndərmək istədiyiniz məbləğ:"
-                      id="amount_want_to_send_to_charity_fund"
-                      name="amount_want_to_send_to_charity_fund"
-                      type="number"
-                      value={editReportFormik.values.amount_want_to_send_to_charity_fund}
-                      onChange={editReportFormik.handleChange}
-                      onBlur={editReportFormik.handleBlur}
-                      touched={editReportFormik.touched.amount_want_to_send_to_charity_fund}
-                      error={editReportFormik.errors.amount_want_to_send_to_charity_fund}
-                      style={style}
-                      disabled={true}
-                    />
                     <AuthInput
                       label="Borc fonduna göndərmək istədiyiniz məbləğ:"
                       id="amount_want_to_send_to_debt_fund"
                       name="amount_want_to_send_to_debt_fund"
                       type="number"
                       value={investment.amount_from_debt_fund}
-                      onChange={() => formik.setFieldValue("amount_want_to_send_to_debt_fund", investment.amount_from_debt_fund)}
-                      onBlur={formik.handleBlur}
-                      touched={formik.touched.amount_want_to_send_to_debt_fund}
-                      error={formik.errors.amount_want_to_send_to_debt_fund}
+                      // onChange={() => formik.setFieldValue("amount_want_to_send_to_debt_fund", investment.amount_from_debt_fund)}
+                      onBlur={editReportFormik.handleBlur}
+                      touched={editReportFormik.touched.amount_want_to_send_to_debt_fund}
+                      error={editReportFormik.errors.amount_want_to_send_to_debt_fund}
                       style={style}
                       disabled={true}
                     />
@@ -420,27 +405,15 @@ const Investments = ({userId}) => {
                 (
                   <>
                     <AuthInput
-                      label="Sədəqə fonduna göndərmək istədiyiniz məbləğ:"
-                      id="amount_want_to_send_to_charity_fund"
-                      name="amount_want_to_send_to_charity_fund"
-                      type="number"
-                      value={editReportFormik.values.amount_want_to_send_to_charity_fund}
-                      onChange={editReportFormik.handleChange}
-                      onBlur={editReportFormik.handleBlur}
-                      touched={editReportFormik.touched.amount_want_to_send_to_charity_fund}
-                      error={editReportFormik.errors.amount_want_to_send_to_charity_fund}
-                      style={style}
-                    />
-                    <AuthInput
                         label="Borc fonduna göndərmək istədiyiniz məbləğ:"
                         id="amount_want_to_send_to_debt_fund"
                         name="amount_want_to_send_to_debt_fund"
                         type="number"
-                        value={formik.values.amount_want_to_send_to_debt_fund}
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        touched={formik.touched.amount_want_to_send_to_debt_fund}
-                        error={formik.errors.amount_want_to_send_to_debt_fund}
+                        value={editReportFormik.values.amount_want_to_send_to_debt_fund}
+                        onChange={editReportFormik.handleChange}
+                        onBlur={editReportFormik.handleBlur}
+                        touched={editReportFormik.touched.amount_want_to_send_to_debt_fund}
+                        error={editReportFormik.errors.amount_want_to_send_to_debt_fund}
                         style={style}
                     />
                   </>
