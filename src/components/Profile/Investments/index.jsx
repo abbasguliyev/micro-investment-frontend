@@ -306,7 +306,7 @@ const Investments = ({userId}) => {
                         disabled={true}
                     />
                   </>
-                  
+
                 ) 
                 : 
                 (
