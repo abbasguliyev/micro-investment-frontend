@@ -1,9 +1,9 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import axios from "../../axios";
 
 export const postLoginAsync = createAsyncThunk('postLoginAsync', async (data) => {
     try {
-        const res = await axios.post('users/login/', data, { headers: { 'Authorization': "" }})
+        const res = await axios.post('users/login/', data, {headers: {'Authorization': ""}})
         return res.data;
     } catch (error) {
         // If the API call fails, the error will be thrown and caught here.
@@ -13,7 +13,7 @@ export const postLoginAsync = createAsyncThunk('postLoginAsync', async (data) =>
 
 export const refreshTokenAsync = createAsyncThunk('refreshTokenAsync', async (data) => {
     try {
-        const res = await axios.post('users/refresh/', data, { headers: { 'Authorization': "" }})
+        const res = await axios.post('users/refresh/', data, {headers: {'Authorization': ""}})
         return res.data;
     } catch (error) {
         // If the API call fails, the error will be thrown and caught here.
@@ -43,8 +43,8 @@ export const postRegisterAsync = createAsyncThunk('postRegisterAsync', async (da
         }
         form.append("references", data.references)
         form.append("password", data.password)
-        
-        const res = await axios.post('users/', form, { headers: { 'Content-Type': 'multipart/form-data', 'Authorization': "" }})
+
+        const res = await axios.post('users/', form, {headers: {'Content-Type': 'multipart/form-data', 'Authorization': ""}})
         return res.data;
     } catch (error) {
         throw {'message': error.response.data.detail};
@@ -54,43 +54,43 @@ export const postRegisterAsync = createAsyncThunk('postRegisterAsync', async (da
 export const putUserProfileAsync = createAsyncThunk('putUserProfileAsync', async (data) => {
     try {
         const form = new FormData();
-        if (data.first_name != null){
+        if (data.first_name != null) {
             form.append("first_name", data.first_name)
         }
-        if (data.last_name != null){
+        if (data.last_name != null) {
             form.append("last_name", data.last_name)
         }
-        if (data.email != null){
+        if (data.email != null) {
             form.append("email", data.email)
         }
-        if (data.birthdate != null){
+        if (data.birthdate != null) {
             form.append("birthdate", data.birthdate)
         }
-        if (data.address != null){
+        if (data.address != null) {
             form.append("address", data.address)
         }
-        if (data.marital_status != null){
+        if (data.marital_status != null) {
             form.append("marital_status", data.marital_status)
         }
-        if (data.employment_status != null){
+        if (data.employment_status != null) {
             form.append("employment_status", data.employment_status)
         }
-        if (data.housing_status != null){
+        if (data.housing_status != null) {
             form.append("housing_status", data.housing_status)
         }
-        if (data.phone_number != null){
+        if (data.phone_number != null) {
             form.append("phone_number", data.phone_number)
         }
-        if (data.credit_cart_number != null){
+        if (data.credit_cart_number != null) {
             form.append("credit_cart_number", data.credit_cart_number)
         }
-        if (data.debt_amount != null){
+        if (data.debt_amount != null) {
             form.append("debt_amount", data.debt_amount)
         }
-        if (data.monthly_income != null){
+        if (data.monthly_income != null) {
             form.append("monthly_income", data.monthly_income)
         }
-        if (data.about != null){
+        if (data.about != null) {
             form.append("about", data.about)
         }
         if (data.profile_picture != null) {
@@ -105,7 +105,7 @@ export const putUserProfileAsync = createAsyncThunk('putUserProfileAsync', async
         if (data.business_activities != null) {
             form.append("business_activities", data.business_activities)
         }
-        const res = await axios.put(`users/${data.id}/`, form, { headers: { 'Content-Type': 'multipart/form-data' }});
+        const res = await axios.put(`users/${data.id}/`, form, {headers: {'Content-Type': 'multipart/form-data'}});
         return res.data;
     } catch (error) {
         throw {'message': error.response.data.detail};
@@ -126,9 +126,9 @@ export const getAllUsersAsync = createAsyncThunk('getAllUsersAsync', async (valu
     if (values.fullname == undefined) {
         values.fullname = ""
     }
-    
+
     try {
-        const res = await axios.get(`users/?limit=10&offset=${values.offset}&fullname=${values.fullname}&birthdate=${values.birthdate}&marital_status=${values.marital_status}&employment_status=${values.employment_status}&housing_status=${values.housing_status}&phone_number=${values.phone_number}&monthly_income=${values.monthly_income}&monthly_income__gte=${values.monthly_income__gte}&monthly_income__lte=${values.monthly_income__lte}&is_active=${values.is_active}`, { headers: { 'Authorization': '' }})
+        const res = await axios.get(`users/?limit=10&offset=${values.offset}&fullname=${values.fullname}&birthdate=${values.birthdate}&marital_status=${values.marital_status}&employment_status=${values.employment_status}&housing_status=${values.housing_status}&phone_number=${values.phone_number}&monthly_income=${values.monthly_income}&monthly_income__gte=${values.monthly_income__gte}&monthly_income__lte=${values.monthly_income__lte}&is_active=${values.is_active}`, {headers: {'Authorization': ''}})
         return res.data;
     } catch (error) {
         // If the API call fails, the error will be thrown and caught here.
@@ -158,7 +158,7 @@ export const deleteUserAsync = createAsyncThunk('deleteUserAsync', async (values
 
 export const resetPasswordAsync = createAsyncThunk('resetPasswordAsync', async (values) => {
     try {
-        const res = await axios.post(`users/password_reset/`, values, { headers: { 'Authorization': '' }})
+        const res = await axios.post(`users/password_reset/`, values, {headers: {'Authorization': ''}})
         return res.data;
     } catch (error) {
         // If the API call fails, the error will be thrown and caught here.
@@ -168,7 +168,7 @@ export const resetPasswordAsync = createAsyncThunk('resetPasswordAsync', async (
 
 export const resetPasswordValidateAsync = createAsyncThunk('resetPasswordValidateAsync', async (values) => {
     try {
-        const res = await axios.post(`users/password_reset/validate_token/`, values, { headers: { 'Authorization': '' }})
+        const res = await axios.post(`users/password_reset/validate_token/`, values, {headers: {'Authorization': ''}})
         return res.data;
     } catch (error) {
         // If the API call fails, the error will be thrown and caught here.
@@ -178,7 +178,7 @@ export const resetPasswordValidateAsync = createAsyncThunk('resetPasswordValidat
 
 export const resetPasswordConfirmAsync = createAsyncThunk('resetPasswordConfirmAsync', async (values) => {
     try {
-        const res = await axios.post(`users/password_reset/confirm/`, values, { headers: { 'Authorization': '' }})
+        const res = await axios.post(`users/password_reset/confirm/`, values, {headers: {'Authorization': ''}})
         return res.data;
     } catch (error) {
         // If the API call fails, the error will be thrown and caught here.
@@ -188,10 +188,20 @@ export const resetPasswordConfirmAsync = createAsyncThunk('resetPasswordConfirmA
 
 export const changePasswordAsync = createAsyncThunk('changePasswordAsync', async (values) => {
     try {
-        const res = await axios.post(`users/change-password/`, values, { headers: { 'Authorization': '' }})
+        const res = await axios.post(`users/change-password/`, values, {headers: {'Authorization': ''}})
         return res.data;
     } catch (error) {
         // If the API call fails, the error will be thrown and caught here.
+        throw {'message': error.response.data.detail};
+    }
+})
+
+
+export const postDebtFundExpense = createAsyncThunk('postDebtFundExpense', async (data) => {
+    try {
+        const res = await axios.post('users/debt-fund-expense/', data)
+        return res.data;
+    } catch (error) {
         throw {'message': error.response.data.detail};
     }
 })
@@ -208,12 +218,12 @@ export const AuthSlice = createSlice({
         isLoading: false,
         error: null,
         successMsg: null,
-        totalPage: 0,   
+        totalPage: 0,
         pageLimit: 10
     },
     reducers: {
         resetAuthSlice: (state) => {
-            return { ...state, isLoading: false, error: null, successMsg: null };
+            return {...state, isLoading: false, error: null, successMsg: null};
         }
     },
     extraReducers: (builder) => {
@@ -396,8 +406,22 @@ export const AuthSlice = createSlice({
             state.error = action.error.message;
             state.isLoading = false;
         })
+
+
+        // Debt Fund expense Reducers
+        builder.addCase(postDebtFundExpense.pending, (state, action) => {
+            state.isLoading = true;
+        })
+        builder.addCase(postDebtFundExpense.fulfilled, (state, action) => {
+            state.isLoading = false;
+            state.successMsg = action.payload.detail;
+        })
+        builder.addCase(postDebtFundExpense.rejected, (state, action) => {
+            state.error = action.error.message;
+            state.isLoading = false;
+        })
     }
 })
 
-export const { resetAuthSlice } = AuthSlice.actions;
+export const {resetAuthSlice} = AuthSlice.actions;
 export default AuthSlice.reducer;
