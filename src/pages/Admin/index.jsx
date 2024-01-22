@@ -58,8 +58,8 @@ function Admin() {
         {
           companyBalance ? companyBalance.map((balance) => (
             <div key={balance.id} className='mx-auto max-w-7xl py-6 sm:px-6 lg:px-8 flex flex-col text-lg text-xl font-bold'>
-              <p>Sədəqə fondu: {balance.charity_fund} AZN</p>
-              <p>Borc Fondu: {balance.debt_fund} AZN</p> 
+              <p>Fonddakı sədəqə: {balance.charity_fund} AZN</p>
+              <p>Fonddakı borc: {balance.debt_fund} AZN</p> 
               <p>Fondun ümumi balansı: {parseFloat(balance.debt_fund) + parseFloat(balance.charity_fund)} AZN</p> 
             </div>
           )) : ""
