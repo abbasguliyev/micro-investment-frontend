@@ -29,6 +29,7 @@ function AdminInvestments() {
     const formik = useFormik({
         initialValues: {
             fullname: "",
+            entrepreneur__project_name: "",
             is_amount_sended: "",
             is_amount_sended_submitted: "",
             amount_must_send__gt: "0.00"
@@ -85,6 +86,18 @@ function AdminInvestments() {
                 <div className="w-full sm:w-full md:w-full lg:w-1/6 pr-3">
                     <b>Filter</b>
                     <form className='rounded h-2/4 mb-5 mt-2 flex flex-col' onSubmit={formik.handleSubmit}>
+                        <AuthInput
+                            label="Sifariş nömrəsi"
+                            id="entrepreneur__project_name"
+                            name="entrepreneur__project_name"
+                            type="text"
+                            value={formik.values.entrepreneur__project_name}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            touched={formik.touched.entrepreneur__project_name}
+                            error={formik.errors.entrepreneur__project_name}
+                            style={"mb-2"}
+                        />
                         <AuthInput
                             label="İstifadəçi adı"
                             id="fullname"

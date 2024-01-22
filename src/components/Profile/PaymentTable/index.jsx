@@ -1,17 +1,12 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { Modal, Pagination } from 'antd'
 
-import style from "./style.module.css"
-
-import { getMeAsync, getUserDetailAsync } from '../../../redux/AuthSlice/AuthSlice'
-import { getAllInvestmentReportsAsync, getAllInvestmentsAsync, postInvestmentReportAsync, putInvestmentAsync, putInvestmentReportAsync } from '../../../redux/InvestmentSlice/InvestmentSlice'
+import { getUserDetailAsync } from '../../../redux/AuthSlice/AuthSlice'
+import { getAllInvestmentsAsync, putInvestmentAsync } from '../../../redux/InvestmentSlice/InvestmentSlice'
 import { FaCheck } from "react-icons/fa";
 import { FaXmark } from "react-icons/fa6";
-import { useFormik } from 'formik'
-import AuthInput from '../../InputComponents/AuthInput'
-import TextAreaInput from '../../InputComponents/TextAreaInput'
 import { getCompanyBalanceAsync } from '../../../redux/CompanyBalanceSlice/CompanyBalanceSlice'
 import { CgSpinner } from 'react-icons/cg'
 
@@ -43,6 +38,7 @@ const PaymentTable = ({userId}) => {
             getAllInvestmentsAsync({"investor": userId, "entrepreneur": "", "offset": offset, "amount_must_send__gt": "0.00"})
           );
           dispatch(getCompanyBalanceAsync())
+          dispatch(getUserDetailAsync({"id": userId}))
       })
   };
 

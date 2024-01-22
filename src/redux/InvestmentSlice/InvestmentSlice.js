@@ -3,7 +3,7 @@ import axios from "../../axios";
 
 export const getAllInvestmentsAsync = createAsyncThunk('getAllInvestmentsAsync', async (values) => {
     try {
-        const res = await axios.get(`investments/?limit=10&offset=${values.offset}&fullname=${values.fullname ? values.fullname : ""}&investor=${values.investor ? values.investor : ""}&entrepreneur=${values.entrepreneur ? values.entrepreneur : ""}&amount_must_send__gt=${values.amount_must_send__gt ? values.amount_must_send__gt : ""}&is_amount_sended=${values.is_amount_sended ? values.is_amount_sended : ""}&is_amount_sended_submitted=${values.is_amount_sended_submitted ? values.is_amount_sended_submitted : ""}&is_from_debt_fund=${values.is_from_debt_fund ? values.is_from_debt_fund : ""}`)
+        const res = await axios.get(`investments/?limit=10&offset=${values.offset}&entrepreneur__project_name__icontains=${values.entrepreneur__project_name ? values.entrepreneur__project_name : ""}&fullname=${values.fullname ? values.fullname : ""}&investor=${values.investor ? values.investor : ""}&entrepreneur=${values.entrepreneur ? values.entrepreneur : ""}&amount_must_send__gt=${values.amount_must_send__gt ? values.amount_must_send__gt : ""}&is_amount_sended=${values.is_amount_sended ? values.is_amount_sended : ""}&is_amount_sended_submitted=${values.is_amount_sended_submitted ? values.is_amount_sended_submitted : ""}&is_from_debt_fund=${values.is_from_debt_fund ? values.is_from_debt_fund : ""}`)
         return res.data;
     } catch (error) {
         throw {'message': error.response.data.detail};
