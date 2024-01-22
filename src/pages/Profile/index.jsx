@@ -130,7 +130,7 @@ function Profile() {
                                 <p className='text-slate-400'>Qazandığı mənfəət:</p>
                                 <span>
                             {
-                                user ? <>{user && user.money_given_to_a_charity_fund_count} AZN</> : "-"
+                                user ? <>{user && user.profit_earned} AZN</> : "-"
                             }
                           </span>
                             </div>
