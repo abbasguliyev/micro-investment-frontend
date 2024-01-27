@@ -12,7 +12,7 @@ import { CgSpinner } from "react-icons/cg";
 
 function Login() {
   const dispatch = useDispatch();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const formik = useFormik({
     initialValues: {
