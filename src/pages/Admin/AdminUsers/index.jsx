@@ -89,6 +89,7 @@ function AdminUsers() {
     const changeUserIsSuperuserStatus = (user) => {
         dispatch(putUserProfileAsync({"id": user.id, "is_superuser": !user.user.is_superuser}))
         .then(() => {
+            let offset = (currentPage - 1) * pageLimit;
             filterFormik.values.offset = offset;
             let filteredValues = { ...filterFormik.values };
             dispatch(getAllUsersAsync(filteredValues))
