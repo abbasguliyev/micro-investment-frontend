@@ -39,7 +39,7 @@ function EducationUpdate() {
             dispatch(putEducationAsync(values))
                 .unwrap()
                 .then(() => {
-                    navigate("/profile", {state: {id: me && me.id}});
+                    navigate(`/profile/${me && me.id}`);
                 });
         },
         validationSchema: validations,

@@ -199,7 +199,7 @@ function AdminUsers() {
                                         </td>
                                         <td className="border border-slate-700">
                                             <NavLink
-                                                to="/profile"
+                                                to={`/profile/${user.id}`}
                                                 state={{id: user.id}}
                                                 className="text-blue-700"
                                             >

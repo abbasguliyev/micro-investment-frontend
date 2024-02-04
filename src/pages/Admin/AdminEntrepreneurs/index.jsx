@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
     deleteInvestmentAsync,
     getAllInvestmentReportsAsync,
-    getAllInvestmentsAsync,
+    getAllInvestmentsAdminAsync,
     postInvestmentAsync,
     putInvestmentAsync,
     resetInvestmentSlice,
@@ -81,12 +81,12 @@ function AdminEntrepreneurs() {
         .then(() => {
             let offset = (currentPage - 1) * pageLimit;
             let iOffset = (currentInvestmentPage - 1) * pageLimit;
+            filterFormik.values.offset = offset;
             dispatch(
                 getAllEntrepreneurAsync(filterFormik.values)
             );
             dispatch(
-                getAllInvestmentsAsync({
-                    offset: iOffset,
+                getAllInvestmentsAdminAsync({
                     investor: "",
                     entrepreneur: investment.entrepreneur.id
                 })
@@ -127,7 +127,7 @@ function AdminEntrepreneurs() {
         let iOffset = (currentInvestmentPage - 1) * pageLimit;
         setEntrepreneur(entrepreneur);
         setIsEntrepreneurInvestmentsModalOpen(true);
-        dispatch(getAllInvestmentsAsync({offset: iOffset, investor: "", entrepreneur: entrepreneur.id}))
+        dispatch(getAllInvestmentsAdminAsync({investor: "", entrepreneur: entrepreneur.id}))
     };
 
     const handleEntrepreneurInvestmentsModalOk = () => {
@@ -152,7 +152,7 @@ function AdminEntrepreneurs() {
             dispatch(
                 getAllEntrepreneurAsync(filterFormik.values)
             );
-            dispatch(getAllInvestmentsAsync({offset: iOffset, investor: "", entrepreneur: entrepreneur.id}))
+            dispatch(getAllInvestmentsAdminAsync({investor: "", entrepreneur: entrepreneur.id}))
             dispatch(
                 getCompanyBalanceAsync()
             )
@@ -215,8 +215,7 @@ function AdminEntrepreneurs() {
                 getAllEntrepreneurAsync(filterFormik.values)
             );
             dispatch(
-                getAllInvestmentsAsync({
-                    offset: iOffset,
+                getAllInvestmentsAdminAsync({
                     investor: "",
                     entrepreneur: entrepreneur.id
                 })
@@ -280,8 +279,7 @@ function AdminEntrepreneurs() {
                 );
                 dispatch(
                     
-                    getAllInvestmentsAsync({
-                        offset: 0,
+                    getAllInvestmentsAdminAsync({
                         investor: "",
                         entrepreneur: entrepreneur.id
                     })
@@ -330,8 +328,7 @@ function AdminEntrepreneurs() {
             let filteredValues = { ...filterFormik.values };
             dispatch(getAllEntrepreneurAsync(filteredValues));
             dispatch(
-                getAllInvestmentsAsync({
-                    offset: iOffset,
+                getAllInvestmentsAdminAsync({
                     investor: "",
                     entrepreneur: entrepreneur.id
                 })
@@ -348,8 +345,7 @@ function AdminEntrepreneurs() {
             let filteredValues = { ...filterFormik.values };
             dispatch(getAllEntrepreneurAsync(filteredValues));
             dispatch(
-                getAllInvestmentsAsync({
-                    offset: iOffset,
+                getAllInvestmentsAdminAsync({
                     investor: "",
                     entrepreneur: entrepreneur.id
                 })
@@ -360,7 +356,7 @@ function AdminEntrepreneurs() {
     const changeInvestmentsPage = (e) => {
         setCurrentInvestmentPage(e);
         let iOffset = (e - 1) * pageLimit;
-        dispatch(getAllInvestmentsAsync({offset: iOffset, investor: "", investment: "", entrepreneur: entrepreneur.id}));
+        dispatch(getAllInvestmentsAdminAsync({investor: "", investment: "", entrepreneur: entrepreneur.id}));
     };
 
     return (
@@ -761,20 +757,20 @@ function AdminEntrepreneurs() {
                                     </table>
                                 </div>
                                 {/* ***************** Pagination ********************* */}
-                                <div>
-                                    <div className="flex justify-center mt-10">
-                                        <Pagination
-                                            onChange={(e) => {
-                                                changeInvestmentsPage(e);
-                                            }}
-                                            className="pagination"
-                                            current={currentInvestmentPage}
-                                            total={investmentstotalPage}
-                                            defaultPageSize={pageLimit}
-                                            showSizeChanger={false}
-                                        />
-                                    </div>
-                                </div>
+                                {/*<div>*/}
+                                {/*    <div className="flex justify-center mt-10">*/}
+                                {/*        <Pagination*/}
+                                {/*            onChange={(e) => {*/}
+                                {/*                changeInvestmentsPage(e);*/}
+                                {/*            }}*/}
+                                {/*            className="pagination"*/}
+                                {/*            current={currentInvestmentPage}*/}
+                                {/*            total={investmentstotalPage}*/}
+                                {/*            defaultPageSize={pageLimit}*/}
+                                {/*            showSizeChanger={false}*/}
+                                {/*        />*/}
+                                {/*    </div>*/}
+                                {/*</div>*/}
                             </>
                         )
                     }

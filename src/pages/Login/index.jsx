@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import {useEffect, useState} from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { useFormik } from 'formik';
@@ -8,9 +8,11 @@ import style from "./style.module.css"
 import AuthInput from '../../components/InputComponents/AuthInput';
 import ResponseMessage from '../../components/ResponseMessage';
 import { CgSpinner } from "react-icons/cg";
+import {FaRegEye, FaRegEyeSlash} from "react-icons/fa";
 
 
 function Login() {
+  const [showPassword, setShowPassword] = useState(false)
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -58,7 +60,19 @@ function Login() {
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
           <form className="space-y-6" onSubmit={formik.handleSubmit}>
             <AuthInput label="Email address" id="email" name="email" value={formik.values.email} type="email" onChange={formik.handleChange} onBlur={formik.handleBlur} touched={formik.touched.email} error={formik.errors.email} style={style} />
-            <AuthInput label="Parol" id="password" name="password" value={formik.values.password}  type="password" onChange={formik.handleChange} onBlur={formik.handleBlur} touched={formik.touched.password} error={formik.errors.password} style={style} />
+            <div className={`relative`}>
+              <AuthInput label="Parol" id="password" name="password" value={formik.values.password}  type={showPassword ? "text" : "password"} onChange={formik.handleChange} onBlur={formik.handleBlur} touched={formik.touched.password} error={formik.errors.password} style={style} />
+              {
+                  formik.values.password !== "" && (
+                      showPassword ? (
+                          <FaRegEye className={`absolute right-2 bottom-3 cursor-pointer`} onClick={() => setShowPassword(!showPassword)}/>
+                      ) : (
+                          <FaRegEyeSlash className={`absolute right-2 bottom-3 cursor-pointer`} onClick={() => setShowPassword(!showPassword)}/>
+                      )
+                  )
+              }
+            </div>
+
             <div className="text-sm">
               <NavLink to="/reset-password" className="font-semibold text-indigo-600 hover:text-indigo-500">
                 Şifrəni unutdun?

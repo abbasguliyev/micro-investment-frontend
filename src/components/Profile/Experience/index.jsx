@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { NavLink } from "react-router-dom";
+import { useEffect, useState } from "react";
+import {NavLink, useParams} from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { getMeAsync, getUserDetailAsync } from "../../../redux/AuthSlice/AuthSlice";
 import {
@@ -10,7 +10,8 @@ import { Modal, Tooltip } from "antd";
 import { MdDelete, MdModeEditOutline } from "react-icons/md";
 import { CgSpinner } from "react-icons/cg";
 
-const Experience = ({userId}) => {
+const Experience = () => {
+    let {id} = useParams();
     const [isExperienceModalOpen, setIsExperienceModalOpen] = useState(false);
     const [experienceId, setExperienceId] = useState(null);
     const dispatch = useDispatch();
@@ -23,7 +24,7 @@ const Experience = ({userId}) => {
     const handleOk = () => {
         setIsExperienceModalOpen(false);
         dispatch(deleteExperienceAsync({ id: experienceId })).then(() => {
-            dispatch(getExperiencesAsync({ me: userId }));
+            dispatch(getExperiencesAsync({ me: id }));
         });
     };
 
@@ -37,14 +38,14 @@ const Experience = ({userId}) => {
 
     useEffect(() => {
         dispatch(getMeAsync())
-        dispatch(getUserDetailAsync({"id": userId}))
-        dispatch(getExperiencesAsync({ me: userId }));
+        dispatch(getUserDetailAsync({"id": id}))
+        dispatch(getExperiencesAsync({ me: id }));
     }, []);
 
     return (
         <div className="mt-4 mx-4 flex flex-col">
             {
-                me && me.id == userId && (
+                me && me.id == id && (
                     <NavLink
                         to="/experience-create"
                         className={`rounded btn-main-bg text-center w-40 h-10 p-2 mb-2`}

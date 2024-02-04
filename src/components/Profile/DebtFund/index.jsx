@@ -1,15 +1,15 @@
-import React, {useEffect, useState} from "react";
+import {useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {getAllInvestmentsAsync, putInvestmentAsync} from "../../../redux/InvestmentSlice/InvestmentSlice.js";
-import {getCompanyBalanceAsync} from "../../../redux/CompanyBalanceSlice/CompanyBalanceSlice.js";
 import {getUserDetailAsync, postDebtFundExpense} from "../../../redux/AuthSlice/AuthSlice.js";
 import AuthInput from "../../InputComponents/AuthInput.jsx";
 import {useFormik} from "formik";
 import validations from "../../../pages/Admin/AdminInvestments/validation.js";
 import style from './style.module.css'
+import {useParams} from "react-router-dom";
 
 
-function DebtFund({userId}) {
+function DebtFund() {
+    let {id} = useParams();
     const dispatch = useDispatch()
 
     let user = useSelector(state => state.auth.user)
@@ -31,7 +31,7 @@ function DebtFund({userId}) {
 
 
     useEffect(() => {
-        dispatch(getUserDetailAsync({"id": userId}))
+        dispatch(getUserDetailAsync({"id": id}))
     }, [dispatch])
 
     return (

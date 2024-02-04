@@ -12,9 +12,11 @@ import { getAllUsersAsync, postRegisterAsync, resetAuthSlice } from "../../redux
 import ResponseMessage from "../../components/ResponseMessage";
 import validations from "./validation";
 import Checkbox from "../../components/InputComponents/Checkbox";
+import {FaRegEye, FaRegEyeSlash} from "react-icons/fa";
 
 
 function Register() {
+    const [showPassword, setShowPassword] = useState(false)
     const dispatch = useDispatch();
     const navigate = useNavigate()
 
@@ -352,18 +354,29 @@ function Register() {
                             style={style}
                         />
                         
-                        <AuthInput
-                            label="Parol"
-                            id="password"
-                            name="password"
-                            type="password"
-                            value={formik.values.password}
-                            onChange={formik.handleChange}
-                            onBlur={formik.handleBlur}
-                            touched={formik.touched.password}
-                            error={formik.errors.password}
-                            style={style}
-                        />
+                        <div className={`relative`}>
+                            <AuthInput
+                                label="Parol"
+                                id="password"
+                                name="password"
+                                type={showPassword ? "text" : "password"}
+                                value={formik.values.password}
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                                touched={formik.touched.password}
+                                error={formik.errors.password}
+                                style={style}
+                            />
+                            {
+                                formik.values.password !== "" && (
+                                    showPassword ? (
+                                        <FaRegEye className={`absolute right-2 bottom-3 cursor-pointer`} onClick={() => setShowPassword(!showPassword)}/>
+                                    ) : (
+                                        <FaRegEyeSlash className={`absolute right-2 bottom-3 cursor-pointer`} onClick={() => setShowPassword(!showPassword)}/>
+                                    )
+                                )
+                            }
+                        </div>
                         <div>
                             <button
                                 type="submit"
