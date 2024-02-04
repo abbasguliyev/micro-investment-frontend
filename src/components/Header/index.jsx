@@ -162,7 +162,7 @@ function Header() {
                       <Menu.Item>
                         {() => (
                           <NavLink
-                            to="/profile"
+                            to={`/profile/${me && me.id}`}
                             state={{id: me && me.id}}
                             className={classNames(location.pathname == '/profile' ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
                           >

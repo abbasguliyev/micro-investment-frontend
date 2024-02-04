@@ -45,7 +45,7 @@ function ProfileUpdate() {
             }
             dispatch(putUserProfileAsync(values))
             .then(() => {
-                navigate("/profile", {state: {id: me && me.id}})
+                navigate(`/profile/${me && me.id}`);
             })
         },
     });

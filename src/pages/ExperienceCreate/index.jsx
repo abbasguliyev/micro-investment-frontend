@@ -39,7 +39,7 @@ function ExperienceCreate() {
             dispatch(postExperiencesAsync(values))
                 .unwrap()
                 .then(() => {
-                    navigate("/profile", {state: {id: me && me.id}});
+                    navigate(`/profile/${me && me.id}`);
                 });
         },
         validationSchema: validations,

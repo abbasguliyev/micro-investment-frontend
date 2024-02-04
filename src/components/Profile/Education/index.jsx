@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { NavLink } from "react-router-dom";
+import { useEffect, useState } from "react";
+import {NavLink, useParams} from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { getMeAsync, getUserDetailAsync } from "../../../redux/AuthSlice/AuthSlice";
 import {
@@ -12,7 +12,8 @@ import { Modal } from "antd";
 import ResponseMessage from "../../ResponseMessage";
 import { CgSpinner } from "react-icons/cg";
 
-const Education = ({userId}) => {
+const Education = () => {
+    let {id} = useParams();
     const [isEducationModalOpen, setIsEducationModalOpen] = useState(false);
     const [educationId, setEducationId] = useState(null);
     const dispatch = useDispatch();
@@ -25,7 +26,7 @@ const Education = ({userId}) => {
     const handleOk = () => {
         setIsEducationModalOpen(false);
         dispatch(deleteEducationAsync({ id: educationId })).then(() => {
-            dispatch(getEducationsAsync({ me: userId }));
+            dispatch(getEducationsAsync({ me: id }));
         });
     };
 
@@ -41,8 +42,8 @@ const Education = ({userId}) => {
 
     useEffect(() => {
         dispatch(getMeAsync())
-        dispatch(getUserDetailAsync({"id": userId}))
-        dispatch(getEducationsAsync({ me: userId }));
+        dispatch(getUserDetailAsync({"id": id}))
+        dispatch(getEducationsAsync({ me: id }));
     }, []);
 
     return (
@@ -62,7 +63,7 @@ const Education = ({userId}) => {
                 />
             )}
             {
-                me && me.id == userId && (
+                me && me.id == id && (
                     <NavLink
                         to="/education-create"
                         className={`rounded btn-main-bg text-center w-40 h-10 p-2 mb-2`}

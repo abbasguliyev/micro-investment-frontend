@@ -10,6 +10,15 @@ export const getAllInvestmentsAsync = createAsyncThunk('getAllInvestmentsAsync',
     }
 })
 
+export const getAllInvestmentsAdminAsync = createAsyncThunk('getAllInvestmentsAdminAsync', async (values) => {
+    try {
+        const res = await axios.get(`investments/admin-investments/?entrepreneur__project_name__icontains=${values.entrepreneur__project_name ? values.entrepreneur__project_name : ""}&fullname=${values.fullname ? values.fullname : ""}&investor=${values.investor ? values.investor : ""}&entrepreneur=${values.entrepreneur ? values.entrepreneur : ""}&amount_must_send__gt=${values.amount_must_send__gt ? values.amount_must_send__gt : ""}&is_amount_sended=${values.is_amount_sended ? values.is_amount_sended : ""}&is_amount_sended_submitted=${values.is_amount_sended_submitted ? values.is_amount_sended_submitted : ""}&is_from_debt_fund=${values.is_from_debt_fund ? values.is_from_debt_fund : ""}`)
+        return res.data;
+    } catch (error) {
+        throw {'message': error.response.data.detail};
+    }
+})
+
 export const postInvestmentAsync = createAsyncThunk('postInvestmentAsync', async (data) => {
     try {
         const res = await axios.post('investments/', data)
@@ -85,6 +94,24 @@ export const InvestmentSlice = createSlice({
         }
     },
     extraReducers: (builder) => {
+        // Admin Investments Reducers
+        builder.addCase(getAllInvestmentsAdminAsync.pending, (state, action) => {
+            state.isLoading = true;
+            state.error = null;
+            state.successMsg = null;
+        })
+        builder.addCase(getAllInvestmentsAdminAsync.fulfilled, (state, action) => {
+            state.isLoading = false;
+            state.investments = action.payload;
+            state.error = null;
+            state.successMsg = null;
+        })
+        builder.addCase(getAllInvestmentsAdminAsync.rejected, (state, action) => {
+            state.error = action.error.message;
+            state.isLoading = false;
+            state.successMsg = null;
+        })
+
         // Investments Reducers
         builder.addCase(getAllInvestmentsAsync.pending, (state, action) => {
             state.isLoading = true;

@@ -117,7 +117,7 @@ function App() {
                       <Route path='/entrepreneur' element={<EntrepreneurCreate/>} />
                       <Route path='/entrepreneur-image-create' element={<EntrepreneurImageCreate/>} />
                       <Route path='/profile' element={<Outlet/>}>
-                        <Route path='' element={<Profile/>} />
+                        <Route path=':id' element={<Profile/>} />
                         <Route path='profile-update' element={<ProfileUpdate/>} />
                       </Route>
                       <Route path='/login' element={<Login/>} />

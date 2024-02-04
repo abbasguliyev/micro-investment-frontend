@@ -1,12 +1,13 @@
-import React, { useEffect, useState } from 'react'
-import { NavLink } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import {NavLink, useParams} from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { Pagination } from 'antd'
-import { getMeAsync, getUserDetailAsync } from '../../../redux/AuthSlice/AuthSlice'
+import { getUserDetailAsync } from '../../../redux/AuthSlice/AuthSlice'
 import { getAllEntrepreneurAsync } from '../../../redux/EntrepreneurSlice/EntrepreneurSlice'
 import { CgSpinner } from 'react-icons/cg'
 
-const EntreprenuerTable = ({userId}) => {
+const EntreprenuerTable = () => {
+  let {id} = useParams();
   let [currentPage, setCurrentPage] = useState(1);
   const dispatch = useDispatch()
 
@@ -18,12 +19,12 @@ const EntreprenuerTable = ({userId}) => {
   const changePage = (e) => {
     setCurrentPage(e);
     let offset = (e - 1) * pageLimit;
-    dispatch(getAllEntrepreneurAsync({owner: userId, offset: offset, start_date: "", end_date: ""}));
+    dispatch(getAllEntrepreneurAsync({owner: id, offset: offset, start_date: "", end_date: ""}));
   };
 
   useEffect(() => {
-    dispatch(getUserDetailAsync({"id": userId}))
-    dispatch(getAllEntrepreneurAsync({owner: userId, offset: 0, start_date: "", end_date: ""}))
+    dispatch(getUserDetailAsync({"id": id}))
+    dispatch(getAllEntrepreneurAsync({owner: id, offset: 0, start_date: "", end_date: ""}))
   }, [])
 
   return (
