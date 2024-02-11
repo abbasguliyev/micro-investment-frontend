@@ -19,7 +19,7 @@ function DebtFund() {
             amount: 0
         },
         onSubmit: (values, {resetForm}) => {
-            values.user = user.id;
+            values.user = user.user.id;
             dispatch(postDebtFundExpense(values))
                 .then(() => {
                     dispatch(getUserDetailAsync({id: user.id}))
