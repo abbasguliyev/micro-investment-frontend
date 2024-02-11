@@ -203,34 +203,34 @@ function AdminInvestments() {
                             <table className="table-auto w-full h-fit">
                                 <thead>
                                     <tr>
-                                        <th className="border border-slate-600">Adı Soyadı</th>
-                                        <th className="border border-slate-600">Sifariş</th>
-                                        <th className="border border-slate-600">İnvestisiya tarixi</th>
-                                        <th className="border border-slate-600">Göndərməli olduğu</th>
-                                        <th className="border border-slate-600">Aktiv/Deaktiv</th>
-                                        <th className="border border-slate-600">Göndərilmə statusu</th>
-                                        <th className="border border-slate-600">Admin təsdiqləmə statusu?</th>
+                                        <th className="border border-slate-600 w-20 text-xs">Adı Soyadı</th>
+                                        <th className="border border-slate-600 w-20 text-xs">Sifariş</th>
+                                        <th className="border border-slate-600 w-20 text-xs">İnvestisiya tarixi</th>
+                                        <th className="border border-slate-600 w-20 text-xs">Göndərməli olduğu</th>
+                                        <th className="border border-slate-600 w-20 text-xs">Aktiv/Deaktiv</th>
+                                        <th className="border border-slate-600 w-10 text-xs">Göndərilmə statusu</th>
+                                        <th className="border border-slate-600 w-10 text-xs">Admin təsdiqləmə statusu?</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {investments.map((investment) => (
                                         <tr key={investment.id}>
-                                            <td className="border border-slate-700">
+                                            <td className="border border-slate-700 text-xs text-center">
                                                 {investment.investor.user.first_name} {investment.investor.user.last_name}
                                             </td>
-                                            <td className="border border-slate-700">
+                                            <td className="border border-slate-700 text-xs text-center">
                                                 {investment.entrepreneur.project_name}
                                             </td>
-                                            <td className="border border-slate-700">
+                                            <td className="border border-slate-700 text-xs text-center">
                                                 {investment.investment_date}
                                             </td>
-                                            <td className="border border-slate-700">
+                                            <td className="border border-slate-700 text-xs text-center">
                                                 {investment.amount_must_send}
                                             </td>
-                                            <td className="border border-slate-700">
+                                            <td className="border border-slate-700 text-xs text-center">
                                                 {investment.is_submitted ? (<p className="success">Aktiv</p>) : (<p className="error">Deaktiv</p>)}
                                             </td>
-                                            <td className="border border-slate-700 py-2 w-40">
+                                            <td className="border border-slate-700 text-xs text-center py-2 w-40">
                                                 {
                                                     investment.is_amount_sended ? (
                                                     <FaCheck className='success mx-20' />

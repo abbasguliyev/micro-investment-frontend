@@ -1,12 +1,10 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
 import { deleteUserAsync, getAllUsersAsync, putUserProfileAsync, resetAuthSlice } from "../../../redux/AuthSlice/AuthSlice";
 import { MdDelete } from "react-icons/md";
 import { Modal, Pagination } from "antd";
 import ResponseMessage from "../../../components/ResponseMessage";
-import { FaCheck } from "react-icons/fa";
-import { FaXmark } from "react-icons/fa6";
 import AuthInput from "../../../components/InputComponents/AuthInput";
 import style from "./style.module.css"
 import { useFormik } from "formik";
@@ -137,45 +135,45 @@ function AdminUsers() {
                                 style={"mb-2"}
                             />
                             <div>
-                            <label className="block text-sm font-medium leading-6 text-gray-900">
-                                Aktiv/Deaktiv
-                            </label>
-                            <div className="mt-2">
-                                <RadioInput
-                                    label="Aktiv"
-                                    id="active"
-                                    name="is_active"
-                                    type="radio"
-                                    value={true}
-                                    onChange={filterFormik.handleChange}
-                                    onBlur={filterFormik.handleBlur}
-                                    style={style}
-                                />
-                                <RadioInput
-                                    label="Deaktiv"
-                                    id="deactive"
-                                    name="is_active"
-                                    type="radio"
-                                    value={false}
-                                    onChange={filterFormik.handleChange}
-                                    onBlur={filterFormik.handleBlur}
-                                    style={style}
-                                />
-                                <RadioInput
-                                    label="Hər İkisi"
-                                    id="both_active"
-                                    name="is_active"
-                                    type="radio"
-                                    value={""}
-                                    onChange={filterFormik.handleChange}
-                                    onBlur={filterFormik.handleBlur}
-                                    style={style}
-                                />
-                                {
-                                    filterFormik.touched.is_active && filterFormik.errors.is_active && (<div className='error'>{filterFormik.errors.is_active}</div>)
-                                }
+                                <label className="block text-sm font-medium leading-6 text-gray-900">
+                                    Aktiv/Deaktiv
+                                </label>
+                                <div className="mt-2">
+                                    <RadioInput
+                                        label="Aktiv"
+                                        id="active"
+                                        name="is_active"
+                                        type="radio"
+                                        value={true}
+                                        onChange={filterFormik.handleChange}
+                                        onBlur={filterFormik.handleBlur}
+                                        style={style}
+                                    />
+                                    <RadioInput
+                                        label="Deaktiv"
+                                        id="deactive"
+                                        name="is_active"
+                                        type="radio"
+                                        value={false}
+                                        onChange={filterFormik.handleChange}
+                                        onBlur={filterFormik.handleBlur}
+                                        style={style}
+                                    />
+                                    <RadioInput
+                                        label="Hər İkisi"
+                                        id="both_active"
+                                        name="is_active"
+                                        type="radio"
+                                        value={""}
+                                        onChange={filterFormik.handleChange}
+                                        onBlur={filterFormik.handleBlur}
+                                        style={style}
+                                    />
+                                    {
+                                        filterFormik.touched.is_active && filterFormik.errors.is_active && (<div className='error'>{filterFormik.errors.is_active}</div>)
+                                    }
+                                </div>
                             </div>
-                        </div>
                             <button type='submit' className={`${style.search_btn} btn-main-bg rounded mt-4`}>Axtar</button>
                         </form>
                     </div>
@@ -183,21 +181,21 @@ function AdminUsers() {
                         <table className="table-auto w-full h-fit">
                             <thead>
                                 <tr>
-                                    <th className="border border-slate-600">#</th>
-                                    <th className="border border-slate-600">Adı Soyadı</th>
-                                    <th className="border border-slate-600">email</th>
-                                    <th className="border border-slate-600">Aktiv</th>
-                                    <th className="border border-slate-600">Admin Status</th>
-                                    <th className="border border-slate-600"></th>
+                                    <th className="border border-slate-600 w-2 text-center text-xs">#</th>
+                                    <th className="border border-slate-600 w-24 text-xs">Adı Soyadı</th>
+                                    <th className="border border-slate-600 w-14 text-xs">email</th>
+                                    <th className="border border-slate-600 w-10 text-xs">Aktiv</th>
+                                    <th className="border border-slate-600 w-10 text-xs">Admin Status</th>
+                                    <th className="border border-slate-600 w-10 text-xs"></th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {users.map((user, i) => (
                                     <tr key={user.id}>
-                                        <td className="border border-slate-700">
+                                        <td className="border border-slate-700 text-xs text-center">
                                             {i+1}
                                         </td>
-                                        <td className="border border-slate-700">
+                                        <td className="border border-slate-700 text-xs">
                                             <NavLink
                                                 to={`/profile/${user.id}`}
                                                 state={{id: user.id}}
@@ -206,10 +204,10 @@ function AdminUsers() {
                                                 {user.user.first_name} {user.user.last_name}
                                             </NavLink>
                                         </td>
-                                        <td className="border border-slate-700">
+                                        <td className="border border-slate-700 text-xs">
                                             {user.user.email}
                                         </td>
-                                        <td className="border border-slate-700 cursor-pointer text-sky-700 w-fit">
+                                        <td className="border border-slate-700 text-xs cursor-pointer text-sky-700 w-fit">
                                             {
                                                 user.user.is_active ? (
                                                     <div onClick={() => changeUserActivity(user)} className="mr-auto ml-auto pointer-events-auto h-6 w-10 rounded-full p-1 ring-1 ring-inset transition duration-200 ease-in-out bg-indigo-600 ring-black/20">
@@ -222,7 +220,7 @@ function AdminUsers() {
                                                 )
                                             }
                                         </td>
-                                        <td className="border border-slate-700 cursor-pointer text-sky-700 w-fit">
+                                        <td className="border border-slate-700 text-xs cursor-pointer text-sky-700 w-fit">
                                             {
                                                 user.user.is_superuser ? (
                                                     <div onClick={() => changeUserIsSuperuserStatus(user)} className="mr-auto ml-auto pointer-events-auto h-6 w-10 rounded-full p-1 ring-1 ring-inset transition duration-200 ease-in-out bg-indigo-600 ring-black/20">
@@ -235,7 +233,7 @@ function AdminUsers() {
                                                 )
                                             }
                                         </td>
-                                        <td className="border border-slate-700 text-center">
+                                        <td className="border border-slate-700 text-xs text-center">
                                             <NavLink
                                                 className={`p-2`}
                                                 onClick={() => showModal(user.id)}

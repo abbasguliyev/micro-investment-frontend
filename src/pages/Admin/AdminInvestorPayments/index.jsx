@@ -1,10 +1,9 @@
-import { DatePicker, Form, Modal, Pagination, Select, Switch } from "antd";
-import React, { useEffect, useState } from "react";
+import { DatePicker, Modal, Pagination } from "antd";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
     getAllInvestmentReportsAsync,
     getAllInvestmentsAsync,
-    postInvestmentAsync,
     putInvestmentAsync,
     putInvestmentReportAsync,
     resetInvestmentSlice,
@@ -15,24 +14,15 @@ import AuthInput from "../../../components/InputComponents/AuthInput";
 import { useFormik } from "formik";
 import style from "./style.module.css";
 import {
-    deleteEntrepreneurAsync,
     getAllEntrepreneurAsync,
-    putEntrepreneurAsync,
     resetEntrepreneurSlice,
 } from "../../../redux/EntrepreneurSlice/EntrepreneurSlice";
-import Checkbox from "../../../components/InputComponents/Checkbox";
-import RadioInput from "../../../components/InputComponents/RadioInput";
-import { getAllUsersAsync } from "../../../redux/AuthSlice/AuthSlice";
-import { FaCheck } from "react-icons/fa";
-import { FaXmark } from "react-icons/fa6";
-import { MdDelete } from "react-icons/md";
 import { CgSpinner } from "react-icons/cg";
 
 function AdminInvestorPayments() {
     let [currentPage, setCurrentPage] = useState(1);
     const [startDate, setStartDate] = useState("");
     const [endDate, setEndDate] = useState("");
-    const [users, setUsers] = useState([]);
 
     const [isEntrepreneurInvestmentReportModalOpen, setIsEntrepreneurInvestmentReportModalOpen] =useState(false);
     const [entrepreneur, setEntrepreneur] = useState(null);
@@ -213,71 +203,78 @@ function AdminInvestorPayments() {
                         </div>
                     ) : (
                         <div className="w-full sm:w-full md:w-full lg:w-4/5 text-sm overflow-y-hidden overflow-x-auto">
-                            <table className="table-auto w-full h-fit">
+                            <table className="table-auto w-full h-fit text-xs">
                                 <thead>
-                                    <tr>
-                                        <th className="border border-slate-600 text-xs">Adı</th>
-                                        <th className="border border-slate-600 text-xs">
-                                            Ümumi investisiya
-                                        </th>
-                                        <th className="border border-slate-600 text-xs">Ümumi gəlir</th>
-                                        <th className="border border-slate-600 text-xs">
-                                            Yekun mənfəət
-                                        </th>
-                                        <th className="border border-slate-600 text-xs">
-                                            Toplanan məbləğ
-                                        </th>
-                                        <th className="border border-slate-600 text-xs">
-                                            Yekunlaşma tarixi
-                                        </th>
-                                        <th className="border border-slate-600 text-xs">
-                                            Başlama tarixi
-                                        </th>
-                                        <th className="border border-slate-600 text-xs">
-                                            Bitmə tarixi
-                                        </th>
-                                        <th className="border border-slate-600 text-xs">
-                                            Hesabat
-                                        </th>
-                                    </tr>
+                                <tr>
+                                    <th className="border border-slate-600 text-xs w-20">Adı</th>
+                                    <th className="border border-slate-600 text-xs w-20">
+                                        Ümumi investisiya
+                                    </th>
+                                    <th className="border border-slate-600 text-xs w-20">Ümumi gəlir</th>
+                                    <th className="border border-slate-600 text-xs w-20">
+                                        Yekun mənfəət
+                                    </th>
+                                    <th className="border border-slate-600 text-xs w-20">
+                                        Toplanan məbləğ
+                                    </th>
+                                    <th className="border border-slate-600 text-xs w-20">
+                                        Sədəqələrin Cəmi
+                                    </th>
+                                    <th className="border border-slate-600 text-xs w-20">
+                                        Yekunlaşma tarixi
+                                    </th>
+                                    <th className="border border-slate-600 text-xs w-20">
+                                        Başlama tarixi
+                                    </th>
+                                    <th className="border border-slate-600 text-xs w-20">
+                                        Bitmə tarixi
+                                    </th>
+                                    <th className="border border-slate-600 text-xs w-20">
+                                        Hesabat
+                                    </th>
+                                </tr>
                                 </thead>
                                 <tbody className="text-center">
-                                    {entrepreneurs.map((entrepreneur) => (
-                                        <tr key={entrepreneur.id}>
-                                            <td className="border border-slate-700 py-1 text-xs">
-                                                <NavLink
-                                                    to={`/entrepreneur-detail/${entrepreneur.id}`}
-                                                    className="text-blue-700"
-                                                >
-                                                    {entrepreneur.project_name}
-                                                </NavLink>
-                                            </td>
-                                            <td className="border border-slate-700 py-1 text-xs">
-                                                {entrepreneur.total_investment}
-                                            </td>
-                                            <td className="border border-slate-700 py-1 text-xs">
-                                                {entrepreneur.gross_income}
-                                            </td>
-                                            <td className="border border-slate-700 py-1 text-xs">
-                                                {entrepreneur.final_profit}
-                                            </td>
-                                            <td className="border border-slate-700 py-1 text-xs">
-                                                {entrepreneur.amount_collected}
-                                            </td>
-                                            <td className="border border-slate-700 py-1 text-xs">
-                                                {entrepreneur.finished_date}
-                                            </td>
-                                            <td className="border border-slate-700 py-1 text-xs">
-                                                {entrepreneur.start_date}
-                                            </td>
-                                            <td className="border border-slate-700 py-1 text-xs">
-                                                {entrepreneur.end_date}
-                                            </td>
-                                            <td onClick={() => showEntrepreneurInvestmentReportModal(entrepreneur)} className="border border-slate-700 cursor-pointer text-sky-700 py-1">
-                                                <p>Bax</p>
-                                            </td>
-                                        </tr>
-                                    ))}
+                                {entrepreneurs.map((entrepreneur) => (
+                                    <tr key={entrepreneur.id}>
+                                        <td className="border border-slate-700 py-1 text-xs">
+                                            <NavLink
+                                                to={`/entrepreneur-detail/${entrepreneur.id}`}
+                                                className="text-blue-700"
+                                            >
+                                                {entrepreneur.project_name}
+                                            </NavLink>
+                                        </td>
+                                        <td className="border border-slate-700 py-1 text-xs">
+                                            {entrepreneur.total_investment} AZN
+                                        </td>
+                                        <td className="border border-slate-700 py-1 text-xs">
+                                            {entrepreneur.gross_income} AZN
+                                        </td>
+                                        <td className="border border-slate-700 py-1 text-xs">
+                                            {entrepreneur.final_profit} AZN
+                                        </td>
+                                        <td className="border border-slate-700 py-1 text-xs">
+                                            {entrepreneur.amount_collected} AZN
+                                        </td>
+                                        <td className="border border-slate-700 py-1 text-xs">
+                                            {entrepreneur.total_charity_money ? entrepreneur.total_charity_money : 0} AZN
+                                        </td>
+                                        <td className="border border-slate-700 py-1 text-xs">
+                                            {entrepreneur.finished_date}
+                                        </td>
+                                        <td className="border border-slate-700 py-1 text-xs">
+                                            {entrepreneur.start_date}
+                                        </td>
+                                        <td className="border border-slate-700 py-1 text-xs">
+                                            {entrepreneur.end_date}
+                                        </td>
+                                        <td onClick={() => showEntrepreneurInvestmentReportModal(entrepreneur)}
+                                            className="border border-slate-700 cursor-pointer text-sky-700 py-1">
+                                            <p>Bax</p>
+                                        </td>
+                                    </tr>
+                                ))}
                                 </tbody>
                             </table>
                         </div>

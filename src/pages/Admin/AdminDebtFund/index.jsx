@@ -1,22 +1,18 @@
 import { Pagination } from "antd";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllInvestmentsAsync, putInvestmentAsync, resetInvestmentSlice } from "../../../redux/InvestmentSlice/InvestmentSlice";
 import ResponseMessage from "../../../components/ResponseMessage";
 import { useFormik } from "formik";
 import validations from "./validation";
 import AuthInput from "../../../components/InputComponents/AuthInput";
-import RadioInput from "../../../components/InputComponents/RadioInput";
 import style from './style.module.css'
-import { NavLink } from "react-router-dom";
-import { FaCheck } from "react-icons/fa";
-import { FaXmark } from "react-icons/fa6";
 import { CgSpinner } from "react-icons/cg";
+import RadioInput from "../../../components/InputComponents/RadioInput.jsx";
 
 
 function AdminDebtFund() {
     let [currentPage, setCurrentPage] = useState(1);
-    const [investmentId, setInvestmentId] = useState(null);
     const dispatch = useDispatch();
 
     let investments = useSelector((state) => state.investment.investments);
@@ -30,6 +26,7 @@ function AdminDebtFund() {
     const formik = useFormik({
         initialValues: {
             fullname: "",
+            entrepreneur__is_finished: ""
         },
         onSubmit: (values) => {
             let offset = (currentPage - 1) * pageLimit;
@@ -52,18 +49,6 @@ function AdminDebtFund() {
         let filteredValues = { ...formik.values };
         dispatch(getAllInvestmentsAsync(filteredValues));
     };
-
-    const changeAmountSumbitStatus = (investment) => {
-        dispatch(putInvestmentAsync({id: investment.id, is_amount_sended_submitted: !investment.is_amount_sended_submitted}))
-        .then(() => {
-            let offset = (currentPage - 1) * pageLimit;
-            formik.values.offset = offset;
-            let filteredValues = { ...formik.values };
-            dispatch(
-                getAllInvestmentsAsync(filteredValues)
-            );
-        })
-    }
 
     return (
         <div className="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8 flex flex-col">
@@ -97,6 +82,46 @@ function AdminDebtFund() {
                             error={formik.errors.fullname}
                             style={"mb-2"}
                         />
+                        <div>
+                            <label className="block text-sm font-medium leading-6 text-gray-900">
+                                Sifariş bitibmi?
+                            </label>
+                            <div className="mt-2">
+                                <RadioInput
+                                    label="Davam edir"
+                                    id="is_continue"
+                                    name="entrepreneur__is_finished"
+                                    type="radio"
+                                    value={false}
+                                    onChange={formik.handleChange}
+                                    onBlur={formik.handleBlur}
+                                    style={style}
+                                />
+                                <RadioInput
+                                    label="Bitib"
+                                    id="is_finished"
+                                    name="entrepreneur__is_finished"
+                                    type="radio"
+                                    value={true}
+                                    onChange={formik.handleChange}
+                                    onBlur={formik.handleBlur}
+                                    style={style}
+                                />
+                                <RadioInput
+                                    label="Hər İkisi"
+                                    id="both"
+                                    name="entrepreneur__is_finished"
+                                    type="radio"
+                                    value={""}
+                                    onChange={formik.handleChange}
+                                    onBlur={formik.handleBlur}
+                                    style={style}
+                                />
+                                {
+                                    formik.touched.entrepreneur__is_finished && formik.errors.entrepreneur__is_finished && (<div className='error'>{formik.errors.entrepreneur__is_finished}</div>)
+                                }
+                            </div>
+                        </div>
                         <button type='submit' className={`${style.search_btn} btn-main-bg rounded mt-4`}>Axtar</button>
                     </form>
                 </div>
@@ -109,38 +134,42 @@ function AdminDebtFund() {
                         <div className="w-full sm:w-full md:w-full lg:w-5/6 text-sm overflow-y-hidden overflow-x-auto">
                             <table className="table-auto w-full h-fit">
                                 <thead>
-                                    <tr>
-                                        <th className="border border-slate-600">Adı Soyadı</th>
-                                        <th className="border border-slate-600">Sifariş</th>
-                                        <th className="border border-slate-600">İnvestisiya tarixi</th>
-                                        <th className="border border-slate-600">Ümumi gəlir</th>
-                                        <th className="border border-slate-600">Fonddan qarşılanan</th>
-                                        <th className="border border-slate-600">Aktiv/Deaktiv</th>
-                                    </tr>
+                                <tr>
+                                    <th className="border border-slate-600 w-20 text-xs">Adı Soyadı</th>
+                                    <th className="border border-slate-600 w-20 text-xs">Sifariş</th>
+                                    <th className="border border-slate-600 w-20 text-xs">İnvestisiya tarixi</th>
+                                    <th className="border border-slate-600 w-20 text-xs">Ümumi gəlir</th>
+                                    <th className="border border-slate-600 w-20 text-xs">Fonddan qarşılanan</th>
+                                    <th className="border border-slate-600 w-20 text-xs">İnvestisiya təsdiq statusu</th>
+                                    <th className="border border-slate-600 w-20 text-xs">Sifariş bitmə statusu</th>
+                                </tr>
                                 </thead>
                                 <tbody>
-                                    {investments.map((investment) => (
-                                        <tr key={investment.id}>
-                                            <td className="border border-slate-700">
-                                                {investment.investor.user.first_name} {investment.investor.user.last_name}
-                                            </td>
-                                            <td className="border border-slate-700">
-                                                {investment.entrepreneur.project_name}
-                                            </td>
-                                            <td className="border border-slate-700">
-                                                {investment.investment_date}
-                                            </td>
-                                            <td className="border border-slate-700">
-                                                {investment.final_profit}
-                                            </td>
-                                            <td className="border border-slate-700">
-                                                {investment.amount_from_debt_fund}
-                                            </td>
-                                            <td className="border border-slate-700">
-                                                {investment.is_submitted ? (<p className="success">Aktiv</p>) : (<p className="error">Deaktiv</p>)}
-                                            </td>
-                                        </tr>
-                                    ))}
+                                {investments.map((investment) => (
+                                    <tr key={investment.id}>
+                                        <td className="border border-slate-700 text-xs text-center">
+                                            {investment.investor.user.first_name} {investment.investor.user.last_name}
+                                        </td>
+                                        <td className="border border-slate-700 text-xs text-center">
+                                            {investment.entrepreneur.project_name}
+                                        </td>
+                                        <td className="border border-slate-700 text-xs text-center">
+                                            {investment.investment_date}
+                                        </td>
+                                        <td className="border border-slate-700 text-xs text-center">
+                                            {investment.final_profit} AZN
+                                        </td>
+                                        <td className="border border-slate-700 text-xs text-center">
+                                            {investment.amount_from_debt_fund} AZN
+                                        </td>
+                                        <td className="border border-slate-700 text-xs text-center">
+                                            {investment.is_submitted ? (<p className="success">Təsdiqlənib</p>) : (<p className="error">Təsdiqlənməyib</p>)}
+                                        </td>
+                                        <td className="border border-slate-700 text-xs text-center">
+                                            {investment.entrepreneur && investment.entrepreneur.is_finished ? (<p className="error">Bitib</p>) : (<p className="success">Davam edir</p>)}
+                                        </td>
+                                    </tr>
+                                ))}
                                 </tbody>
                             </table>
                         </div>
