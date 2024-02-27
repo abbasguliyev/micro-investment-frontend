@@ -119,7 +119,7 @@ export const ExperienceSlice = createSlice({
         })
         builder.addCase(deleteExperienceAsync.fulfilled, (state, action) => {
             state.isLoading = false;
-            state.successMsg = "Əməliyyat yerinə yetirildi";;
+            state.successMsg = "Əməliyyat yerinə yetirildi";
         })
         builder.addCase(deleteExperienceAsync.rejected, (state, action) => {
             state.error = action.error.message;
