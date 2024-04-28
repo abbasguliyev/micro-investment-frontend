@@ -357,7 +357,7 @@ function AdminInvestorPayments() {
                                                         <td className="border border-slate-700">
                                                         {
                                                             investmentReport.is_amount_sended_to_investor ? (
-                                                                <div onClick={() => changeReportSendedStatus(investmentReport)} className="ml-auto pointer-events-auto h-6 w-10 rounded-full p-1 ring-1 ring-inset transition duration-200 ease-in-out bg-indigo-600 ring-black/20 cursor-pointer">
+                                                                <div onClick={() => changeReportSendedStatus(investmentReport)} className="pointer-events-auto h-6 w-10 rounded-full p-1 ring-1 ring-inset transition duration-200 ease-in-out bg-indigo-600 ring-black/20 cursor-pointer">
                                                                     <div className="h-4 w-4 rounded-full bg-white shadow-sm ring-1 ring-slate-700/10 transition duration-200 ease-in-out translate-x-4"></div>
                                                                 </div>
                                                             ) : (

@@ -107,6 +107,7 @@ body {
 
 .active-btn-main-bg {
     background-color: var(--second);
+    border: 1px solid var(--main);
     color: var(--main);
 }
 

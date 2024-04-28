@@ -97,13 +97,13 @@ function AdminUsers() {
 
     return (
         <>
-            <NavLink
-                to="user-create"
-                className={`rounded btn-main-bg text-center w-40 h-10 p-2 m-8`}
-            >
-                Yeni əlavə et
-            </NavLink>
             <div className="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8 flex flex-col mt-4">
+                <NavLink
+                    to="user-create"
+                    className={`rounded btn-main-bg text-center w-40 h-10 p-2 m-8`}
+                >
+                    Yeni əlavə et
+                </NavLink>
                 <div className="w-full flex flex-row flex-wrap">
                     {errorMsg && (
                         <ResponseMessage
