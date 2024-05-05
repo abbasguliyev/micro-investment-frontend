@@ -99,7 +99,7 @@ function AdminUsers() {
         <>
             <div className="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8 flex flex-col mt-4">
                 <NavLink
-                    to="user-create"
+                    to="/admin/users/user-create"
                     className={`rounded btn-main-bg text-center w-40 h-10 p-2 m-8`}
                 >
                     Yeni əlavə et
