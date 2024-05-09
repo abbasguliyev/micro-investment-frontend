@@ -1,13 +1,9 @@
-import {useEffect, useState} from 'react'
-import AdminUsers from './AdminUsers';
-import AdminInvestments from './AdminInvestments';
-import AdminEntrepreneurs from './AdminEntrepreneurs';
-import AdminInvestorPayments from './AdminInvestorPayments';
+import {useEffect,} from 'react'
+
 import {useDispatch, useSelector} from 'react-redux';
 import {getCompanyBalanceAsync} from '../../redux/CompanyBalanceSlice/CompanyBalanceSlice';
 import {getMeAsync} from '../../redux/AuthSlice/AuthSlice';
 import {NavLink, useLocation, useNavigate} from 'react-router-dom';
-import AdminDebtFund from './AdminDebtFund';
 
 function Admin() {
     const dispatch = useDispatch();

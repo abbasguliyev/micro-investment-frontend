@@ -283,7 +283,7 @@ function AdminInvestorPayments() {
                 
 
                 <Modal
-                    title={`Hesabat`}
+                    title={`Hesabat: ${entrepreneur ? `${entrepreneur.project_name}` : "-"}`}
                     okType="default"
                     width={1500}
                     open={isEntrepreneurInvestmentReportModalOpen}
